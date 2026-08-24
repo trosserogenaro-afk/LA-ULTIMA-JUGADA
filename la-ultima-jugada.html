@@ -46,8 +46,7 @@
         + html.slice(b);
     }
   }
-  // Fix broken JS: styleEsc = crestStyle(...).replace(BAD)
-  var bad = ".replace(/\"/g,\"\"\")";
+  // Fix broken JS styleEsc line
   var bi = html.indexOf("const styleEsc = crestStyle(lg,abbr)");
   if (bi !== -1) {
     var se = html.indexOf(";", bi);
