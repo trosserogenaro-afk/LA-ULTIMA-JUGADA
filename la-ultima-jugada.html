@@ -34,24 +34,17 @@
     document.body.innerHTML = "<div class='boot'><p class='msg'>No se pudo cargar. Recargá en unos segundos.</p></div>";
     return;
   }
-  const markerStart = html.indexOf('<img src="la-ultima-jugada-logo.png"');
-  if (markerStart !== -1) {
-    const needle = "La Última Jugada</h1>'">";
-    const endRel = html.indexOf(needle, markerStart);
-    if (endRel !== -1) {
-      const end = endRel + needle.length;
-      const replacement = '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>';
-      html = html.slice(0, markerStart) + replacement + html.slice(end);
-    } else {
-      const pIdx = html.indexOf('<p class="hero-sub"', markerStart);
-      if (pIdx !== -1) {
-        const replacement = '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>\n      ';
-        html = html.slice(0, markerStart) + replacement + html.slice(pIdx);
-      }
+  const a = html.indexOf('<img src="la-ultima-jugada-logo.png"');
+  if (a !== -1) {
+    const b = html.indexOf('<p class="hero-sub"', a);
+    if (b !== -1) {
+      html = html.slice(0, a)
+        + '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>\n      '
+        + html.slice(b);
     }
   }
-  html = html.replace(/La Última Jugada"">/g, "La Última Jugada");
-  html = html.replace(/"">/g, "");
+  html = html.split('La Última Jugada"">').join('La Última Jugada');
+  html = html.split('"">').join('');
 
   document.open("text/html");
   document.write(html);
