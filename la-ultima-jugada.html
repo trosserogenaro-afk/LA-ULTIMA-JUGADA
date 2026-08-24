@@ -5,37 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Ultima Jugada</title>
 <style>
-  body{margin:0;background:#0A0F0D;color:#F3F6F1;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
-  .load{text-align:center;opacity:.7}
-  .spin{width:28px;height:28px;border:3px solid #243029;border-top-color:#34D399;border-radius:50%;animation:s .7s linear infinite;margin:0 auto 12px}
+  html,body{margin:0;padding:0;background:#0A0F0D;color:#F3F6F1;font-family:system-ui,sans-serif;height:100%}
+  .boot{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:12px}
+  .spin{width:28px;height:28px;border:3px solid #243029;border-top-color:#34D399;border-radius:50%;animation:s .7s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
+  .msg{opacity:.7;font-size:14px}
 </style>
 </head>
 <body>
-<div class="load"><div class="spin"></div>Cargando La Última Jugada…</div>
+<div class="boot"><div class="spin"></div><div class="msg">Cargando La Última Jugada…</div></div>
 <script>
 (async function(){
   const urls = [
-    "https://raw.githubusercontent.com/trosserogenaro-afk/LA-ULTIMA-JUGADA/3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html",
-    "https://cdn.jsdelivr.net/gh/trosserogenaro-afk/LA-ULTIMA-JUGADA@3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html"
+    "https://cdn.jsdelivr.net/gh/trosserogenaro-afk/LA-ULTIMA-JUGADA@3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html",
+    "https://raw.githubusercontent.com/trosserogenaro-afk/LA-ULTIMA-JUGADA/3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html"
   ];
   let html = null;
   for (const u of urls) {
     try {
       const r = await fetch(u, {cache:"no-store"});
-      if (r.ok) { html = await r.text(); break; }
+      if (r.ok) {
+        html = await r.text();
+        if (html && html.length > 50000) break;
+      }
     } catch(e) {}
   }
-  if (!html) {
-    document.body.innerHTML = "<p style='padding:24px;text-align:center'>No se pudo cargar. Recargá en unos segundos.</p>";
+  if (!html || html.length < 50000) {
+    document.body.innerHTML = "<div class='boot'><p class='msg'>No se pudo cargar. Recargá en unos segundos.</p></div>";
     return;
   }
-  // Quitar el PNG roto del logo y poner título limpio
-  html = html.replace(
-    /<img src="la-ultima-jugada-logo\.png"[^>]*>/,
-    '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>'
-  );
-  document.open();
+  const markerStart = html.indexOf('<img src="la-ultima-jugada-logo.png"');
+  if (markerStart !== -1) {
+    const needle = "La Última Jugada</h1>'">";
+    const endRel = html.indexOf(needle, markerStart);
+    if (endRel !== -1) {
+      const end = endRel + needle.length;
+      const replacement = '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>';
+      html = html.slice(0, markerStart) + replacement + html.slice(end);
+    } else {
+      const pIdx = html.indexOf('<p class="hero-sub"', markerStart);
+      if (pIdx !== -1) {
+        const replacement = '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>\n      ';
+        html = html.slice(0, markerStart) + replacement + html.slice(pIdx);
+      }
+    }
+  }
+  html = html.replace(/La Última Jugada"">/g, "La Última Jugada");
+  html = html.replace(/"">/g, "");
+
+  document.open("text/html");
   document.write(html);
   document.close();
 })();
