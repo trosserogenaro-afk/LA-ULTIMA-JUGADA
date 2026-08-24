@@ -4,30 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Ultima Jugada</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0A0F0D;
-    --bg-alt:#101713;
-    --card:#141D18;
-    --card-hi:#192219;
-    --line:#243029;
-    --line-soft:#1A2420;
-    --text:#F3F6F1;
-    --dim:#8FA095;
-    --dim2:#5E6E66;
-    --turf:#34D399;
-    --turf-dim:#1D5A44;
-    --amber:#FBBF24;
-    --amber-dim:#6B5419;
-    --loss:#FB7185;
-    --draw:#94A3A0;
-    --radius:14px;
-  }
+  body{margin:0;background:#0A0F0D;color:#F3F6F1;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+  .load{text-align:center;opacity:.7}
+  .spin{width:28px;height:28px;border:3px solid #243029;border-top-color:#34D399;border-radius:50%;animation:s .7s linear infinite;margin:0 auto 12px}
+  @keyframes s{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<p>RESTORING FULL FILE - IF YOU SEE THIS THE PUSH WAS TRUNCATED AGAIN</p>
+<div class="load"><div class="spin"></div>Cargando La Última Jugada…</div>
+<script>
+(async function(){
+  const urls = [
+    "https://raw.githubusercontent.com/trosserogenaro-afk/LA-ULTIMA-JUGADA/3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html",
+    "https://cdn.jsdelivr.net/gh/trosserogenaro-afk/LA-ULTIMA-JUGADA@3ed1bd84092cb12bf561cfbff28e76315e991f61/la-ultima-jugada.html"
+  ];
+  let html = null;
+  for (const u of urls) {
+    try {
+      const r = await fetch(u, {cache:"no-store"});
+      if (r.ok) { html = await r.text(); break; }
+    } catch(e) {}
+  }
+  if (!html) {
+    document.body.innerHTML = "<p style='padding:24px;text-align:center'>No se pudo cargar. Recargá en unos segundos.</p>";
+    return;
+  }
+  // Quitar el PNG roto del logo y poner título limpio
+  html = html.replace(
+    /<img src="la-ultima-jugada-logo\.png"[^>]*>/,
+    '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>'
+  );
+  document.open();
+  document.write(html);
+  document.close();
+})();
+</script>
 </body>
 </html>
