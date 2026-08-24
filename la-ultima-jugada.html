@@ -37,21 +37,22 @@
   var a = html.indexOf("la-ultima-jugada-logo.png");
   if (a !== -1) {
     var start = html.lastIndexOf("<img", a);
-    var b = html.indexOf('<p class="hero-sub"', a);
+    var b = html.indexOf("hero-sub", a);
     if (start !== -1 && b !== -1) {
+      b = html.lastIndexOf("<", b);
       html = html.slice(0, start)
-        + '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>\n      '
+        + "<h1 style=\"margin:0 0 2px\">La Ultima Jugada</h1>\n      "
         + html.slice(b);
     }
   }
+  var q = String.fromCharCode(34);
   var anchor = "const styleEsc = crestStyle(lg,abbr)";
   var ai = html.indexOf(anchor);
   if (ai !== -1) {
     var semi = html.indexOf(";", ai);
     if (semi !== -1) {
-      html = html.slice(0, ai)
-        + "const styleEsc = crestStyle(lg,abbr).replace(/\"/g,\""\")"
-        + html.slice(semi);
+      var fixed = "const styleEsc = crestStyle(lg,abbr).replace(/" + q + "/g," + q + """ + q + ")";
+      html = html.slice(0, ai) + fixed + html.slice(semi);
     }
   }
   document.open("text/html");
