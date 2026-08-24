@@ -34,19 +34,26 @@
     document.body.innerHTML = "<div class='boot'><p class='msg'>No se pudo cargar. Recargá en unos segundos.</p></div>";
     return;
   }
-  const a = html.indexOf('<img src="la-ultima-jugada-logo.png"');
+  var a = html.indexOf("la-ultima-jugada-logo.png");
   if (a !== -1) {
-    const b = html.indexOf('<p class="hero-sub"', a);
-    if (b !== -1) {
-      html = html.slice(0, a)
+    var start = html.lastIndexOf("<img", a);
+    var b = html.indexOf('<p class="hero-sub"', a);
+    if (start !== -1 && b !== -1) {
+      html = html.slice(0, start)
         + '<h1 style="margin:0 0 2px;opacity:0;animation:riseIn .5s ease forwards;">⚽ La Última Jugada</h1>\n      '
         + html.slice(b);
     }
   }
-  html = html.split('.replace(/"/g,""")').join(".replace(/\\"/g,'"')");
-  html = html.split('La Última Jugada"">').join('La Última Jugada');
-  html = html.split('"">').join('');
-
+  var anchor = "const styleEsc = crestStyle(lg,abbr)";
+  var ai = html.indexOf(anchor);
+  if (ai !== -1) {
+    var semi = html.indexOf(";", ai);
+    if (semi !== -1) {
+      html = html.slice(0, ai)
+        + "const styleEsc = crestStyle(lg,abbr).replace(/\"/g,\""\")"
+        + html.slice(semi);
+    }
+  }
   document.open("text/html");
   document.write(html);
   document.close();
