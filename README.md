@@ -1,5 +1,7 @@
-# La Última Jugada
+# La Ultima Jugada
 
-Sitio estático. El archivo principal es `index.html` (copia completa, sin cargador).
+Web de futbol - Clausura 2026, Libertadores, Sudamericana y ligas europeas.
 
-No uses un bootstrap que descargue el HTML desde jsDelivr/GitHub: eso deja la web en "Cargando…" si el fetch falla.
+**Principal:** https://la-ultima-jugada.pages.dev/
+
+Actualizacion automatica cada hora (10:00-23:59 ART).
