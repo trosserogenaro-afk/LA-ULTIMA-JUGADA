@@ -41,18 +41,16 @@
     if (start !== -1 && b !== -1) {
       b = html.lastIndexOf("<", b);
       html = html.slice(0, start)
-        + "<h1 style=\"margin:0 0 2px\">La Ultima Jugada</h1>\n      "
+        + "<h1 style='margin:0 0 2px'>La Ultima Jugada</h1>\n      "
         + html.slice(b);
     }
   }
-  var q = String.fromCharCode(34);
   var anchor = "const styleEsc = crestStyle(lg,abbr)";
   var ai = html.indexOf(anchor);
   if (ai !== -1) {
     var semi = html.indexOf(";", ai);
-    if (semi !== -1) {
-      var fixed = "const styleEsc = crestStyle(lg,abbr).replace(/" + q + "/g," + q + """ + q + ")";
-      html = html.slice(0, ai) + fixed + html.slice(semi);
+    if (semi !== -1 && semi - ai < 80) {
+      html = html.slice(0, ai) + "const styleEsc = crestStyle(lg,abbr)" + html.slice(semi);
     }
   }
   document.open("text/html");
