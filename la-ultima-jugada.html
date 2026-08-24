@@ -43,6 +43,7 @@
         + html.slice(b);
     }
   }
+  html = html.split('.replace(/"/g,""")').join(".replace(/\\"/g,'"')");
   html = html.split('La Última Jugada"">').join('La Última Jugada');
   html = html.split('"">').join('');
 
