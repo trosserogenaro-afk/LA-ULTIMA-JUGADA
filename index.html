@@ -4,23 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Ultima Jugada</title>
-<script>
-// Cargar la version completa del repo (archivo index completo en el mismo repo, commit anterior)
-fetch('https://cdn.jsdelivr.net/gh/trosserogenaro-afk/LA-ULTIMA-JUGADA@main/index.html?t=' + Date.now())
-  .then(r => r.text())
-  .then(html => {
-    if (html.length < 5000 || html.indexOf('jsdelivr') !== -1 && html.length < 2000) {
-      document.body.innerHTML = '<p style="font-family:sans-serif;padding:40px;text-align:center">Error al cargar. <a href="https://github.com/trosserogenaro-afk/LA-ULTIMA-JUGADA">Ver repo</a></p>';
-      return;
-    }
-    document.open(); document.write(html); document.close();
-  })
-  .catch(e => {
-    document.body.innerHTML = '<p style="font-family:sans-serif;padding:40px">No se pudo cargar la web.</p>';
-  });
-</script>
 </head>
 <body style="background:#0A0F0D;color:#F3F6F1;font-family:sans-serif;padding:40px;text-align:center">
-<p>Cargando La Última Jugada…</p>
+<h1>La Última Jugada</h1>
+<p>Usá la versión estable:</p>
+<p><a href="https://laultimajugada.trosserogenaro.workers.dev/" style="color:#34D399;font-size:18px">laultimajugada.trosserogenaro.workers.dev</a></p>
+<p style="color:#888;margin-top:24px">pages.dev redirige a workers hasta restaurar el HTML completo en Git.</p>
+<script>location.replace('https://laultimajugada.trosserogenaro.workers.dev/');</script>
 </body>
 </html>
