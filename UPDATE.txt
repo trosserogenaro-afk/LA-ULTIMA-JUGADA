@@ -1,2 +1,7 @@
-Planteles desactivados. La Liga actualizada. LEV/B04 fix. Subir index.html completo desde la automatizacion o deploy manual.
+Planteles desactivados. Ver en Promiedos.
+LEV = solo Levante. Bayer Leverkusen = B04.
+La Liga actualizada (Osasuna 0-0 Levante, Málaga 1-1 Deportivo, Elche 0-5 Barça).
+SA_TODAY solo HOY 24/08: Tigre 2-1, Fulham 2-3 Chelsea, Osasuna-Levante, Málaga-Deportivo, Bologna-Lazio, Roma-Fiorentina.
+Ayer (23): Racing 1-1 Boca, River 2-2 Vélez — fuera de SA_TODAY.
+HTML completo en workers: https://laultimajugada.trosserogenaro.workers.dev/
 Principal: https://la-ultima-jugada.pages.dev/
