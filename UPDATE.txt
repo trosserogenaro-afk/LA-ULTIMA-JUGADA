@@ -1,0 +1,2 @@
+Planteles desactivados. La Liga actualizada. LEV/B04 fix. Subir index.html completo desde la automatizacion o deploy manual.
+Principal: https://la-ultima-jugada.pages.dev/
