@@ -1,5 +1,6 @@
-Actualizado 26/08/2026 18:00 ART.
-Clausura: Instituto 13, Vélez/Gimnasia Mza 12 · Argentinos 13, Sarmiento 12.
-La Liga: Real Madrid 4-1 Real Sociedad (hoy).
-SA_TODAY: River vs Ind. Santa Fe (Sudamericana) + Primera Nacional.
-HTML completo (~261KB) en workers.dev.
+Actualizado 26/08/2026 21:00 ART.
+Clausura tablas OK (Instituto 13, Vélez/Gimnasia M 12 · Argentinos 13, Sarmiento 12).
+La Liga: Real Madrid 4-1 Real Sociedad.
+UCL playoffs: AEK 4-0 Levski, Lyon 1-2 Fener, Celje 1-2 Slovan, Viking 3-1 Dinamo.
+SA_TODAY: River vs Ind. Santa Fe (Sudamericana 21:30) + Primera Nacional + B Metro + Copa Argentina.
+HTML completo (~262KB) SOLO en workers.dev — push a GitHub falla por tamaño (no se sube stub de datos inventados).
