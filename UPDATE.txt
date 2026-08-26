@@ -1,7 +1,6 @@
-Planteles desactivados. Ver en Promiedos.
-LEV = solo Levante. Bayer Leverkusen = B04.
-La Liga actualizada (Osasuna 0-0 Levante, Málaga 1-1 Deportivo, Elche 0-5 Barça).
-SA_TODAY solo HOY 25/08: Valencia-Betis, Indep del Valle-Tolima.
-Ayer (23): Racing 1-1 Boca, River 2-2 Vélez — fuera de SA_TODAY.
-HTML completo ~186KB en index.html y la-ultima-jugada.html.
-Principal: https://la-ultima-jugada.pages.dev/
+Actualizado 25/08/2026 23:00 ART.
+Clausura Zona A: Instituto 13, Gimnasia Mza 12, Velez 12.
+Zona B: Argentinos 13, Sarmiento 12, Tigre 11.
+La Liga: Valencia 0-1 Betis (hoy).
+SA_TODAY: solo partidos de hoy 25/08.
+HTML completo en workers.dev (~252KB).
