@@ -1,6 +1,10 @@
-Actualizado 26/08/2026 21:00 ART.
-Clausura tablas OK (Instituto 13, Vélez/Gimnasia M 12 · Argentinos 13, Sarmiento 12).
+Actualizado 26/08/2026 23:30 ART.
+SA_TODAY: River 1-1 Ind. Santa Fe (Sudamericana 90+; Driussi 52', Fagundez 80' pen; ida 0-0).
+Copa Argentina: Aldosivi 0-2 Ind. Rivadavia.
+PN: C. Norte 0-0 Moron; Acassuso 1-2 San Telmo; Chaco FE 3-0 San Miguel; San Martin SJ 1-0 Chicago; Patronato 2-0 Atlanta.
+B Metro: Camioneros 2-0 Comunicaciones; Liniers 3-1 Armenio; Merlo 1-2 Dock Sud.
+Clausura tablas sin cambios (no hubo fecha de LPF hoy): Instituto 13 / Argentinos 13.
 La Liga: Real Madrid 4-1 Real Sociedad.
-UCL playoffs: AEK 4-0 Levski, Lyon 1-2 Fener, Celje 1-2 Slovan, Viking 3-1 Dinamo.
-SA_TODAY: River vs Ind. Santa Fe (Sudamericana 21:30) + Primera Nacional + B Metro + Copa Argentina.
-HTML completo (~262KB) SOLO en workers.dev — push a GitHub falla por tamaño (no se sube stub de datos inventados).
+EPL: Fulham 2-3 Chelsea.
+UCL playoff: AEK 4-0 Levski; Lyon 1-2 Fener; Celje 1-2 Slovan; Viking 3-1 Dinamo.
+Fuentes: Promiedos, ESPN, Sofascore. LEV=Levante.
