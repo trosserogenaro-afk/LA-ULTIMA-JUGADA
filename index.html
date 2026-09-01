@@ -658,7 +658,7 @@
   <div class="hero-top">
     <div>
       <img src="logo-luj.png" alt="La Última Jugada" style="height:72px;width:auto;max-width:220px;object-fit:contain;display:block;margin-bottom:4px;opacity:0;animation:riseIn .5s ease forwards;" onerror="this.src='la-ultima-jugada-logo.png'; this.onerror=null;">
-      <p class="hero-sub">Lun 31/08 · Defensa–Platense · Estudiantes–Newell's · Tigre–Barracas · Instituto–San Lorenzo</p>
+      <p class="hero-sub">Mar 1/09 · Sin partidos LPF hoy · Fecha 8 desde el jueves · Tablas post F7</p>
     </div>
     <div class="hero-actions">
       <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Sonido en vivo">🔇</button>
@@ -765,7 +765,7 @@
    DATA — resultados y tablas reales tomados el 22/08/2026
    ========================================================= */
 
-const TODAY_DATE = "2026-08-31";
+const TODAY_DATE = "2026-09-01";
 const RESULTS_CUTOFF = "2026-08-18"; // últimos 5 días
 
 const EURO = {
@@ -805,8 +805,7 @@ epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
   names:{EVE:"Everton",CRY:"Crystal Palace",IPS:"Ipswich Town",SUN:"Sunderland",NFO:"Nott'm Forest",LEE:"Leeds United",
     ARS:"Arsenal",COV:"Coventry City",HUL:"Hull City",MUN:"Man United",BRE:"Brentford",TOT:"Tottenham",
     BRI:"Brighton",AVL:"Aston Villa",MCI:"Manchester City",LFC:"Liverpool",CFC:"Chelsea",NEW:"Newcastle",
-    FUL:"Fulham",BOU:"Bournemouth"},
-},
+    FUL:"Fulham",BOU:"Bournemouth"}},
 la_liga: { name:"La Liga", accent:"#EE8707", country:"España",
   matches:[
     {id:"ll19",home:"RMA",away:"MCF",hs:4,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
@@ -874,36 +873,6 @@ bundesliga: { name:"Bundesliga", accent:"#D3010C", country:"Alemania",
     {r:4,t:"RBL",w:1,d:0,l:0,pts:3},{r:5,t:"SVW",w:0,d:0,l:1,pts:0},{r:6,t:"SCH",w:0,d:0,l:1,pts:0},
   ]
 },
-ligue_1: { name:"Ligue 1", accent:"#DAE036", country:"Francia",
-  matches:[
-    {id:"sr:sport_event:72036118",home:"OLM",away:"RCS",hs:4,as:0,status:"final",when:"Vie 21, 15:45",date:"2026-08-21"},
-    {id:"sr:sport_event:72036116",home:"RCL",away:"AUX",hs:5,as:2,status:"final",when:"Sáb 22, 12:15",date:"2026-08-22"},
-    {id:"sr:sport_event:72036114",home:"LMS",away:"STB",hs:2,as:2,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:72036120",home:"NIC",away:"FCL",hs:0,as:0,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:72036124",home:"TFC",away:"OL",hs:0,as:2,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:72036126",home:"EST",away:"PAR",hs:0,as:0,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:72036110",home:"ANG",away:"LIL",hs:0,as:2,status:"final",when:"Hoy 10:00",date:"2026-08-23"},
-    {id:"sr:sport_event:72036112",home:"HAC",away:"ASM",hs:0,as:0,status:"live",when:"HOY 12:15",date:"2026-08-23"},
-    {id:"sr:sport_event:72036520",home:"REN",away:"PSG",hs:0,as:0,status:"sched",when:"Hoy 15:45",date:"2026-08-23"},
-    {id:"sr:sport_event:72036132",home:"LIL",away:"PSG",hs:2,as:2,status:"final",when:"Vie 28",date:"2026-08-28"},
-    {id:"sr:sport_event:72036144",home:"RCS",away:"RCL",hs:0,as:0,status:"sched",when:"Sáb 29, 12:15",date:"2026-08-29"},
-    {id:"sr:sport_event:72036128",home:"AUX",away:"ANG",hs:0,as:0,status:"sched",when:"Sáb 29, 15:45",date:"2026-08-29"},
-    {id:"sr:sport_event:72036130",home:"STB",away:"TFC",hs:0,as:0,status:"sched",when:"Sáb 29, 15:45",date:"2026-08-29"},
-    {id:"sr:sport_event:72036134",home:"FCL",away:"EST",hs:0,as:0,status:"sched",when:"Sáb 29, 15:45",date:"2026-08-29"},
-    {id:"sr:sport_event:72036136",home:"OL",away:"HAC",hs:0,as:0,status:"sched",when:"Sáb 29, 15:45",date:"2026-08-29"},
-    {id:"sr:sport_event:72036140",home:"PAR",away:"NIC",hs:0,as:0,status:"sched",when:"Dom 30, 10:00",date:"2026-08-30"},
-    {id:"sr:sport_event:72036142",home:"REN",away:"LMS",hs:3,as:2,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"sr:sport_event:72036138",home:"ASM",away:"OLM",hs:0,as:0,status:"sched",when:"Dom 30, 15:45",date:"2026-08-30"},
-  ],
-  names:{RCL:"Lens",AUX:"Auxerre",OLM:"Marsella",RCS:"Estrasburgo",LMS:"Le Mans",STB:"Brest",NIC:"Niza",FCL:"Lorient",
-    TFC:"Toulouse",OL:"Lyon",EST:"Troyes",PAR:"Paris FC",ANG:"Angers",LIL:"Lille",HAC:"Le Havre",ASM:"Mónaco",REN:"Rennes",PSG:"PSG"},
-  standings:[
-    {r:1,t:"PAR",w:1,d:1,l:0,pts:4},{r:2,t:"REN",w:0,d:1,l:0,pts:1},{r:3,t:"LMS",w:0,d:1,l:0,pts:1},
-    {r:4,t:"OLM",w:1,d:0,l:0,pts:3},{r:5,t:"LIL",w:0,d:1,l:0,pts:1},{r:6,t:"PSG",w:0,d:2,l:0,pts:2},
-    {r:7,t:"NIC",w:0,d:1,l:1,pts:1},{r:8,t:"ASM",w:1,d:0,l:0,pts:3},{r:9,t:"OL",w:1,d:1,l:0,pts:4},
-    {r:10,t:"RCL",w:1,d:0,l:1,pts:3},
-  ]
-},
 ucl: { name:"Champions League", accent:"#1A2B5C", country:"UEFA",
   matches:[
     {id:"ucl1",home:"SAB",away:"HBS",hs:5,as:2,status:"final",when:"Mar 25 · Ida/Vuelta",date:"2026-08-25"},
@@ -933,8 +902,7 @@ ucl: { name:"Champions League", accent:"#1A2B5C", country:"UEFA",
 const GAME_STATS = {
   "sr:sport_event:72221154":{home:{pos:65,shots:19,sot:6,corners:8,fouls:10,yc:1,rc:0},away:{pos:35,shots:4,sot:1,corners:2,fouls:13,yc:1,rc:0}},
   "sr:sport_event:72221156":{home:{pos:28,shots:8,sot:4,corners:1,fouls:10,yc:2,rc:0},away:{pos:72,shots:20,sot:6,corners:6,fouls:9,yc:1,rc:0}},
-  "sr:sport_event:72478448":{home:{pos:55,shots:13,sot:6,corners:6,fouls:17,yc:2,rc:0},away:{pos:45,shots:4,sot:1,corners:1,fouls:11,yc:3,rc:0}},
-};
+  "sr:sport_event:72478448":{home:{pos:55,shots:13,sot:6,corners:6,fouls:17,yc:2,rc:0},away:{pos:45,shots:4,sot:1,corners:1,fouls:11,yc:3,rc:0}}};
 
 // ---- Sudamérica: sin API en vivo — tablas reales buscadas a mano, fechas indicadas ----
 const URUGUAY = {
@@ -951,7 +919,7 @@ const URUGUAY = {
   ]
 };
 const ARGENTINA = {
-  updated:"Clausura · Lun 31/08/2026 (F7) · TyC / Sporting News",
+  updated:"Clausura · 1/09/2026 post F7 · TyC / Sporting News",
   link:"https://www.promiedos.com.ar/",
   zonaA:[
     {t:"Gimnasia (Mza)",pj:7,pts:15,gf:12,gc:5},
@@ -991,8 +959,8 @@ const ARGENTINA = {
 
 /* ---- Extras: anual, promedios, goleadores, transferencias ---- */
 const ARG_ANUAL = {
-  updated:"Tabla anual 2026 · Sporting News / TyC · 31/08",
-  note:"Apertura + Clausura (fase regular). Un descenso por el último de esta tabla (salvo empatar con peor promedio).",
+  updated:"Tabla anual 2026 · 1/09/2026 post F7",
+  note:"Apertura + Clausura. Un descenso por el último de esta tabla.",
   rows:[
     {t:"Ind. Rivadavia",pj:23,pts:45},{t:"Argentinos Juniors",pj:23,pts:45},{t:"Vélez",pj:23,pts:41},
     {t:"Boca",pj:23,pts:40},{t:"Rosario Central",pj:22,pts:39},{t:"Estudiantes (LP)",pj:23,pts:38},
@@ -1007,8 +975,8 @@ const ARG_ANUAL = {
   ]
 };
 const ARG_PROMEDIOS = {
-  updated:"Promedios descenso · 31/08/2026 (aprox. post F7)",
-  note:"Promedio 2024+2025+2026 (o desde el ascenso). El último desciende por promedios; otro por tabla anual.",
+  updated:"Promedios descenso · 1/09/2026",
+  note:"Promedio 2024+2025+2026. El último desciende por promedios; otro por tabla anual.",
   rows:[
     {t:"Boca",pj:96,pts:169,prom:1.760},{t:"Vélez",pj:96,pts:159,prom:1.656},{t:"River Plate",pj:96,pts:159,prom:1.656},
     {t:"Argentinos Juniors",pj:96,pts:158,prom:1.646},{t:"Rosario Central",pj:95,pts:152,prom:1.600},
@@ -1059,16 +1027,14 @@ const B_METRO = {
     {t:"Comunicaciones",pj:32,pts:43},
     {t:"Dock Sud",pj:32,pts:40},
     {t:"Argentino de Merlo",pj:32,pts:40},
-  ],
-};
+  ]};
 const FEDERAL_A = {
   updated:"Federal A 2026 · 30/08/2026 · UniversoFútbol (top general)",
   link:"https://www.365scores.com/es/football/league/federal-a-5078/standings",
   zonas:[
     {name:"Top general (parcial)",teams:["Olimpo 43","San Martín (Fsa) 40","Sol de América 39","Douglas Haig 39","Alvarado 38","Sp. Belgrano 35","Gimnasia (Chivilcoy) 35","Def. Belgrano (VR) 34","Cipolletti 33","9 de Julio (Raf) 33"]},
     {name:"Referencia",teams:["Villa Mitre","Kimberley","FADEP","Atenas","San Martín (Mza)","Escobar","Sp. Las Parejas","Sarmiento (La Banda)"]},
-  ],
-};
+  ]};
 
 
 // Escudos SA: SOLO logos oficiales ESPN (si falla la imagen, se oculta — sin inventar escudos)
@@ -1146,9 +1112,7 @@ const SA_CRESTS = {
   "Dep. Riestra":"https://a.espncdn.com/i/teamlogos/soccer/500/17702.png",
   "Central Córdoba":"https://a.espncdn.com/i/teamlogos/soccer/500/11989.png",
   "Atl. Tucumán":"https://a.espncdn.com/i/teamlogos/soccer/500/9785.png",
-  "Barracas Central":"https://a.espncdn.com/i/teamlogos/soccer/500/10060.png",
-
-};
+  "Barracas Central":"https://a.espncdn.com/i/teamlogos/soccer/500/10060.png"};
 function saCrest(name){
   if(!name) return "";
   const n = String(name).trim();
@@ -1229,11 +1193,9 @@ const ARG_FECHAS = {
 };
 
 const SA_TODAY = [
-  {comp:"🇦🇷 Clausura", home:"Defensa y Justicia", away:"Platense", hs:1, as:0, status:"final", when:"FINAL", date:"2026-08-31", kickoff:"19:00", tv:["pack"], stadium:"Norberto Tomaghello", scorers:[{name:"Martínez",team:"home",min:"75"}]},
-  {comp:"🇦🇷 Clausura", home:"Estudiantes (LP)", away:"Newell's Old Boys", hs:0, as:0, status:"final", when:"FINAL", date:"2026-08-31", kickoff:"19:00", tv:["espn"], stadium:"Jorge Luis Hirschi"},
-  {comp:"🇦🇷 Clausura", home:"Tigre", away:"Barracas Central", hs:0, as:0, status:"live", when:"21:15", date:"2026-08-31", kickoff:"21:15", tv:["pack"], stadium:"José Dellagiovanna"},
-  {comp:"🇦🇷 Clausura", home:"Instituto", away:"San Lorenzo", hs:0, as:0, status:"live", when:"21:15", date:"2026-08-31", kickoff:"21:15", tv:["espn"], stadium:"Monumental de Alta Córdoba"},
+  // 1/09/2026: sin partidos de Liga Profesional (cierre F7 anoche). Fecha 8 desde el 4/09.
 ];
+
 
 
 
@@ -1490,7 +1452,7 @@ const CREST_URLS = {
   SCH:"https://media.api-sports.io/football/teams/161.png",
   PAD:"https://media.api-sports.io/football/teams/185.png",
   SVE:"https://media.api-sports.io/football/teams/183.png",
-  // Ligue 1
+  // 
   PSG:"https://media.api-sports.io/football/teams/85.png",
   OLM:"https://media.api-sports.io/football/teams/81.png",
   OL:"https://media.api-sports.io/football/teams/80.png",
@@ -1509,8 +1471,7 @@ const CREST_URLS = {
   LMS:"https://tmssl.akamaized.net/images/wappen/big/1081.png",
   LEM:"https://tmssl.akamaized.net/images/wappen/big/1081.png",
   EST:"https://media.api-sports.io/football/teams/110.png",
-  PAR:"https://media.api-sports.io/football/teams/114.png",
-};
+  PAR:"https://media.api-sports.io/football/teams/114.png"};
 
 // Ficha del club (estilo Promiedos): apodo, fundación, estadio, ciudad
 const TEAM_INFO = {
@@ -1604,12 +1565,11 @@ const TEAM_INFO = {
   AUX:{apodo:"L'AJA",fundacion:"1905",estadio:"Stade de l'Abbé-Deschamps",ciudad:"Auxerre"},
   ANG:{apodo:"Les Scoïstes",fundacion:"1919",estadio:"Stade Raymond-Kopa",ciudad:"Angers"},
   HAC:{apodo:"Le Club doyen",fundacion:"1872",estadio:"Stade Océane",ciudad:"Le Havre"},
-  FCL:{apodo:"Les Merlus",fundacion:"1926",estadio:"Stade du Moustoir",ciudad:"Lorient"},
-};
+  FCL:{apodo:"Les Merlus",fundacion:"1926",estadio:"Stade du Moustoir",ciudad:"Lorient"}};
 
 function crestUrlFor(lg, abbr){
-  // PAR se usa en Serie A (Parma) y Ligue 1 (Paris FC)
-  if(abbr==="PAR" && lg && lg.name==="Ligue 1") return "https://media.api-sports.io/football/teams/114.png";
+  // PAR se usa en Serie A (Parma) y  (Paris FC)
+  if(abbr==="PAR" && lg && lg.name==="") return "https://media.api-sports.io/football/teams/114.png";
   if(abbr==="PAR" && lg && lg.name==="Serie A") return "https://media.api-sports.io/football/teams/523.png";
   // Le Mans: nunca usar MAN/130 (era escudo incorrecto)
   if(abbr==="LMS" || abbr==="LEM" || abbr==="MAN"){
@@ -1635,14 +1595,14 @@ function crestFallback(img,style,abbr){
 /* =========================================================
    RENDER
    ========================================================= */
-const leagueKeys = ["epl","la_liga","serie_a","bundesliga","ligue_1","ucl"];
-const leagueColors = {epl:"#37003C",la_liga:"#EE8707",serie_a:"#0068A8",bundesliga:"#D3010C",ligue_1:"#DAE036",ucl:"#1A2B5C"};
+const leagueKeys = ["epl","la_liga","serie_a","bundesliga","ucl"];
+const leagueColors = {epl:"#37003C",la_liga:"#EE8707",serie_a:"#0068A8",bundesliga:"#D3010C",ucl:"#1A2B5C"};
 let activeLeague = "epl";
 let mainSection = "today"; // today | arg | uy | sa | europa | career
 
 
 function goSection(key){
-  const euro = ["epl","la_liga","serie_a","bundesliga","ligue_1","ucl"];
+  const euro = ["epl","la_liga","serie_a","bundesliga","ucl"];
   if(euro.includes(key)){ mainSection="europa"; activeLeague=key; }
   else { mainSection=key; }
   try{ dismissNavGuide(true); }catch(e){}
@@ -1677,7 +1637,7 @@ function initTabs(){
     {key:"la_liga",label:"🇪🇸 La Liga",type:"euro"},
     {key:"serie_a",label:"🇮🇹 Serie A",type:"euro"},
     {key:"bundesliga",label:"🇩🇪 Bundesliga",type:"euro"},
-    {key:"ligue_1",label:"🇫🇷 Ligue 1",type:"euro"},
+    
     {key:"ucl",label:"⭐ Champions",type:"euro"},
     {key:"otros",label:"🏅 Otros deportes",type:"section"},
     {key:"tools",label:"🧰 Más",type:"section"},
@@ -1688,7 +1648,7 @@ function initTabs(){
     b.className="tab"+(it.key==="today"?" active":"");
     b.style.animation=`riseIn .4s ease ${i*0.04}s both`;
     const dot = it.type==="euro" ? `<span class="dot" style="background:${leagueColors[it.key]||"#888"}"></span>` : "";
-    const tips={today:"Partidos de hoy",arg:"Liga argentina y tablas",uy:"Uruguay",sa:"Libertadores y Sudamericana",epl:"Premier League",la_liga:"La Liga España",serie_a:"Serie A",bundesliga:"Bundesliga",ligue_1:"Ligue 1",ucl:"Champions League",udl:"Unión Deportiva de Ligas · Entre Ríos",otros:"Otros deportes solo Argentina",tools:"Más herramientas",career:"Modo carrera"};
+    const tips={today:"Partidos de hoy",arg:"Liga argentina y tablas",uy:"Uruguay",sa:"Libertadores y Sudamericana",epl:"Premier League",la_liga:"La Liga España",serie_a:"Serie A",bundesliga:"Bundesliga",ucl:"Champions League",udl:"Unión Deportiva de Ligas · Entre Ríos",otros:"Otros deportes solo Argentina",tools:"Más herramientas",career:"Modo carrera"};
     b.title = tips[it.key]||it.label;
     b.innerHTML = dot + it.label;
     b.onclick=()=>{
@@ -1768,8 +1728,7 @@ const TV_CH = {
   disney:{name:"Disney+",short:"Disney+",color:"#113CCF",letter:"▶"},
   espn:{name:"ESPN",short:"ESPN",color:"#D00",letter:"E"},
   pack:{name:"Pack Fútbol",short:"Pack",color:"#1B7A4E",letter:"⚽"},
-  flow:{name:"Flow",short:"Flow",color:"#E6007A",letter:"F"},
-};
+  flow:{name:"Flow",short:"Flow",color:"#E6007A",letter:"F"}};
 function tvChipHTML(keys){
   if(!keys||!keys.length) return "";
   return `<div class="tv-row">${keys.map(k=>{
@@ -1888,7 +1847,7 @@ function loadFavs(){
 
 function matchCard(m,lg,i,leagueKey){
   const lk = leagueKey || activeLeague;
-  const slugMap = {epl:"eng.1",la_liga:"esp.1",serie_a:"ita.1",bundesliga:"ger.1",ligue_1:"fra.1",ucl:"uefa.champions"};
+  const slugMap = {epl:"eng.1",la_liga:"esp.1",serie_a:"ita.1",bundesliga:"ger.1",ucl:"uefa.champions"};
   const slug = slugMap[lk] || "eng.1";
   const eid = m.espnId || (String(m.id||"").startsWith("espn:")?String(m.id).slice(5):"");
   const payload = encodeURIComponent(JSON.stringify({
@@ -2418,8 +2377,7 @@ const TSDB_SEARCH = {
   "Central Córdoba (SdE)":"Central Cordoba","Dep. Riestra":"Deportivo Riestra",
   "Atl. Tucumán":"Atletico Tucuman","Atlético Tucumán":"Atletico Tucuman",
   "Boca":"Boca Juniors","Racing":"Racing Club","Unión":"Union de Santa Fe",
-  "Vélez":"Velez Sarsfield","Talleres":"Talleres de Cordoba","Instituto":"Instituto",
-};
+  "Vélez":"Velez Sarsfield","Talleres":"Talleres de Cordoba","Instituto":"Instituto"};
 
 
 function posOrder(p){
@@ -2962,8 +2920,7 @@ const TM_CLUB_IDS = {
   "Arsenal (Sarandi)":"1152","Arsenal de Sarandi":"1152","Arsenal FC":"11","Arsenal (ENG)":"11","Man United":"985","Man City":"281","Liverpool":"31","Chelsea":"631",
   "Tottenham":"148","Barcelona":"131","Real Madrid":"418","Atlético Madrid":"13",
   "Bayern Múnich":"27","B. Dortmund":"16","Inter":"46","AC Milan":"5","Juventus":"506",
-  "Napoli":"6195","PSG":"583","Marsella":"244","Lyon":"1041",
-};
+  "Napoli":"6195","PSG":"583","Marsella":"244","Lyon":"1041"};
 
 async function tmFetch(path){
   const url = TM_API + path;
@@ -3099,7 +3056,6 @@ const ESPN_LEAGUES = {
   la_liga: "esp.1",
   serie_a: "ita.1",
   bundesliga: "ger.1",
-  ligue_1: "fra.1",
   ucl: "uefa.champions",
 };
 // 10+ endpoints ESPN públicos (sin key) que alimentan toda la web al tocar Actualizar
@@ -3107,17 +3063,14 @@ const ESPN_ALL_APIS = {
   epl: "eng.1",
   la_liga: "esp.1",
   serie_a: "ita.1",
-  bundesliga: "ger.1",
-  ligue_1: "fra.1",
-  arg: "arg.1",
+  bundesliga: "ger.1",arg: "arg.1",
   ucl: "uefa.champions",
   uel: "uefa.europa",
   libertadores: "conmebol.libertadores",
   sudamericana: "conmebol.sudamericana",
   mls: "usa.1",
   eredivisie: "ned.1",
-  primeira: "por.1",
-};
+  primeira: "por.1"};
 const ESPN_ARG = "arg.1";
 
 function espnDateStr(d){
@@ -3182,8 +3135,7 @@ function abbrFromEspnTeam(team, leagueKey){
     "FIO":"FIO","TOR":"TOR","BOL":"BFC","GEN":"GEN","UDI":"UDI","CAG":"CAG","SAS":"SAS",
     "BAY":"BMU","BVB":"BVB","DOR":"BVB","RBL":"RBL","B04":"B04","SGE":"SGE","VFB":"VFB",
     "BMG":"BMG","SCF":"SCF","SVW":"SVW","FCU":"UNI","KOE":"KOE","TSG":"TSG","M05":"M05",
-    "PSG":"PSG","OL":"OL","OM":"OLM","ASM":"ASM","LIL":"LIL","RCL":"RCL","REN":"REN","NIC":"NIC",
-  };
+    "PSG":"PSG","OL":"OL","OM":"OLM","ASM":"ASM","LIL":"LIL","RCL":"RCL","REN":"REN","NIC":"NIC"};
   if(map[a]) return map[a];
   if(map[short]) return map[short];
   // Match por nombre completo contra EURO.names
@@ -3988,8 +3940,7 @@ const ROLES_META = {
         winDelta:{continuidad:8},loseDelta:{continuidad:-3},winTxt:"La clavaste, el plantel salió con otra confianza.",loseTxt:"La erraste feo, medio incómodo el momento."},
       {title:"Duelo mental antes del clásico ante {rival}",desc:"El técnico rival te reta a un Ta-Te-Ti en la previa, como para picantear la semana.",game:"tictactoe",
         winDelta:{continuidad:6},loseDelta:{continuidad:-2},winTxt:"Le ganaste y la prensa lo usó para meterle presión a él.",loseTxt:"Perdiste y los memes te tocaron a vos toda la semana."},
-    ]},
-};
+    ]}};
 
 function shuffleArr(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function randInt(a,b){return Math.floor(a+Math.random()*(b-a+1));}
@@ -4909,7 +4860,7 @@ function compsForCareer(c){
     }catch(e){}
     if(euClubs.includes(c.club.name)){
       return {
-        nacional: leagueName.includes("Premier")?"Premier League": leagueName.includes("La Liga")?"La Liga": leagueName.includes("Serie")?"Serie A": leagueName.includes("Bundes")?"Bundesliga": leagueName.includes("Ligue")?"Ligue 1":"Liga nacional",
+        nacional: leagueName.includes("Premier")?"Premier League": leagueName.includes("La Liga")?"La Liga": leagueName.includes("Serie")?"Serie A": leagueName.includes("Bundes")?"Bundesliga": leagueName.includes("Ligue")?"":"Liga nacional",
         copa: leagueName.includes("Premier")?"FA Cup": leagueName.includes("La Liga")?"Copa del Rey": leagueName.includes("Serie")?"Coppa Italia": leagueName.includes("Bundes")?"DFB-Pokal": leagueName.includes("Ligue")?"Coupe de France":"Copa nacional",
         continental: "Champions League",
         continentalB: "Europa League",
