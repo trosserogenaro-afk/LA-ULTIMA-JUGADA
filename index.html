@@ -85,7 +85,8 @@
     opacity:0;animation:riseIn .5s ease .22s forwards;
   }
 
-  .status-pill.live{background:rgba(255,59,48,.22);color:#ff6b6b;border:1px solid rgba(255,59,48,.45);font-weight:800;letter-spacing:.04em;animation:livePulse 1.4s ease infinite;}
+  .live-minute{display:block;font-size:11px;font-weight:700;color:#ff6b6b;letter-spacing:.04em;margin-bottom:2px;}
+.status-pill.live{background:rgba(255,59,48,.22);color:#ff6b6b;border:1px solid rgba(255,59,48,.45);font-weight:800;letter-spacing:.04em;animation:livePulse 1.4s ease infinite;}
   @keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(255,59,48,.35)}50%{box-shadow:0 0 0 6px rgba(255,59,48,0)}}
   .match.live-match{border-color:rgba(255,59,48,.35);background:linear-gradient(90deg,rgba(255,59,48,.08),transparent 40%);}
   .ads-slot{margin:12px 14px;padding:14px;border:1px dashed var(--line-soft);border-radius:12px;text-align:center;color:var(--dim2);font-size:11px;background:rgba(0,0,0,.15);}
@@ -1230,9 +1231,11 @@ const ARG_FECHAS = {
 const SA_TODAY = [
   {comp:"🇦🇷 Clausura", home:"Defensa y Justicia", away:"Platense", hs:1, as:0, status:"final", when:"FINAL", date:"2026-08-31", tv:["pack"], stadium:"Norberto Tomaghello", scorers:[{name:"Martínez",team:"home",min:"75"}]},
   {comp:"🇦🇷 Clausura", home:"Estudiantes (LP)", away:"Newell's Old Boys", hs:0, as:0, status:"final", when:"FINAL", date:"2026-08-31", tv:["espn"], stadium:"Jorge Luis Hirschi"},
-  {comp:"🇦🇷 Clausura", home:"Tigre", away:"Barracas Central", hs:null, as:null, status:"sched", when:"21:15", date:"2026-08-31", tv:["pack"], stadium:"José Dellagiovanna"},
-  {comp:"🇦🇷 Clausura", home:"Instituto", away:"San Lorenzo", hs:null, as:null, status:"sched", when:"21:15", date:"2026-08-31", tv:["espn"], stadium:"Monumental de Alta Córdoba"},
+  {comp:"🇦🇷 Clausura", home:"Tigre", away:"Barracas Central", hs:0, as:0, status:"live", when:"EN VIVO", date:"2026-08-31", minute:"75'", tv:["pack"], stadium:"José Dellagiovanna"},
+  {comp:"🇦🇷 Clausura", home:"Instituto", away:"San Lorenzo", hs:0, as:0, status:"live", when:"EN VIVO", date:"2026-08-31", minute:"75'", tv:["espn"], stadium:"Monumental de Alta Córdoba"},
 ];
+
+
 
 
 
@@ -1783,9 +1786,15 @@ function guessTV(m,comp){
 }
 
 function statusPill(m){
-  if(m.status==="live") return `<span class="status-pill live"><span class="live-dot" style="display:inline-block;position:relative;"></span>EN VIVO</span>`;
+  if(m.status==="live"){
+    let min = m.minute || m.clock || "";
+    if(!min && m.when){ const mm=String(m.when).match(/(\d{1,3})\s*'|(\d{1,3})\s*min/i); if(mm) min=(mm[1]||mm[2])+"'"; }
+    const minHtml = min ? `<span class="live-minute">${min}</span>` : "";
+    return `${minHtml}<span class="status-pill live"><span class="live-dot" style="display:inline-block;position:relative;"></span>EN VIVO</span>`;
+  }
   if(m.status==="final") return `<span class="status-pill final">FINAL</span>`;
-  return `<span class="status-pill sched">${m.when.split(",")[0]}</span>`;
+  const w = (m.when||"").split(",")[0];
+  return `<span class="status-pill sched">${w}</span>`;
 }
 function shareBtnHTML(home, away, score, comp){
   const sc = score || "vs";
@@ -1922,6 +1931,13 @@ function filterHoyList(list){
     const w = String(m.when||"").toLowerCase();
     if(/^lun\b|^lunes|mañana/.test(w)) return false;
     if(m.date && typeof TODAY_DATE!=="undefined" && m.date!==TODAY_DATE && m.status!=="live") return false;
+    // blacklist cruces de jornadas anteriores que ESPN reinyecta
+    const k = (typeof pairKey==="function") ? pairKey(m.home,m.away) : "";
+    if(k && (k.includes("racing") && k.includes("rivadavia") || k==="indrivadavia|racing" || k==="racing|indrivadavia")){
+      if(m.date && m.date!==TODAY_DATE) return false;
+      // en 31/08 no debe aparecer
+      if(TODAY_DATE==="2026-08-31") return false;
+    }
     return true;
   });
 }
@@ -1961,6 +1977,42 @@ function isHoyWhen(m){
   if(/^lun\b|^lunes|mañana|tomorrow/i.test(w)) return false;
   if(m.date && m.date !== TODAY_DATE && m.status!=="live") return false;
   return true;
+}
+
+
+function promotePastKickoff(){
+  try{
+    const now = new Date();
+    const list = (typeof SA_TODAY!=="undefined" && SA_TODAY) ? SA_TODAY : [];
+    list.forEach(function(m){
+      if(!m || (m.status!=="sched" && m.status!=="live")) return;
+      const w = String(m.when||"");
+      const hm = w.match(/(\d{1,2}):(\d{2})/);
+      if(!hm) return;
+      const date = m.date || (typeof TODAY_DATE!=="undefined" ? TODAY_DATE : "");
+      if(!date) return;
+      const iso = date + "T" + String(hm[1]).padStart(2,"0") + ":" + hm[2] + ":00-03:00";
+      const kick = new Date(iso);
+      if(isNaN(kick.getTime())) return;
+      const diff = (now - kick) / 60000;
+      if(diff < 3) return;
+      if(diff >= 3 && diff < 125){
+        if(m.status==="sched"){
+          m.status = "live";
+          if(m.hs==null) m.hs = 0;
+          if(m.as==null) m.as = 0;
+        }
+        if(!m.minute || m.status==="live"){
+          var min = Math.min(90, Math.max(1, Math.floor(diff)));
+          if(diff > 45 && diff < 60) m.minute = "ET";
+          else m.minute = min + "'";
+        }
+      } else if(diff >= 125 && m.status!=="final"){
+        // posible final si pasó mucho; no forzar resultado inventado
+        if(m.hs!=null && m.as!=null){ m.status="final"; m.when="FINAL"; m.minute=""; }
+      }
+    });
+  }catch(e){}
 }
 
 function renderToday(){
@@ -2737,12 +2789,16 @@ async function openMatchDetail(opts){
 
 
 function saMatchCard(m, i){
-  const score = (m.status==="sched"||m.hs===null||m.hs===undefined)
+  const hasScore = m.hs!==null && m.hs!==undefined && m.as!==null && m.as!==undefined;
+  const score = (m.status==="sched" && !hasScore)
     ? `<div class="kickoff">${(/scheduled/i.test(m.when||'')?'Programado':(m.when||'Programado'))}</div>`
-    : `<div class="score">${m.hs}<span class="dash">–</span>${m.as}</div>`;
+    : `<div class="score">${m.hs??0}<span class="dash">–</span>${m.as??0}</div>`;
   let stLabel = m.when || "Programado";
   if(/scheduled/i.test(stLabel)) stLabel = "Programado";
-  const pill = m.status==="live" ? `<span class="status-pill live">EN VIVO</span>`
+  let liveMin = m.minute || m.clock || "";
+  if(!liveMin && m.status==="live" && m.when){ const mm=String(m.when).match(/(\d{1,3})\s*'/); if(mm) liveMin=mm[1]+"'"; }
+  const pill = m.status==="live"
+    ? `${liveMin?`<span class="live-minute">${liveMin}</span>`:""}<span class="status-pill live">EN VIVO</span>`
     : m.status==="final" ? `<span class="status-pill final">FINAL</span>`
     : `<span class="status-pill sched">${stLabel}</span>`;
   const eid = m.espnId || m.eventId || "";
@@ -3041,10 +3097,41 @@ function espnDateStr(d){
   return `${y}${m}${day}`;
 }
 
+function extractEspnClock(ev){
+  try{
+    const st = (ev.status && ev.status.type) || {};
+    // 1) displayClock ESPN: "67:00" / "45:00" / "90:00"
+    const dc = (ev.status && ev.status.displayClock) ? String(ev.status.displayClock).trim() : "";
+    if(dc){
+      const m = dc.match(/^(\d{1,3})(?::(\d{2}))?/);
+      if(m) return m[1] + "'";
+    }
+    let clock = String(st.detail || st.shortDetail || st.description || "");
+    if(/half.?time|entretiempo|\bHT\b|medio.?tiempo/i.test(clock)) return "ET";
+    // "2nd Half - 67'" / "67'" / "45'+2"
+    let m = clock.match(/(\d{1,3})\s*'\s*\+\s*(\d{1,2})/);
+    if(m) return m[1] + "'+" + m[2];
+    m = clock.match(/(\d{1,3})\s*'/);
+    if(m) return m[1] + "'";
+    m = clock.match(/\b(\d{1,3})\s*min/i);
+    if(m) return m[1] + "'";
+  }catch(e){}
+  return "";
+}
 function mapEspnStatus(ev){
   const st = (ev.status && ev.status.type) || {};
-  if(st.state==="in" || st.name==="STATUS_IN_PROGRESS" || st.name==="STATUS_HALFTIME") return "live";
-  if(st.completed || st.state==="post" || st.name==="STATUS_FULL_TIME" || st.name==="STATUS_FINAL") return "final";
+  const name = String(st.name||"");
+  const state = String(st.state||"");
+  const desc = String(st.description||st.detail||st.shortDetail||"");
+  if(st.completed || state==="post" || /STATUS_FULL_TIME|STATUS_FINAL|STATUS_FINAL_PEN/i.test(name) || /final|full.?time|terminado|ended/i.test(desc)) return "final";
+  if(state==="in" || /STATUS_IN_PROGRESS|STATUS_HALFTIME|STATUS_FIRST_HALF|STATUS_SECOND_HALF|STATUS_END_PERIOD/i.test(name)
+     || /in progress|half.?time|1st half|2nd half|en vivo|primer tiempo|segundo tiempo|entretiempo/i.test(desc))
+    return "live";
+  // displayClock con minutos => en vivo
+  try{
+    const dc = (ev.status && ev.status.displayClock) ? String(ev.status.displayClock) : "";
+    if(dc && /\d/.test(dc) && state!=="pre" && !/sched|not.?started/i.test(name)) return "live";
+  }catch(e){}
   return "sched";
 }
 
@@ -3141,9 +3228,11 @@ function applyEspnEventsToEuro(leagueKey, data){
       m.hs = status==="sched" ? m.hs : hs;
       m.as = status==="sched" ? m.as : as;
       if(status!=="sched") { m.hs = hs; m.as = as; }
-      m.status = status;
+      if(!(status==="sched" && m.status==="live")) m.status = status;
       if(when) m.when = when;
       if(date) m.date = date;
+      if(m.status==="live" || status==="live"){ const clk=extractEspnClock(ev); if(clk) m.minute=clk; else if(when){ const mm=String(when).match(/(\d{1,3})\s*'/); if(mm) m.minute=mm[1]+"'"; } }
+      else m.minute = "";
       m.espnId = ev.id;
       if(scorers.length) m.scorers = scorers;
       n++;
@@ -3197,10 +3286,9 @@ function applyEspnArgToSA(data){
     const teams = comps.competitors || [];
     if(teams.length<2) return;
     const date = (ev.date||"").slice(0,10);
-    // Solo partidos de HOY (o en vivo) en el apartado Hoy
     if(date && date !== TODAY_DATE){
       const st0 = mapEspnStatus(ev);
-      if(st0 !== "live") return;
+      if(st0 !== "live") return; // nunca partidos de otro día
     }
     const home = teams.find(c=>c.homeAway==="home") || teams[0];
     const away = teams.find(c=>c.homeAway==="away") || teams[1];
@@ -3213,30 +3301,43 @@ function applyEspnArgToSA(data){
     const aName = (away.team && (away.team.shortDisplayName || away.team.displayName)) || "Visitante";
     const scorers = extractEspnScorers(ev);
     const nk = pairKey(hName, aName);
-    if(!nk || nk==="|" ) return;
+    if(!nk || nk==="|") return;
+    // SOLO actualizar partidos ya listados en SA_TODAY — no agregar nuevos (evita Racing de ayer, etc.)
     const i = SA_TODAY.findIndex(m => pairKey(m.home, m.away) === nk);
-    if(i >= 0){
-      const m = SA_TODAY[i];
-      if(status !== "sched"){ m.hs = hs; m.as = as; }
-      m.status = status;
-      // preferir horario tipo 19:15 sobre "Programado"
-      if(when && (/^\d{1,2}:\d{2}/.test(when) || !m.when || /programado|scheduled/i.test(String(m.when)))) m.when = when;
-      if(ev.id) m.espnId = ev.id;
-      if(scorers && scorers.length) m.scorers = scorers;
-      // NO cambiar home/away si ya tenemos nombre corto bueno
+    if(i < 0) return;
+    const m = SA_TODAY[i];
+    // No degradar EN VIVO -> Programado (ESPN a veces manda pre por error)
+    if(status==="sched" && m.status==="live"){
+      // mantener live; solo refrescar minuto si viene
+      const clk0 = extractEspnClock(ev);
+      if(clk0) m.minute = clk0;
+      if(hs!=null) m.hs = hs;
+      if(as!=null) m.as = as;
       n++;
-    } else {
-      // Solo AGREGAR si es de HOY (nunca partidos de ayer)
-      if(date && date !== TODAY_DATE && status !== "live") return;
-      SA_TODAY.push({
-        comp:"🇦🇷 Clausura", home: hName, away: aName,
-        hs: status==="sched" ? null : hs, as: status==="sched" ? null : as,
-        status, when, date: date||TODAY_DATE, espnId: ev.id, scorers: scorers.length?scorers:undefined
-      });
-      n++;
+      return;
     }
+    if(status !== "sched"){ m.hs = hs; m.as = as; }
+    else if(hs!=null && as!=null && (hs>0 || as>0)){ // hay goles => no puede ser sched
+      m.hs = hs; m.as = as; m.status = "live";
+    } else {
+      m.status = status;
+    }
+    if(status==="live" || status==="final") m.status = status;
+    if(when && (/^\d{1,2}:\d{2}/.test(when) || !m.when || /programado|scheduled/i.test(String(m.when)))) m.when = when;
+    if(status==="final") m.when = "FINAL";
+    if(status==="live" && when && !/programado|scheduled/i.test(when)) m.when = when;
+    if(ev.id) m.espnId = ev.id;
+    if(scorers && scorers.length) m.scorers = scorers;
+    m.date = TODAY_DATE;
+    const clk = extractEspnClock(ev);
+    if(clk) m.minute = clk;
+    else if(status==="live" && when){
+      const mm = String(when).match(/(\d{1,3})\s*'/);
+      if(mm) m.minute = mm[1]+"'";
+    } else if(status!=="live") m.minute = "";
+    n++;
   });
-  // Dedupe final: una sola tarjeta por pairKey (prioriza final/live)
+  // Dedupe duro
   try{
     const map = new Map();
     (SA_TODAY||[]).forEach(m=>{
@@ -3244,7 +3345,7 @@ function applyEspnArgToSA(data){
       if(!k||k==="|") return;
       if(m.date && m.date !== TODAY_DATE && m.status!=="live") return;
       const prev = map.get(k);
-      const sc = x => (x.status==="live"?10:x.status==="final"?8:1)+(x.hs!=null?3:0)+(x.scorers&&x.scorers.length?1:0);
+      const sc = x => (x.status==="live"?10:x.status==="final"?8:1)+(x.hs!=null?3:0);
       if(!prev || sc(m)>sc(prev)) map.set(k,m);
     });
     SA_TODAY.length = 0;
@@ -3253,6 +3354,7 @@ function applyEspnArgToSA(data){
   try{ scrubMexicanFromToday(); }catch(e){}
   return n;
 }
+
 function pairKey(a,b){
   const n = (s)=>{
     let t = String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
