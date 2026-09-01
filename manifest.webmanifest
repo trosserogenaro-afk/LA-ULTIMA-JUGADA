@@ -1,0 +1,25 @@
+{
+  "name": "La Última Jugada",
+  "short_name": "La Última Jugada",
+  "description": "Resultados, tablas y fútbol en vivo — Argentina, Sudamérica y Europa",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0A0F0D",
+  "theme_color": "#0A0F0D",
+  "orientation": "portrait-primary",
+  "lang": "es-AR",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
