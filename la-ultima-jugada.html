@@ -1979,7 +1979,21 @@ function renderToday(){
   leagueKeys.forEach(k=>{
     const lg=EURO[k];
     if(!lg) return;
-    const todays = (lg.matches||[]).filter(m=>m.date===TODAY_DATE);
+    let todays = (lg.matches||[]).filter(m=>m.date===TODAY_DATE || m.status==="live");
+    // Uniq dentro de la liga por pairKey de nombres resueltos
+    const seenLg = new Map();
+    todays.forEach(m=>{
+      const hn = (lg.names && lg.names[m.home]) || m.home || "";
+      const an = (lg.names && lg.names[m.away]) || m.away || "";
+      const nk = pairKey(hn, an);
+      if(!nk || nk==="|") return;
+      if(seenLg.has(nk)){
+        const prev = seenLg.get(nk);
+        const score = x => (x.status==="live"?4:x.status==="final"?3:1)+(x.hs!=null?1:0);
+        if(score(m) > score(prev)) seenLg.set(nk, m);
+      } else seenLg.set(nk, m);
+    });
+    todays = Array.from(seenLg.values());
     if(todays.length) groups.push({key:k,lg,matches:todays});
   });
   const favs = typeof loadFavs==="function" ? loadFavs() : [];
@@ -3216,6 +3230,15 @@ function applyEspnArgToSA(data){
 function pairKey(a,b){
   const n = (s)=>{
     let t = String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    // Aliases duros antes de normalizar (anti-dup ESPN)
+    if(/manchester\s*city|man\s*city|\bmancity\b/.test(t)) return "mancity";
+    if(/manchester\s*united|man\s*utd|man\s*united|\bmanu\b/.test(t)) return "manutd";
+    if(/crystal\s*palace|c\.?\s*palace/.test(t)) return "crystalpalace";
+    if(/real\s*madrid|\brma\b/.test(t)) return "realmadrid";
+    if(/atletico\s*madrid|atl[eé]tico\s*de\s*madrid|\batm\b/.test(t)) return "atleticomadrid";
+    if(/newell/.test(t)) return "newells";
+    if(/estudiantes/.test(t) && /rio\s*cuarto|rc\b/.test(t)) return "estudiantesrc";
+    if(/estudiantes/.test(t)) return "estudianteslp";
     // Guardar si era Mza antes de sacar parentesis (Gimnasia (M) / (Mza))
     const wasMza = /\(\s*m(za)?\s*\)|\bmendoza\b|\bmza\b/.test(t);
     const wasLP = /\(\s*lp\s*\)|\bla plata\b|\b\(lp\)/.test(t);
