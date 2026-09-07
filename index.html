@@ -658,7 +658,7 @@
   <div class="hero-top">
     <div>
       <img src="logo-luj.png" alt="La Última Jugada" style="height:72px;width:auto;max-width:220px;object-fit:contain;display:block;margin-bottom:4px;opacity:0;animation:riseIn .5s ease forwards;" onerror="this.src='la-ultima-jugada-logo.png'; this.onerror=null;">
-      <p class="hero-sub">Mar 1/09 · Sin partidos LPF hoy · Fecha 8 desde el jueves · Tablas post F7</p>
+      <p class="hero-sub">Dom 6/09 · Clásico Rosario · River–Rivadavia · Arsenal–Chelsea · Valencia–Barça</p>
     </div>
     <div class="hero-actions">
       <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Sonido en vivo">🔇</button>
@@ -765,12 +765,21 @@
    DATA — resultados y tablas reales tomados el 22/08/2026
    ========================================================= */
 
-const TODAY_DATE = "2026-09-01";
+const TODAY_DATE = "2026-09-07";
 const RESULTS_CUTOFF = "2026-08-18"; // últimos 5 días
 
 const EURO = {
 epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
   matches:[
+    {id:"epl906a",home:"EVE",away:"MUN",hs:null,as:null,status:"sched",when:"10:00",date:"2026-09-06"},
+    {id:"epl906b",home:"ARS",away:"CFC",hs:null,as:null,status:"sched",when:"12:30",date:"2026-09-06"},
+    {id:"epl905a",home:"NEW",away:"BOU",hs:null,as:null,status:"sched",when:"08:30",date:"2026-09-05"},
+    {id:"epl905b",home:"BRE",away:"SUN",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
+    {id:"epl905c",home:"BRI",away:"LEE",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
+    {id:"epl905d",home:"FUL",away:"CRY",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
+    {id:"epl905e",home:"MCI",away:"COV",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
+    {id:"epl905f",home:"NFO",away:"TOT",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
+    {id:"epl905g",home:"HUL",away:"AVL",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-05"},
     {id:"sr:sport_event:72221154",home:"ARS",away:"COV",hs:3,as:0,status:"final",when:"Vie 21, 16:00",date:"2026-08-21"},
     {id:"sr:sport_event:72221156",home:"HUL",away:"MUN",hs:2,as:0,status:"final",when:"Sáb 22, 08:30",date:"2026-08-22"},
     {id:"sr:sport_event:72221158",home:"EVE",away:"CRY",hs:2,as:0,status:"final",when:"Sáb 22, 11:00",date:"2026-08-22"},
@@ -795,13 +804,13 @@ epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
     ARS:"Arsenal",COV:"Coventry City",HUL:"Hull City",MUN:"Man United",BRE:"Brentford",TOT:"Tottenham",
     BRI:"Brighton",AVL:"Aston Villa",MCI:"Man City",BOU:"Bournemouth",NEW:"Newcastle",LFC:"Liverpool",FUL:"Fulham",CFC:"Chelsea"},
   standings:[
-    {r:1,t:"MCI",w:2,d:0,l:0,pts:6},{r:2,t:"HUL",w:2,d:0,l:0,pts:6},{r:3,t:"CFC",w:2,d:0,l:0,pts:6},
-    {r:4,t:"BRE",w:1,d:1,l:0,pts:4},{r:5,t:"NEW",w:1,d:1,l:0,pts:4},{r:6,t:"EVE",w:1,d:1,l:0,pts:4},
-    {r:7,t:"LEE",w:1,d:1,l:0,pts:4},{r:8,t:"BRI",w:1,d:0,l:1,pts:3},{r:9,t:"ARS",w:1,d:0,l:0,pts:3},
-    {r:10,t:"MUN",w:1,d:0,l:1,pts:3},{r:11,t:"SUN",w:1,d:0,l:1,pts:3},{r:12,t:"IPS",w:1,d:0,l:1,pts:3},
-    {r:13,t:"LFC",w:0,d:2,l:0,pts:2},{r:14,t:"BOU",w:0,d:1,l:1,pts:1},{r:15,t:"NFO",w:0,d:1,l:1,pts:1},
-    {r:16,t:"FUL",w:0,d:0,l:2,pts:0},{r:17,t:"AVL",w:0,d:0,l:1,pts:0},{r:18,t:"COV",w:0,d:0,l:2,pts:0},
-    {r:19,t:"CRY",w:0,d:0,l:2,pts:0},{r:20,t:"TOT",w:0,d:0,l:2,pts:0},
+    {r:1,t:"MCI",w:3,d:0,l:0,pts:9,gf:7,gc:2},{r:2,t:"ARS",w:3,d:0,l:0,pts:9,gf:6,gc:1},{r:3,t:"HUL",w:2,d:1,l:0,pts:7,gf:3,gc:0},
+    {r:4,t:"CFC",w:2,d:0,l:1,pts:6,gf:8,gc:7},{r:5,t:"BRE",w:1,d:2,l:0,pts:5,gf:5,gc:2},{r:6,t:"LFC",w:1,d:2,l:0,pts:5,gf:6,gc:4},
+    {r:7,t:"NEW",w:1,d:2,l:0,pts:5,gf:6,gc:4},{r:8,t:"EVE",w:1,d:2,l:0,pts:5,gf:5,gc:3},{r:9,t:"LEE",w:1,d:2,l:0,pts:5,gf:3,gc:2},
+    {r:10,t:"BRI",w:1,d:1,l:1,pts:4,gf:8,gc:5},{r:11,t:"MUN",w:1,d:1,l:1,pts:4,gf:7,gc:6},{r:12,t:"SUN",w:1,d:1,l:1,pts:4,gf:3,gc:3},
+    {r:13,t:"CRY",w:1,d:0,l:2,pts:3,gf:4,gc:8},{r:14,t:"IPS",w:1,d:0,l:2,pts:3,gf:4,gc:8},{r:15,t:"BOU",w:0,d:2,l:1,pts:2,gf:4,gc:5},
+    {r:16,t:"NFO",w:0,d:2,l:1,pts:2,gf:2,gc:3},{r:17,t:"AVL",w:0,d:1,l:2,pts:1,gf:0,gc:5},{r:18,t:"TOT",w:0,d:1,l:2,pts:1,gf:0,gc:5},
+    {r:19,t:"FUL",w:0,d:0,l:3,pts:0,gf:4,gc:7},{r:20,t:"COV",w:0,d:0,l:3,pts:0,gf:0,gc:5},
   ],
   names:{EVE:"Everton",CRY:"Crystal Palace",IPS:"Ipswich Town",SUN:"Sunderland",NFO:"Nott'm Forest",LEE:"Leeds United",
     ARS:"Arsenal",COV:"Coventry City",HUL:"Hull City",MUN:"Man United",BRE:"Brentford",TOT:"Tottenham",
@@ -809,6 +818,12 @@ epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
     FUL:"Fulham",BOU:"Bournemouth"}},
 la_liga: { name:"La Liga", accent:"#EE8707", country:"España",
   matches:[
+    {id:"lal906a",home:"VCF",away:"BAR",hs:null,as:null,status:"sched",when:"11:15",date:"2026-09-06"},
+    {id:"lal906b",home:"ALA",away:"OSA",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-06"},
+    {id:"lal906c",home:"ESP",away:"SEV",hs:null,as:null,status:"sched",when:"16:00",date:"2026-09-06"},
+    {id:"lal905a",home:"ATH",away:"ATM",hs:null,as:null,status:"sched",when:"11:15",date:"2026-09-05"},
+    {id:"lal905b",home:"RAY",away:"RAC",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-05"},
+    {id:"lal905c",home:"VIL",away:"DEP",hs:null,as:null,status:"sched",when:"16:00",date:"2026-09-05"},
     {id:"ll19",home:"RMA",away:"MCF",hs:4,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
     {id:"ll20",home:"DEP",away:"VCF",hs:3,as:1,status:"final",when:"FINAL",date:"2026-08-30"},
     {id:"ll21",home:"RCC",away:"ATH",hs:0,as:2,status:"final",when:"FINAL",date:"2026-08-30"},
@@ -821,18 +836,20 @@ la_liga: { name:"La Liga", accent:"#EE8707", country:"España",
     VIL:"Villarreal",ESP:"Espanyol",LEV:"Levante",DEP:"Deportivo La Coruña",ELC:"Elche",ATM:"Atlético Madrid",MCF:"Málaga",
     RBB:"Real Betis",RSO:"Real Sociedad",VCF:"Valencia",RCC:"Celta de Vigo",RMA:"Real Madrid",BAR:"Barcelona",OSA:"Osasuna"},
   standings:[
-    {r:1,t:"RMA",w:3,d:0,l:0,pts:9},{r:2,t:"BAR",w:3,d:0,l:0,pts:9},{r:3,t:"ATM",w:2,d:1,l:0,pts:7},
-    {r:4,t:"ALA",w:2,d:1,l:0,pts:7},{r:5,t:"OSA",w:2,d:1,l:0,pts:7},{r:6,t:"SEV",w:2,d:0,l:1,pts:6},
-    {r:7,t:"BET",w:2,d:0,l:1,pts:6},{r:8,t:"DEP",w:1,d:2,l:0,pts:5},{r:9,t:"LEV",w:1,d:1,l:1,pts:4},
-    {r:10,t:"RAC",w:1,d:1,l:1,pts:4},{r:11,t:"ESP",w:1,d:0,l:2,pts:3},{r:12,t:"ATH",w:1,d:0,l:2,pts:3},
-    {r:13,t:"RSO",w:1,d:0,l:2,pts:3},{r:14,t:"GET",w:1,d:0,l:2,pts:3},{r:15,t:"VIL",w:0,d:2,l:1,pts:2},
-    {r:16,t:"RAY",w:0,d:1,l:2,pts:1},{r:17,t:"CEL",w:0,d:1,l:2,pts:1},{r:18,t:"VCF",w:0,d:1,l:2,pts:1},
-    {r:19,t:"ELC",w:0,d:1,l:2,pts:1},{r:20,t:"MCF",w:0,d:1,l:2,pts:1},
+    {r:1,t:"BAR",w:4,d:0,l:0,pts:12,gf:17,gc:2},{r:2,t:"ALA",w:3,d:1,l:0,pts:10,gf:10,gc:3},{r:3,t:"RMA",w:3,d:0,l:1,pts:9,gf:10,gc:3},
+    {r:4,t:"BET",w:3,d:0,l:1,pts:9,gf:5,gc:5},{r:5,t:"DEP",w:2,d:2,l:0,pts:8,gf:8,gc:5},{r:6,t:"ATM",w:2,d:1,l:1,pts:7,gf:7,gc:6},
+    {r:7,t:"SEV",w:2,d:1,l:1,pts:7,gf:7,gc:6},{r:8,t:"OSA",w:2,d:1,l:1,pts:7,gf:5,gc:6},{r:9,t:"ATH",w:2,d:0,l:2,pts:6,gf:6,gc:5},
+    {r:10,t:"LEV",w:1,d:2,l:1,pts:5,gf:5,gc:5},{r:11,t:"ESP",w:1,d:1,l:2,pts:4,gf:6,gc:5},{r:12,t:"RAC",w:1,d:1,l:2,pts:4,gf:7,gc:8},
+    {r:13,t:"RAY",w:1,d:1,l:2,pts:4,gf:7,gc:10},{r:14,t:"RSO",w:1,d:1,l:2,pts:4,gf:3,gc:6},{r:15,t:"GET",w:1,d:0,l:2,pts:3,gf:1,gc:4},
+    {r:16,t:"VIL",w:0,d:2,l:2,pts:2,gf:6,gc:8},{r:17,t:"CEL",w:0,d:2,l:2,pts:2,gf:1,gc:4},{r:18,t:"MCF",w:0,d:2,l:2,pts:2,gf:1,gc:7},
+    {r:19,t:"ELC",w:0,d:1,l:2,pts:1,gf:3,gc:9},{r:20,t:"VCF",w:0,d:1,l:3,pts:1,gf:1,gc:9},
   ]
 },
 
 serie_a: { name:"Serie A", accent:"#0068A8", country:"Italia",
   matches:[
+    {id:"sa906a",home:"JUV",away:"MIL",hs:null,as:null,status:"sched",when:"15:45",date:"2026-09-06"},
+    {id:"sa906b",home:"BOL",away:"SAS",hs:null,as:null,status:"sched",when:"13:00",date:"2026-09-06"},
     {id:"sr:sport_event:71944898",home:"INT",away:"MON",hs:4,as:1,status:"final",when:"Sáb 22, 13:30",date:"2026-08-22"},
     {id:"sr:sport_event:71944906",home:"UDI",away:"COM",hs:1,as:1,status:"final",when:"Sáb 22, 13:30",date:"2026-08-22"},
     {id:"sr:sport_event:71944896",home:"GEN",away:"NAP",hs:0,as:2,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
@@ -852,30 +869,32 @@ serie_a: { name:"Serie A", accent:"#0068A8", country:"Italia",
     FRO:"Frosinone",JUV:"Juventus",VEN:"Venezia",LEC:"Lecce",ATA:"Atalanta",SAS:"Sassuolo",TOR:"Torino",ACM:"AC Milan",
     BFC:"Bologna",LAZ:"Lazio",ROM:"AS Roma",FIO:"Fiorentina"},
   standings:[
-    {r:1,t:"INT",w:2,d:0,l:0,pts:6},{r:2,t:"MIL",w:2,d:0,l:0,pts:6},{r:3,t:"JUV",w:2,d:0,l:0,pts:6},
-    {r:4,t:"LAZ",w:2,d:0,l:0,pts:6},{r:5,t:"UDI",w:1,d:1,l:0,pts:4},{r:6,t:"COM",w:1,d:1,l:0,pts:4},
-    {r:7,t:"ROM",w:1,d:0,l:0,pts:3},{r:8,t:"NAP",w:1,d:0,l:1,pts:3},{r:9,t:"ATA",w:1,d:0,l:0,pts:3},
-    {r:10,t:"SAS",w:1,d:0,l:1,pts:3},{r:11,t:"CAG",w:1,d:0,l:1,pts:3},{r:12,t:"FRO",w:1,d:0,l:1,pts:3},
-    {r:13,t:"LEC",w:1,d:0,l:0,pts:3},{r:14,t:"BOL",w:0,d:0,l:1,pts:0},{r:15,t:"GEN",w:0,d:0,l:2,pts:0},
-    {r:16,t:"TOR",w:0,d:0,l:2,pts:0},{r:17,t:"PAR",w:0,d:0,l:2,pts:0},{r:18,t:"MON",w:0,d:0,l:2,pts:0},
-    {r:19,t:"VEN",w:0,d:0,l:2,pts:0},{r:20,t:"FIO",w:0,d:0,l:2,pts:0},
+    {r:1,t:"ROM",w:3,d:0,l:0,pts:9,gf:10,gc:1},{r:2,t:"INT",w:3,d:0,l:0,pts:9,gf:8,gc:3},{r:3,t:"COM",w:2,d:1,l:0,pts:7,gf:7,gc:3},
+    {r:4,t:"MIL",w:2,d:1,l:0,pts:7,gf:5,gc:2},{r:5,t:"JUV",w:2,d:1,l:0,pts:7,gf:4,gc:1},{r:6,t:"FRO",w:2,d:0,l:1,pts:6,gf:6,gc:3},
+    {r:7,t:"LAZ",w:2,d:0,l:0,pts:6,gf:2,gc:0},{r:8,t:"ATA",w:2,d:0,l:1,pts:6,gf:4,gc:3},{r:9,t:"UDI",w:1,d:1,l:0,pts:4,gf:4,gc:3},
+    {r:10,t:"SAS",w:1,d:1,l:1,pts:4,gf:5,gc:5},{r:11,t:"NAP",w:1,d:0,l:2,pts:3,gf:5,gc:5},{r:12,t:"CAG",w:1,d:0,l:1,pts:3,gf:1,gc:1},
+    {r:13,t:"TOR",w:1,d:0,l:2,pts:3,gf:4,gc:5},{r:14,t:"LEC",w:1,d:0,l:1,pts:3,gf:2,gc:4},{r:15,t:"BOL",w:0,d:1,l:2,pts:1,gf:2,gc:4},
+    {r:16,t:"PAR",w:0,d:1,l:2,pts:1,gf:1,gc:4},{r:17,t:"MON",w:0,d:1,l:2,pts:1,gf:4,gc:8},{r:18,t:"VEN",w:0,d:0,l:3,pts:0,gf:2,gc:7},
+    {r:19,t:"GEN",w:0,d:0,l:3,pts:0,gf:1,gc:7},{r:20,t:"FIO",w:0,d:0,l:3,pts:0,gf:1,gc:9},
   ]
 },
 bundesliga: { name:"Bundesliga", accent:"#D3010C", country:"Alemania",
   matches:[
+    {id:"bl906a",home:"HSV",away:"M05",hs:null,as:null,status:"sched",when:"10:30",date:"2026-09-06"},
+    {id:"bl906b",home:"SGE",away:"FCA",hs:null,as:null,status:"sched",when:"12:30",date:"2026-09-06"},
     {id:"bl30a",home:"SCF",away:"SVW",hs:4,as:1,status:"final",when:"FINAL",date:"2026-08-30"},
     {id:"bl30b",home:"FCA",away:"SCH",hs:3,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
   ],
   names:{BMU:"Bayern Múnich",VFB:"Stuttgart",RBL:"RB Leipzig",BMG:"M'gladbach",M05:"Mainz",
     UNI:"Union Berlin",SGE:"E. Frankfurt",KOE:"Colonia",TSG:"Hoffenheim",LEV:"B. Leverkusen",
-    BVB:"B. Dortmund",HSV:"Hamburgo",SCF:"Freiburg",SVW:"W. Bremen",FCA:"Augsburgo",SCH:"Schalke 04"},
+    BVB:"B. Dortmund",HSV:"Hamburgo",SCF:"Freiburg",SVW:"W. Bremen",FCA:"Augsburgo",SCH:"Schalke 04",ELV:"Elversberg",PAD:"Paderborn"},
   standings:[
-    {r:1,t:"BMU",w:1,d:0,l:0,pts:3},{r:2,t:"FCA",w:1,d:0,l:0,pts:3},{r:3,t:"BVB",w:1,d:0,l:0,pts:3},
-    {r:4,t:"SVW",w:1,d:0,l:0,pts:3},{r:5,t:"SCF",w:1,d:0,l:0,pts:3},{r:6,t:"RBL",w:1,d:0,l:0,pts:3},
-    {r:7,t:"LEV",w:0,d:1,l:0,pts:1},{r:8,t:"SGE",w:0,d:1,l:0,pts:1},{r:9,t:"BMG",w:0,d:0,l:1,pts:0},
-    {r:10,t:"VFB",w:0,d:0,l:1,pts:0},{r:11,t:"UNI",w:0,d:0,l:1,pts:0},{r:12,t:"HSV",w:0,d:0,l:1,pts:0},
-    {r:13,t:"KOE",w:0,d:0,l:1,pts:0},{r:14,t:"TSG",w:0,d:0,l:1,pts:0},{r:15,t:"M05",w:0,d:0,l:1,pts:0},
-    {r:16,t:"SCH",w:0,d:0,l:1,pts:0},
+    {r:1,t:"FCA",w:2,d:0,l:0,pts:6,gf:7,gc:1},{r:2,t:"SCF",w:2,d:0,l:0,pts:6,gf:5,gc:1},{r:3,t:"BVB",w:2,d:0,l:0,pts:6,gf:5,gc:2},
+    {r:4,t:"ELV",w:2,d:0,l:0,pts:6,gf:7,gc:5},{r:5,t:"M05",w:1,d:1,l:0,pts:4,gf:5,gc:0},{r:6,t:"BMU",w:1,d:1,l:0,pts:4,gf:5,gc:1},
+    {r:7,t:"LEV",w:1,d:0,l:1,pts:3,gf:6,gc:3},{r:8,t:"RBL",w:1,d:0,l:1,pts:3,gf:4,gc:3},{r:9,t:"VFB",w:1,d:0,l:1,pts:3,gf:5,gc:6},
+    {r:10,t:"SVW",w:1,d:0,l:1,pts:3,gf:4,gc:5},{r:11,t:"KOE",w:1,d:0,l:1,pts:3,gf:4,gc:6},{r:12,t:"PAD",w:0,d:1,l:1,pts:1,gf:0,gc:1},
+    {r:13,t:"SGE",w:0,d:1,l:1,pts:1,gf:4,gc:7},{r:14,t:"SCH",w:0,d:1,l:1,pts:1,gf:0,gc:3},{r:15,t:"UNI",w:0,d:1,l:1,pts:1,gf:3,gc:7},
+    {r:16,t:"TSG",w:0,d:0,l:2,pts:0,gf:4,gc:6},{r:17,t:"BMG",w:0,d:0,l:2,pts:0,gf:3,gc:7},{r:18,t:"HSV",w:0,d:0,l:2,pts:0,gf:0,gc:7},
   ]
 },
 ucl: { name:"Champions League", accent:"#1A2B5C", country:"UEFA",
@@ -924,92 +943,43 @@ const URUGUAY = {
   ]
 };
 const ARGENTINA = {
-  updated:"Clausura · 1/09/2026 post F7 (incl. lunes) · TyC / SN",
+    updated:"Clausura · 7/09/2026 post fecha 8 (domingo) · pendientes Barracas-Argentinos y Unión-Instituto",
   link:"https://www.promiedos.com.ar/",
   zonaA:[
-    {t:"Gimnasia (Mza)",pj:7,pts:15,gf:12,gc:5},
-    {t:"Defensa y Justicia",pj:7,pts:14,gf:9,gc:8},
-    {t:"Vélez",pj:7,pts:13,gf:10,gc:6},
-    {t:"Instituto",pj:6,pts:13,gf:5,gc:2},
-    {t:"Newell's Old Boys",pj:7,pts:11,gf:8,gc:6},
+    {t:"Gimnasia (Mza)",pj:8,pts:16,gf:14,gc:7},
+    {t:"Vélez",pj:8,pts:16,gf:11,gc:6},
+    {t:"Instituto",pj:7,pts:16,gf:6,gc:2},
+    {t:"Defensa y Justicia",pj:8,pts:14,gf:9,gc:9},
+    {t:"Independiente",pj:8,pts:13,gf:7,gc:6},
+    {t:"Newell's Old Boys",pj:8,pts:12,gf:9,gc:7},
+    {t:"Boca",pj:8,pts:11,gf:9,gc:10},
     {t:"Unión",pj:7,pts:10,gf:12,gc:10},
-    {t:"Independiente",pj:7,pts:10,gf:6,gc:6},
-    {t:"Boca",pj:7,pts:10,gf:7,gc:8},
-    {t:"Platense",pj:7,pts:8,gf:7,gc:11},
-    {t:"Deportivo Riestra",pj:7,pts:8,gf:7,gc:6},
-    {t:"Estudiantes (LP)",pj:7,pts:7,gf:7,gc:7},
-    {t:"Lanús",pj:7,pts:7,gf:7,gc:8},
-    {t:"Central Córdoba (SdE)",pj:7,pts:7,gf:3,gc:5},
-    {t:"San Lorenzo",pj:6,pts:7,gf:2,gc:4},
-    {t:"Talleres",pj:7,pts:5,gf:8,gc:12},
+    {t:"Lanús",pj:8,pts:10,gf:8,gc:8},
+    {t:"San Lorenzo",pj:8,pts:10,gf:3,gc:5},
+    {t:"Deportivo Riestra",pj:8,pts:9,gf:8,gc:7},
+    {t:"Platense",pj:8,pts:9,gf:8,gc:12},
+    {t:"Estudiantes (LP)",pj:8,pts:7,gf:7,gc:8},
+    {t:"Central Córdoba (SdE)",pj:8,pts:7,gf:4,gc:8},
+    {t:"Talleres",pj:8,pts:5,gf:8,gc:13},
   ],
   zonaB:[
     {t:"Argentinos Juniors",pj:7,pts:16,gf:12,gc:7},
-    {t:"Sarmiento",pj:7,pts:12,gf:13,gc:12},
-    {t:"Gimnasia (LP)",pj:7,pts:12,gf:10,gc:11},
-    {t:"Belgrano",pj:7,pts:11,gf:7,gc:4},
-    {t:"Tigre",pj:6,pts:11,gf:6,gc:3},
-    {t:"Rosario Central",pj:7,pts:11,gf:8,gc:7},
-    {t:"Ind. Rivadavia",pj:7,pts:11,gf:8,gc:7},
-    {t:"Atlético Tucumán",pj:7,pts:10,gf:4,gc:2},
-    {t:"Huracán",pj:7,pts:9,gf:5,gc:5},
-    {t:"Barracas Central",pj:6,pts:9,gf:4,gc:5},
-    {t:"River Plate",pj:7,pts:7,gf:7,gc:8},
-    {t:"Banfield",pj:7,pts:7,gf:7,gc:10},
-    {t:"Estudiantes (RC)",pj:7,pts:6,gf:3,gc:7},
-    {t:"Racing",pj:7,pts:5,gf:6,gc:11},
-    {t:"Aldosivi",pj:7,pts:2,gf:5,gc:11},
-  ]
-};
-
-/* ---- Extras: anual, promedios, goleadores, transferencias ---- */
-const ARG_ANUAL = {
-  updated:"Tabla anual 2026 · 1/09/2026 post F7",
-  note:"Apertura + Clausura. Un descenso por el último de esta tabla.",
-  rows:[
-    {t:"Ind. Rivadavia",pj:23,pts:45},{t:"Argentinos Juniors",pj:23,pts:45},{t:"Vélez",pj:23,pts:41},
-    {t:"Boca",pj:23,pts:40},{t:"Rosario Central",pj:22,pts:39},{t:"Estudiantes (LP)",pj:23,pts:38},
-    {t:"Belgrano",pj:23,pts:37},{t:"River Plate",pj:23,pts:36},{t:"Gimnasia (LP)",pj:22,pts:35},
-    {t:"Independiente",pj:23,pts:34},{t:"Instituto",pj:22,pts:34},{t:"Gimnasia (Mza)",pj:23,pts:34},
-    {t:"Defensa y Justicia",pj:23,pts:33},{t:"Unión",pj:23,pts:31},{t:"Tigre",pj:22,pts:31},
-    {t:"Huracán",pj:23,pts:31},{t:"Lanús",pj:23,pts:31},{t:"Talleres",pj:23,pts:31},
-    {t:"Sarmiento",pj:23,pts:31},{t:"Barracas Central",pj:22,pts:30},{t:"San Lorenzo",pj:22,pts:29},
-    {t:"Racing",pj:23,pts:26},{t:"Newell's Old Boys",pj:23,pts:26},{t:"Banfield",pj:23,pts:25},
-    {t:"Atlético Tucumán",pj:23,pts:24},{t:"Platense",pj:23,pts:24},{t:"Central Córdoba (SdE)",pj:23,pts:23},
-    {t:"Deportivo Riestra",pj:23,pts:19},{t:"Estudiantes (RC)",pj:23,pts:11},{t:"Aldosivi",pj:23,pts:10},
-  ]
-};
-const ARG_PROMEDIOS = {
-  updated:"Promedios descenso · 1/09/2026",
-  note:"Promedio 2024+2025+2026. El último desciende por promedios; otro por tabla anual.",
-  rows:[
-    {t:"Boca",pj:96,pts:169,prom:1.760},{t:"Vélez",pj:96,pts:159,prom:1.656},{t:"River Plate",pj:96,pts:159,prom:1.656},
-    {t:"Argentinos Juniors",pj:96,pts:158,prom:1.646},{t:"Rosario Central",pj:95,pts:152,prom:1.600},
-    {t:"Racing",pj:96,pts:150,prom:1.563},{t:"Independiente",pj:96,pts:144,prom:1.500},
-    {t:"Estudiantes (LP)",pj:95,pts:143,prom:1.505},{t:"Lanús",pj:96,pts:141,prom:1.469},
-    {t:"Huracán",pj:96,pts:140,prom:1.458},{t:"Talleres",pj:96,pts:137,prom:1.427},
-    {t:"Ind. Rivadavia",pj:96,pts:134,prom:1.396},{t:"Gimnasia (Mza)",pj:23,pts:34,prom:1.478},
-    {t:"Barracas Central",pj:95,pts:128,prom:1.347},{t:"Unión",pj:96,pts:130,prom:1.354},
-    {t:"Defensa y Justicia",pj:95,pts:129,prom:1.358},{t:"San Lorenzo",pj:95,pts:125,prom:1.316},
-    {t:"Belgrano",pj:96,pts:123,prom:1.281},{t:"Gimnasia (LP)",pj:95,pts:124,prom:1.305},
-    {t:"Instituto",pj:95,pts:124,prom:1.305},{t:"Tigre",pj:95,pts:122,prom:1.284},
-    {t:"Deportivo Riestra",pj:96,pts:119,prom:1.240},{t:"Platense",pj:95,pts:117,prom:1.232},
-    {t:"Sarmiento",pj:96,pts:112,prom:1.167},{t:"Atlético Tucumán",pj:96,pts:110,prom:1.146},
-    {t:"Central Córdoba (SdE)",pj:96,pts:108,prom:1.125},{t:"Newell's Old Boys",pj:95,pts:107,prom:1.126},
-    {t:"Banfield",pj:96,pts:102,prom:1.063},{t:"Estudiantes (RC)",pj:23,pts:11,prom:0.478},
-    {t:"Aldosivi",pj:96,pts:43,prom:0.448},
-  ]
-};
-const PRIMERA_NACIONAL = {
-  updated:"Primera Nacional 2026 · 30/08/2026 · FutbolArgentino / Goal",
-  link:"https://www.promiedos.com.ar/league/primera-nacional",
-  zonaA:[
-    {t:"Ferro",pj:27,pts:53},{t:"Deportivo Morón",pj:27,pts:49},{t:"Colón",pj:27,pts:45},
-    {t:"Almirante Brown",pj:27,pts:44},{t:"Godoy Cruz",pj:27,pts:43},{t:"Deportivo Madryn",pj:27,pts:43},
-    {t:"Ciudad de Bolívar",pj:27,pts:38},{t:"Estudiantes (BA)",pj:27,pts:36},{t:"Racing (Cba)",pj:27,pts:35},
-    {t:"Los Andes",pj:25,pts:33},
+    {t:"Sarmiento",pj:8,pts:15,gf:15,gc:12},
+    {t:"Gimnasia (LP)",pj:8,pts:15,gf:12,gc:12},
+    {t:"Atlético Tucumán",pj:8,pts:13,gf:6,gc:3},
+    {t:"Belgrano",pj:8,pts:12,gf:8,gc:5},
+    {t:"Tigre",pj:8,pts:12,gf:7,gc:5},
+    {t:"Rosario Central",pj:8,pts:12,gf:9,gc:8},
+    {t:"Ind. Rivadavia",pj:8,pts:11,gf:9,gc:10},
+    {t:"River Plate",pj:8,pts:10,gf:10,gc:9},
+    {t:"Huracán",pj:8,pts:10,gf:6,gc:6},
+    {t:"Barracas Central",pj:7,pts:10,gf:4,gc:5},
+    {t:"Banfield",pj:8,pts:7,gf:8,gc:13},
+    {t:"Estudiantes (RC)",pj:8,pts:6,gf:3,gc:9},
+    {t:"Aldosivi",pj:8,pts:5,gf:8,gc:12},
+    {t:"Racing",pj:8,pts:5,gf:7,gc:13},
   ],
-  zonaB:[
+zonaB:[
     {t:"Tristán Suárez",pj:26,pts:48},{t:"Temperley",pj:27,pts:46},{t:"Gimnasia (Jujuy)",pj:26,pts:45},
     {t:"Atlanta",pj:27,pts:42},{t:"Midland",pj:26,pts:41},{t:"Gimnasia y Tiro",pj:27,pts:41},
     {t:"Deportivo Maipú",pj:27,pts:38},{t:"Atlético Rafaela",pj:26,pts:35},{t:"Quilmes",pj:27,pts:33},
@@ -1174,6 +1144,90 @@ const ARG_FECHA_EXTRA = [
 ];
 
 
+
+const ARG_ANUAL = {
+  updated: "Tabla Anual 2026 · actualizada 7/09/2026 (Apertura + Clausura hasta F8)",
+  note: "Suma puntos Apertura + Clausura. El 1° es Campeón de Liga; último desciende (si no coincide con promedios).",
+  rows: [
+    {t:"Ind. Rivadavia", pj:24, pts:45},
+    {t:"Argentinos Juniors", pj:23, pts:45},
+    {t:"Vélez", pj:24, pts:44},
+    {t:"Boca", pj:24, pts:41},
+    {t:"Gimnasia (LP)", pj:24, pts:41},
+    {t:"Rosario Central", pj:24, pts:40},
+    {t:"River Plate", pj:24, pts:39},
+    {t:"Estudiantes (LP)", pj:24, pts:38},
+    {t:"Belgrano", pj:24, pts:38},
+    {t:"Independiente", pj:24, pts:37},
+    {t:"Instituto", pj:23, pts:37},
+    {t:"Gimnasia (Mza)", pj:24, pts:35},
+    {t:"Lanús", pj:24, pts:34},
+    {t:"Sarmiento", pj:24, pts:34},
+    {t:"Defensa y Justicia", pj:24, pts:33},
+    {t:"Tigre", pj:24, pts:32},
+    {t:"Huracán", pj:24, pts:32},
+    {t:"San Lorenzo", pj:24, pts:32},
+    {t:"Unión", pj:23, pts:31},
+    {t:"Talleres", pj:24, pts:31},
+    {t:"Barracas Central", pj:23, pts:31},
+    {t:"Atlético Tucumán", pj:24, pts:27},
+    {t:"Newell's Old Boys", pj:24, pts:27},
+    {t:"Racing", pj:24, pts:26},
+    {t:"Banfield", pj:24, pts:25},
+    {t:"Platense", pj:24, pts:25},
+    {t:"Central Córdoba (SdE)", pj:24, pts:23},
+    {t:"Deportivo Riestra", pj:24, pts:20},
+    {t:"Aldosivi", pj:24, pts:13},
+    {t:"Estudiantes (RC)", pj:24, pts:11},
+  ]
+};
+
+const ARG_PROMEDIOS = {
+  updated: "Promedios 2024-2025-2026 · 7/09/2026",
+  note: "Último de promedios desciende. Estudiantes RC y Aldosivi en zona crítica.",
+  rows: [
+    {t:"Boca", pj:97, pts:170, prom:1.753},
+    {t:"River Plate", pj:97, pts:162, prom:1.670},
+    {t:"Vélez", pj:97, pts:160, prom:1.649},
+    {t:"Argentinos Juniors", pj:96, pts:158, prom:1.646},
+    {t:"Rosario Central", pj:97, pts:153, prom:1.577},
+    {t:"Racing", pj:97, pts:149, prom:1.536},
+    {t:"Independiente", pj:97, pts:147, prom:1.515},
+    {t:"Lanús", pj:97, pts:143, prom:1.474},
+    {t:"Estudiantes (LP)", pj:97, pts:143, prom:1.474},
+    {t:"Gimnasia (Mza)", pj:24, pts:35, prom:1.458},
+    {t:"Huracán", pj:97, pts:141, prom:1.454},
+    {t:"Talleres", pj:97, pts:137, prom:1.412},
+    {t:"Ind. Rivadavia", pj:97, pts:134, prom:1.381},
+    {t:"Unión", pj:96, pts:130, prom:1.354},
+    {t:"Barracas Central", pj:96, pts:129, prom:1.344},
+    {t:"Defensa y Justicia", pj:97, pts:129, prom:1.330},
+    {t:"San Lorenzo", pj:97, pts:128, prom:1.320},
+    {t:"Gimnasia (LP)", pj:97, pts:127, prom:1.309},
+    {t:"Instituto", pj:96, pts:124, prom:1.292},
+    {t:"Belgrano", pj:97, pts:124, prom:1.278},
+    {t:"Tigre", pj:97, pts:120, prom:1.237},
+    {t:"Deportivo Riestra", pj:97, pts:120, prom:1.237},
+    {t:"Platense", pj:97, pts:117, prom:1.206},
+    {t:"Atlético Tucumán", pj:97, pts:111, prom:1.144},
+    {t:"Newell's Old Boys", pj:97, pts:109, prom:1.124},
+    {t:"Central Córdoba (SdE)", pj:97, pts:107, prom:1.103},
+    {t:"Sarmiento", pj:97, pts:104, prom:1.072},
+    {t:"Banfield", pj:97, pts:101, prom:1.041},
+    {t:"Aldosivi", pj:56, pts:46, prom:0.821},
+    {t:"Estudiantes (RC)", pj:24, pts:11, prom:0.458},
+  ]
+};
+
+const COPA_ARGENTINA = {
+  updated: "Copa Argentina 2026 · octavos · 7/09/2026",
+  note: "Vélez 0-0 Boca (Boca clasificó 4-3 penales). Próximos cruces según fixture oficial.",
+  fase: "Octavos de final",
+  pairs: [
+    {home:"Vélez", away:"Boca", hs:0, as:0, status:"clasificado", when:"FINAL", note:"0-0 · Boca 4-3 penales · clasifica Boca"},
+  ]
+};
+
 const ARG_FECHAS = {
   current: 7,
   list: {
@@ -1198,8 +1252,20 @@ const ARG_FECHAS = {
 };
 
 const SA_TODAY = [
-  // 1/09/2026: sin partidos de Liga Profesional (cierre F7 anoche). Fecha 8 desde el 4/09.
+  // Solo 7 de septiembre 2026
+  {comp:"🇦🇷 Clausura", home:"Barracas Central", away:"Argentinos Juniors", hs:null, as:null, status:"sched", when:"19:00", date:"2026-09-07", tv:["espn","disney"], stadium:"Claudio Chiqui Tapia", note:"Fecha 8 · Zona B"},
+  {comp:"🇦🇷 Clausura", home:"Unión", away:"Instituto", hs:null, as:null, status:"sched", when:"21:15", date:"2026-09-07", tv:["tnt","dgo"], stadium:"15 de Abril", note:"Fecha 8 · Zona A"},
+  {comp:"🇪🇸 La Liga", home:"Getafe", away:"Celta", hs:null, as:null, status:"sched", when:"14:00", date:"2026-09-07", tv:["espn4","disney"], note:"Jornada 4"},
+  {comp:"🇪🇸 La Liga", home:"Elche", away:"Real Sociedad", hs:null, as:null, status:"sched", when:"16:30", date:"2026-09-07", tv:["espn4","disney"], note:"Jornada 4"},
+  {comp:"🇮🇹 Serie A", home:"Cagliari", away:"Lecce", hs:null, as:null, status:"sched", when:"13:30", date:"2026-09-07", tv:["disney"], note:"Jornada 3"},
+  {comp:"🇮🇹 Serie A", home:"Udinese", away:"Lazio", hs:null, as:null, status:"sched", when:"15:45", date:"2026-09-07", tv:["disney"], note:"Jornada 3"},
 ];
+
+
+
+
+
+
 
 
 
@@ -1215,7 +1281,7 @@ const SA_TODAY = [
 
 // Libertadores / Sudamericana (octavos 2026)
 const LIBERTADORES = {
-  updated:"Cuartos de final · ida 8-10/09 · vuelta 15-17/09 · 1/09/2026",
+  updated:"Cuartos de final · ida 8-10/09 · vuelta 15-17/09 · 7/09/2026",
   note:"Octavos terminados. Argentinos en cuartos: Estudiantes y Platense. Rivadavia eliminado por Fluminense (penales).",
   pairs:[
     {home:"Fluminense",away:"Platense",hs:null,as:null,status:"cuartos",note:"Ida 8/09 19:00 Maracaná · Vuelta 15/09"},
@@ -1225,17 +1291,13 @@ const LIBERTADORES = {
   ]
 };
 const SUDAMERICANA = {
-  updated:"Octavos finalizados · cuartos en curso · 1/09/2026",
+  updated:"Cuartos de final · ida 8-10/09 · 7/09/2026",
   note:"Boca 7-1 Recoleta. River eliminado por Santa Fe (penales). Torque eliminó a Tigre.",
   pairs:[
-    {home:"Boca",away:"Recoleta",hs:7,as:1,status:"clasificado",note:"Global 7-1 (3-1 y 4-0)"},
-    {home:"São Paulo",away:"Bolívar",hs:4,as:2,status:"clasificado",note:"Global 4-2"},
-    {home:"Atlético Mineiro",away:"Bragantino",hs:3,as:2,status:"clasificado",note:"Global 3-2"},
-    {home:"City Torque",away:"Tigre",hs:3,as:1,status:"clasificado",note:"Global 3-1 · Tigre eliminado"},
-    {home:"Santa Fe",away:"River Plate",hs:1,as:1,status:"clasificado",note:"1-1 global · Santa Fe penales 8-7"},
-    {home:"Vasco",away:"Olimpia",hs:4,as:1,status:"clasificado",note:"Global 4-1"},
-    {home:"Santos",away:"Macará",hs:2,as:1,status:"clasificado",note:"Global 2-1"},
-    {home:"Cienciano",away:"Botafogo",hs:6,as:2,status:"clasificado",note:"Global 6-2"},
+    {home:"Santa Fe",away:"Vasco",hs:null,as:null,status:"cuartos",note:"Ida 8/09 19:00 El Campín · Vuelta 15/09"},
+    {home:"Boca",away:"São Paulo",hs:null,as:null,status:"cuartos",note:"Ida 8/09 21:30 Bombonera · Vuelta 15/09"},
+    {home:"Santos",away:"Atlético Mineiro",hs:null,as:null,status:"cuartos",note:"Ida 9/09 19:00 · Vuelta 16/09"},
+    {home:"Cienciano",away:"City Torque",hs:null,as:null,status:"cuartos",note:"Ida 10/09 21:30 · Vuelta 17/09"},
   ]
 };
 
@@ -1937,9 +1999,13 @@ function fixLaLigaMadridMixups(){
 
 
 function isHoyWhen(m){
+  if(!m) return false;
+  const d = String(m.date||"").slice(0,10);
+  const hoy = (typeof TODAY_DATE!=="undefined" ? TODAY_DATE : "2026-09-07");
+  if(d && d !== hoy) return false;
+  if(m.status==="live") return true;
   const w = String(m.when||"").toLowerCase();
-  if(/^lun\b|^lunes|mañana|tomorrow/i.test(w)) return false;
-  if(m.date && m.date !== TODAY_DATE && m.status!=="live") return false;
+  if(/\bfinal\b|ayer|domingo|sáb\b|sab\b|vie\b|jue\b|mié|mie\b|2026-09-0[0-6]/i.test(w)) return false;
   return true;
 }
 
@@ -2119,13 +2185,13 @@ function renderToday(){
     });
     saFiltered = Array.from(hard.values());
     saFiltered.sort((a,b)=>{
-      const score = m => {
-        if(m.status==="live") return 0;
+      const rank = m => {
+        if(m.status==="live") return -1;
         if(m.status==="final") return 2;
-        if(/^Lun/i.test(String(m.when||""))) return 3;
-        return 1;
+        const t = String(m.when||"").match(/(\d{1,2}):(\d{2})/);
+        return t ? (parseInt(t[1],10)*60+parseInt(t[2],10))/1500 : 1;
       };
-      return score(a)-score(b);
+      return rank(a)-rank(b);
     });
     html += `<div class="group-label">🌎 Sudamérica / Argentina${onlyFav?" · favoritos":""}</div>`;
     saFiltered.forEach(m=>{
@@ -2136,7 +2202,7 @@ function renderToday(){
   groups.forEach(g=>{
     let ms = uniqMatches(g.matches||[], ab=>(g.lg.names[ab]||ab));
     // solo HOY para no mezclar fechas viejas
-    ms = ms.filter(m=>!m.date || m.date===TODAY_DATE || m.status==="live" || m.status==="final");
+    ms = ms.filter(m=>!m.date || m.date===TODAY_DATE || m.status==="live");
     if(onlyFav){
       ms = ms.filter(m=>{
         const hn = g.lg.names[m.home]||m.home, an = g.lg.names[m.away]||m.away;
@@ -2784,30 +2850,35 @@ async function openMatchDetail(opts){
 
 function saMatchCard(m, i){
   const hasScore = m.hs!==null && m.hs!==undefined && m.as!==null && m.as!==undefined;
-  const score = (m.status==="sched" && !hasScore)
-    ? `<div class="kickoff">${(/scheduled/i.test(m.when||'')?'Programado':(m.when||'Programado'))}</div>`
+  const isSched = m.status==="sched" || (!hasScore && m.status!=="live" && m.status!=="final");
+  const timeOnly = String(m.when||"").replace(/scheduled/i,"Programado").trim() || "Programado";
+  const scoreHtml = isSched
+    ? `<div class="kickoff">${timeOnly}</div>`
     : `<div class="score">${m.hs??0}<span class="dash">–</span>${m.as??0}</div>`;
-  let stLabel = m.when || "Programado";
-  if(/scheduled/i.test(stLabel)) stLabel = "Programado";
   let liveMin = m.minute || m.clock || "";
-  if(!liveMin && m.status==="live" && m.when){ const mm=String(m.when).match(/(\d{1,3})\s*'/); if(mm) liveMin=mm[1]+"'"; }
+  if(!liveMin && m.status==="live" && m.when){
+    const mm=String(m.when).match(/(\d{1,3})\s*'/);
+    if(mm) liveMin=mm[1]+"'";
+  }
   const pill = m.status==="live"
-    ? `${liveMin?`<span class="live-minute">${liveMin}</span>`:""}<span class="status-pill live">EN VIVO</span>`
-    : m.status==="final" ? `<span class="status-pill final">FINAL</span>`
-    : `<span class="status-pill sched">${stLabel}</span>`;
+    ? (liveMin?`<span class="live-minute">${liveMin}</span>`:"")+`<span class="status-pill live">EN VIVO</span>`
+    : (m.status==="final" ? `<span class="status-pill final">${/pen/i.test(String(m.when||""))?m.when:"FINAL"}</span>` : "");
+  const crestH = (typeof saCrest==="function" && saCrest(m.home)) || `<div class="crest crest-fallback">${String(m.home||"?").slice(0,3).toUpperCase()}</div>`;
+  const crestA = (typeof saCrest==="function" && saCrest(m.away)) || `<div class="crest crest-fallback">${String(m.away||"?").slice(0,3).toUpperCase()}</div>`;
   const eid = m.espnId || m.eventId || "";
   const slug = m.leagueSlug || "arg.1";
   const payload = encodeURIComponent(JSON.stringify({
     leagueSlug: slug, eventId: eid, home: m.home, away: m.away,
     hs: m.hs, as: m.as, status: m.status, when: m.when, comp: m.comp||"🇦🇷 Clausura"
   }));
+  const homeSafe = String(m.home||"").replace(/'/g,"\\'");
+  const awaySafe = String(m.away||"").replace(/'/g,"\\'");
   return `<div class="match" style="animation-delay:${i*0.04}s;cursor:pointer" onclick="try{openMatchDetail(JSON.parse(decodeURIComponent('${payload}')))}catch(e){}">
-    <div class="side" onclick="event.stopPropagation();openSATeam('${String(m.home||'').replace(/'/g,"\\'")}')">${saCrest(m.home)}<div class="tname">${m.home}</div>${scorersForSide(m,"home")}</div>
-    <div class="mid">${score}${pill}${tvChipHTML(m.tv||guessTV(m, m.comp||""))}<div style="font-size:9px;color:var(--dim2);margin-top:2px">tocá para detalle</div></div>
-    <div class="side right" onclick="event.stopPropagation();openSATeam('${String(m.away||'').replace(/'/g,"\\'")}')">${saCrest(m.away)}<div class="tname">${m.away}</div>${scorersForSide(m,"away")}</div>
+    <div class="side" onclick="event.stopPropagation();openSATeam('${homeSafe}')">${crestH}<div class="tname">${m.home||""}</div>${typeof scorersForSide==="function"?scorersForSide(m,"home"):""}</div>
+    <div class="mid">${scoreHtml}${pill}${typeof tvChipHTML==="function"?tvChipHTML(m.tv||[]):""}<div class="tap-hint">tocá para detalle</div></div>
+    <div class="side right" onclick="event.stopPropagation();openSATeam('${awaySafe}')">${crestA}<div class="tname">${m.away||""}</div>${typeof scorersForSide==="function"?scorersForSide(m,"away"):""}</div>
   </div>`;
 }
-
 
 function openSATeam(name){
   if(!name) return;
@@ -5613,6 +5684,7 @@ function renderArgentina(){
     <button class="stab ${sub==="clausura"?"active":""}" onclick="window.__argSub='clausura';render()">Clausura</button>
     <button class="stab ${sub==="anual"?"active":""}" onclick="window.__argSub='anual';render()">Anual</button>
     <button class="stab ${sub==="prom"?"active":""}" onclick="window.__argSub='prom';render()">Promedios</button>
+    <button class="stab ${sub==="fechas"?"active":""}" onclick="window.__argSub='copa';render()">Copa Argentina</button>
     <button class="stab ${sub==="fechas"?"active":""}" onclick="window.__argSub='fechas';render()">Fechas</button>
     <button class="stab ${sub==="ascenso"?"active":""}" onclick="window.__argSub='ascenso';render()">Ascenso</button>
   </div>`;
@@ -5636,6 +5708,23 @@ function renderArgentina(){
         <td>${r.pj}</td><td class="pts">${r.pts}</td><td class="pts">${Number(r.prom||r.avg||0).toFixed(3)}</td></tr>`;
     });
     html += `</tbody></table>`;
+  } else if(sub==="copa"){
+    const CA = COPA_ARGENTINA;
+    html += `<div class="note">${CA.updated}<br>${CA.note}</div>`;
+    html += `<div class="group-label">${CA.fase}</div>`;
+    (CA.pairs||[]).forEach((p,i)=>{
+      const score = (p.hs!=null && p.as!=null) ? (p.hs + " – " + p.as) : "–";
+      let stHtml = "";
+      if(p.status==="hoy") stHtml = '<span class="status-pill live">HOY</span>';
+      else if(p.status==="clasificado") stHtml = '<span class="status-pill final">'+(p.when||"FINAL")+'</span>';
+      else stHtml = '<span class="status-pill sched">'+(p.when||"")+'</span>';
+      const note = p.note ? '<div style="font-size:10px;color:var(--dim);margin-top:3px">'+p.note+'</div>' : '';
+      html += '<div class="match" style="animation-delay:'+(i*0.04)+'s">'
+        + '<div class="side"><div class="tname">'+p.home+'</div></div>'
+        + '<div class="mid"><div class="score">'+score+'</div>'+stHtml+note+'</div>'
+        + '<div class="side right"><div class="tname">'+p.away+'</div></div>'
+        + '</div>';
+    });
   } else if(sub==="fechas"){
     const curF = window.__argFecha || (typeof ARG_FECHAS!=="undefined" ? ARG_FECHAS.current : 7);
     const maxF = 7;
