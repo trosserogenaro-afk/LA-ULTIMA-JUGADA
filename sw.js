@@ -1,4 +1,4 @@
-const CACHE = "luj-v12";
+const CACHE = "luj-v17";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./logo-luj.png", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {

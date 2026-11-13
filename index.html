@@ -147,7 +147,7 @@
   }
   .match:hover{border-color:var(--line);}
   @keyframes cardIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-  .side{flex:1;display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer;border-radius:8px;padding:4px;transition:background .15s;}
+  .side{flex:1;display:flex;align-items:center;gap:8px;min-width:0;cursor:pointer;border-radius:8px;padding:4px;transition:background .15s;}.side-col{display:flex;flex-direction:column;min-width:0;flex:1;}.side .scorers,.side .side-scorers{font-size:10px;color:#9aa;line-height:1.35;margin-top:3px;max-width:130px;}.side.right .scorers,.side.right .side-scorers{text-align:right;margin-left:auto;}.side .scorers b,.side .side-scorers b{color:var(--text,#eee);font-weight:600;}
   .side:hover{background:var(--card-hi);}
   .side.right{flex-direction:row-reverse;text-align:right;}
   .crest{
@@ -638,6 +638,8 @@
   }
 
 
+  .scorers{font-size:10px;color:var(--dim);line-height:1.35;margin-top:4px;max-width:140px;text-align:center;}
+  .scorers b{color:var(--text);font-weight:600;}
   .scorers-line{
     font-size:10px;color:var(--dim);line-height:1.35;margin-top:4px;
     max-width:160px;margin-left:auto;margin-right:auto;text-align:center;
@@ -650,6 +652,353 @@
   .side-scorers.left{text-align:left;margin-right:auto;}
   .side-scorers b{color:var(--text);font-weight:600;}
 </style>
+<style id="luj-redesign">
+  /* =====================================================================
+     LA ÚLTIMA JUGADA — capa de rediseño visual
+     Sobrescribe solo presentación. No cambia IDs, clases usadas por JS,
+     datos, endpoints ni claves de localStorage.
+     ===================================================================== */
+  :root{
+    --radius-lg:16px;
+    --radius-md:12px;
+    --radius-sm:8px;
+    --focus-ring:0 0 0 3px rgba(52,211,153,.45);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.28);
+    --shadow-md:0 12px 32px rgba(0,0,0,.38);
+    --live-amber:#FBBF24;
+    --ease-out:cubic-bezier(.22,.9,.35,1);
+  }
+  html.light{
+    --shadow-sm:0 1px 2px rgba(15,26,20,.06);
+    --shadow-md:0 12px 28px rgba(15,26,20,.12);
+    --live-amber:#D97706;
+  }
+
+  /* ---------- base ---------- */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--turf);outline-offset:2px;border-radius:6px;}
+  input:focus-visible,select:focus-visible{outline:none;box-shadow:var(--focus-ring);}
+  main{max-width:640px;padding:12px 14px 16px;}
+  .footer-note{margin-top:20px;padding-bottom:8px;}
+
+  /* ---------- header ---------- */
+  .hero{
+    padding:14px 14px 12px;
+    background:
+      radial-gradient(120% 120% at 0% 0%, rgba(52,211,153,.14), transparent 55%),
+      linear-gradient(180deg, var(--bg-alt), var(--bg));
+    border-bottom:1px solid var(--line-soft);
+  }
+  .hero::before{display:none;}           /* sin barrido decorativo permanente */
+  .hero-top{align-items:center;gap:12px;}
+  .hero-top > div:first-child{min-width:0;}
+  .hero-top img{height:50px!important;max-width:200px!important;margin-bottom:2px!important;}
+  .hero-sub{font-size:12px;color:var(--dim);line-height:1.35;}
+  .hero-actions{gap:6px;flex:0 0 auto;}
+  .sound-btn,.theme-btn,.icon-btn{width:36px;height:36px;border-radius:10px;font-size:15px;}
+  .refresh-btn{
+    height:36px;padding:0 12px;border-radius:10px;font-size:12.5px;
+    background:var(--card);box-shadow:var(--shadow-sm);
+  }
+  .refresh-btn:hover{background:var(--card-hi);transform:none;border-color:var(--turf-dim);}
+  .refresh-btn.spin{border-color:var(--turf);color:var(--turf);cursor:progress;}
+  .refresh-btn:disabled{opacity:.6;cursor:progress;}
+  .live-strip{
+    margin-top:12px;display:inline-flex;gap:8px;width:fit-content;
+    padding:5px 12px 5px 10px;border-radius:999px;
+    background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);
+  }
+  .live-strip span{font-size:12.5px;color:var(--dim);}
+  .live-strip b{color:var(--live-amber);}
+  .install-banner{
+    margin:10px 14px 0;padding:10px 12px;border-radius:var(--radius-md);
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--turf);
+    box-shadow:var(--shadow-sm);
+  }
+  .install-banner button{padding:7px 12px;border-radius:8px;}
+
+  /* ---------- favoritos ---------- */
+  .fav-search-wrap{padding:12px 14px 4px;}
+  .fav-search-wrap label{
+    font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+  }
+  .fav-search-row input{
+    height:42px;border-radius:var(--radius-md);border-color:var(--line-soft);
+    background:var(--card);font-size:16px; /* 16px evita zoom automático en iPhone */
+  }
+  .fav-search-row input:focus{border-color:var(--turf);}
+  .fav-results{box-shadow:var(--shadow-md);border-radius:var(--radius-md);}
+  .fav-bar{padding:8px 14px 10px;gap:6px;}
+  .fav-chip{
+    padding:6px 12px;font-size:12.5px;border-radius:999px;background:var(--card-hi);
+    min-height:34px;
+  }
+
+  /* ---------- guía inicial y navegación ---------- */
+  .nav-guide{
+    margin:12px 14px 0;padding:14px;border-radius:var(--radius-lg);
+    border:1px solid rgba(52,211,153,.3);
+    background:linear-gradient(145deg,rgba(52,211,153,.10),var(--card) 70%);
+    box-shadow:var(--shadow-sm);
+  }
+  .nav-guide h3{font-size:17px;margin:0 0 4px;}
+  .nav-guide p{font-size:13px;margin:0 0 12px;}
+  .nav-cards{gap:8px;}
+  .nav-card{padding:12px;border-radius:var(--radius-md);min-height:86px;background:var(--card);}
+  .nav-card .nc-ico{font-size:20px;}
+  .nav-card .nc-title{font-size:14.5px;}
+  .nav-card .nc-sub{font-size:11.5px;}
+  .nav-guide-dismiss{font-size:12px;min-height:32px;}
+  .nav-label-row{
+    padding:16px 14px 0;font-size:10.5px;letter-spacing:.14em;color:var(--dim2);
+  }
+  .nav-wrap{
+    background:rgba(10,15,13,.94);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+    box-shadow:0 8px 18px -14px rgba(0,0,0,.7);
+  }
+  html.light .nav-wrap{background:rgba(244,247,245,.94);box-shadow:0 8px 18px -14px rgba(15,26,20,.25);}
+  .tabs{
+    padding:8px 14px;gap:6px;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%);
+            mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 12px),transparent 100%);
+  }
+  .tab{
+    padding:8px 14px;font-size:13.5px;min-height:38px;border-width:1px;
+    display:inline-flex;align-items:center;background:var(--card);
+  }
+  .tab:hover{border-color:var(--turf);}
+  .tab.active{box-shadow:0 0 0 2px rgba(52,211,153,.25);}
+  .stab{min-height:36px;padding:8px 12px;}
+
+  /* ---------- títulos de grupo ---------- */
+  .group-label{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Oswald',sans-serif;font-size:12.5px;font-weight:500;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--text);margin:20px 2px 10px;
+  }
+  .group-label::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--turf);flex:0 0 auto;}
+  .group-label:first-child{margin-top:6px;}
+  .note{background:var(--card);border-radius:var(--radius-md);font-size:12px;margin:8px 0 12px;}
+  .empty-hint{
+    text-align:center;padding:26px 14px;border:1px dashed var(--line);border-radius:var(--radius-md);
+    color:var(--dim);font-size:13px;
+  }
+  .ads-slot{margin:12px 0;border-radius:var(--radius-md);}
+  main .ads-slot{margin:12px 0;}
+
+  /* ---------- tarjetas de partido ---------- */
+  .match{
+    display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+    align-items:center;gap:8px;
+    padding:12px;margin-bottom:8px;border-radius:var(--radius-lg);
+    background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);
+  }
+  /* sin transform en hover: la animación cardIn usa fill-mode forwards y lo bloquearía */
+  .match:hover{border-color:var(--line);background:var(--card-hi);}
+  .match .side{padding:6px;border-radius:10px;}
+  .match .side:hover{background:rgba(255,255,255,.035);}
+  html.light .match .side:hover{background:rgba(15,26,20,.04);}
+  .match .side .tname{font-size:14px;font-weight:600;}
+  .match .side .crest-img{width:28px;height:28px;}
+  .match .side .scorers,.match .side .side-scorers{font-size:11px;}
+  .match .mid{min-width:84px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .match .mid > div[style*="font-size:9px"]{font-size:10px;}
+  .match .score{font-size:21px;}
+  .match .kickoff{font-size:13px;font-weight:600;color:var(--text);}
+  .match .live-minute{font-size:12px;color:var(--live-amber);margin-bottom:0;}
+  .status-pill{font-size:10.5px;padding:3px 8px;border-radius:6px;margin-top:2px;}
+  .status-pill.live{
+    background:var(--live-amber);color:#1A1204;border:none;font-weight:800;
+    animation:none;box-shadow:none;
+  }
+  .status-pill.final{background:rgba(148,163,160,.16);color:var(--draw);}
+  .status-pill.sched{background:rgba(52,211,153,.12);color:var(--turf);}
+  .match.live-match,
+  .match:has(.status-pill.live){
+    border-color:rgba(251,191,36,.45);
+    background:linear-gradient(90deg,rgba(251,191,36,.09),var(--card) 38%,var(--card) 62%,rgba(251,191,36,.09));
+  }
+  .match:has(.status-pill.final) .score{color:var(--text);}
+  .match.fav-highlight{
+    border-color:var(--turf-dim);
+    box-shadow:inset 3px 0 0 var(--turf),var(--shadow-sm);
+  }
+  .tv-chip{font-size:10.5px;padding:2px 6px;}
+  .tv-row{margin-top:3px;}
+
+  /* ---------- tablas de posiciones ---------- */
+  table.standings{
+    display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;
+    border-collapse:separate;border-spacing:0;
+    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+  }
+  table.standings th{
+    font-size:11px;padding:10px 6px;background:var(--card-hi);color:var(--dim);
+    border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  table.standings th.sortable{cursor:pointer;}
+  table.standings th.sortable::after{content:"↕";font-size:10px;opacity:.35;margin-left:3px;}
+  table.standings th.sortable:has(.arrow)::after{content:none;}
+  table.standings th .arrow{opacity:1;color:var(--turf);font-size:9px;}
+  table.standings th.sortable:hover{color:var(--text);}
+  table.standings td{padding:10px 6px;font-size:13.5px;border-bottom:1px solid var(--line-soft);}
+  table.standings tbody tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+  html.light table.standings tbody tr:nth-child(even) td{background:rgba(15,26,20,.02);}
+  table.standings tbody tr:hover td{background:var(--card-hi);}
+  table.standings td.team{font-weight:600;min-width:0;}
+  table.standings td.team .crest-img,table.standings td.team .crest{width:24px;height:26px;}
+  table.standings .rank{font-size:12.5px;font-weight:700;color:var(--text);}
+  table.standings td.pts{font-size:14.5px;color:var(--turf);}
+
+  /* ---------- hoja de equipo / partido ---------- */
+  .overlay{background:rgba(4,8,6,.72);}
+  .sheet{
+    padding:14px 16px calc(24px + env(safe-area-inset-bottom,0px));
+    max-height:min(88vh,calc(100dvh - 16px));overscroll-behavior:contain;
+    background:var(--bg-alt);
+  }
+  .sheet-handle{margin-bottom:12px;}
+  .sheet-head{margin-bottom:10px;}
+  .sheet-head h2{font-size:22px;}
+  .sheet-rank{font-size:12.5px;}
+  .sheet-close{
+    width:36px;height:36px;border-radius:50%;padding:0;font-size:16px;
+    background:var(--card-hi);border:1px solid var(--line);color:var(--text);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sheet-close:hover{border-color:var(--turf);color:var(--turf);}
+  .sheet h4{color:var(--dim);font-size:11px;letter-spacing:.12em;margin:18px 0 8px;}
+  .club-info{grid-template-columns:1fr 1fr;padding:12px 14px;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);}
+  .mini-match{font-size:13.5px;}
+  .md-scoreboard{
+    border-radius:var(--radius-lg);padding:16px 10px;
+    background:linear-gradient(180deg,var(--card-hi),var(--card));box-shadow:var(--shadow-sm);
+  }
+  .md-team img,.md-team .crest{width:52px;height:52px;}
+  .md-team .n{font-size:14px;}
+  .md-mid .sc{font-size:32px;}
+  .md-comp{font-size:11px;}
+  .ev-list{border-radius:var(--radius-md);}
+  .ev-row{font-size:13px;}
+  .opt-btn,.opt-btn2{min-height:44px;}
+  .confirm-btn,.def-btn,.drib-btn,.again-btn{min-height:44px;}
+  .career-save-row button{min-height:44px;}
+
+  /* ---------- modo carrera ---------- */
+  .role-card,.event-card,.legend-card,.player-card,.tool-card,.tier-card,.sa-card{box-shadow:var(--shadow-sm);}
+  .role-card{border-radius:var(--radius-lg);padding:16px;}
+  .role-card:hover{border-color:var(--turf);background:var(--card-hi);}
+  .career-hud{gap:8px;}
+  .hud-stat{border-radius:var(--radius-md);padding:10px 10px;}
+  .hud-stat .v{font-size:20px;}
+  .hud-stat .k{font-size:10.5px;}
+  .pos-btn{width:40px;height:40px;}
+  .club-pick span{font-size:10.5px;}
+  .ttt-cell{min-height:64px;}
+  .simon-dot{min-height:56px;}
+
+  /* ---------- herramientas ---------- */
+  .tools-grid{gap:10px;padding:4px 0 16px;}
+  .tool-card{border-radius:var(--radius-lg);padding:14px;min-height:96px;}
+  .tool-card:hover{background:var(--card-hi);border-color:var(--turf);}
+  .tool-card .t-title{font-size:15px;}
+  .tool-card .t-sub{font-size:12px;line-height:1.35;}
+  .udl-club{border-radius:var(--radius-md);}
+  .club-pick-grid{gap:8px;}
+
+  /* ---------- pie ---------- */
+  .footer-note{font-size:12px;}
+
+  /* ---------- escritorio y tablets ---------- */
+  @media(min-width:520px){
+    .nav-cards{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .club-pick-grid{grid-template-columns:repeat(4,1fr);}
+    .sheet{border-radius:var(--radius-lg);}
+  }
+  @media(min-width:700px){
+    .tools-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .udl-grid{grid-template-columns:repeat(6,minmax(0,1fr));}
+  }
+  @media(min-width:900px){
+    main{max-width:960px;padding:16px 20px 20px;}
+    .footer-note{max-width:960px;padding:0 20px;}
+    .nav-guide{max-width:960px;margin:14px auto 0;}
+    .nav-label-row{max-width:960px;margin:0 auto;padding:16px 20px 0;}
+    .nav-wrap{padding:0;}
+    .nav-cards{grid-template-columns:repeat(4,minmax(0,1fr));}
+    .tabs{
+      flex-wrap:wrap;justify-content:center;overflow:visible;
+      -webkit-mask-image:none;mask-image:none;
+      max-width:960px;margin:0 auto;padding:10px 20px;row-gap:8px;
+    }
+    .tab{padding:8px 16px;font-size:14px;}
+    .fav-search-wrap,.fav-bar{max-width:960px;margin-left:auto;margin-right:auto;}
+    .fav-search-wrap{padding-left:20px;padding-right:20px;}
+    .fav-bar{padding-left:20px;padding-right:20px;}
+    .install-banner{max-width:960px;margin-left:auto;margin-right:auto;}
+    /* Hoy: dos columnas de partidos. Solo si el panel está visible (inline display:block) */
+    #todayPanel[style*="block"]{
+      display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+      column-gap:12px;align-items:start;
+    }
+    #todayPanel > .note,
+    #todayPanel > .group-label,
+    #todayPanel > .fav-filter-bar,
+    #todayPanel > .empty-hint{grid-column:1 / -1;}
+    .match{margin-bottom:0;}
+    .club-pick-grid{grid-template-columns:repeat(5,1fr);}
+  }
+
+  /* ---------- subpestañas de sección (Clausura / Anual / Promedios / Fechas / Ascenso) ---------- */
+  .section-tabs{
+    overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    padding:10px 14px 2px;margin-bottom:2px;
+  }
+  .section-tabs::-webkit-scrollbar{display:none;}
+  .section-tabs > .stab{flex:0 0 auto;white-space:nowrap;}
+  .stab{font-size:13px;}
+
+  /* hora duplicada en partidos programados: se muestra una sola vez (en la píldora) */
+  .match .kickoff:has(+ .status-pill.sched){display:none;}
+  html.light .ads-slot{background:rgba(15,26,20,.03);border-color:var(--line);}
+
+  /* nombres de equipo: hasta 2 líneas en vez de cortarse con "…" */
+  .match .side .tname{
+    white-space:normal;overflow:hidden;line-height:1.2;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  }
+  .match .side-col{min-width:0;}
+
+  /* UDL: solo escudos de los clubes */
+  .udl-club{padding:8px;display:flex;align-items:center;justify-content:center;aspect-ratio:1;}
+  .udl-club img{width:100%;height:100%;max-width:64px;max-height:64px;margin:0;}
+  .udl-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  @media(min-width:700px){.udl-grid{grid-template-columns:repeat(6,minmax(0,1fr));}}
+
+  /* zonas de clasificación en tablas europeas */
+  .zdot{display:inline-block;width:4px;height:24px;border-radius:2px;margin-right:6px;vertical-align:middle;flex:0 0 4px;}
+  .zone-ucl{background:#2563EB;}
+  .zone-uel{background:#F97316;}
+  .zone-uecl{background:#22C55E;}
+  .zone-po{background:#FACC15;}
+  .zone-rel{background:#EF4444;}
+  .zone-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--dim);margin:10px 2px 14px;}
+  .zone-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+
+  /* ---------- movimiento reducido ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *:not(.def-marker){
+      animation-duration:.01ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.01ms!important;
+      scroll-behavior:auto!important;
+    }
+  }
+</style>
 </head>
 <body>
 <div class="toast-stack" id="toastStack"></div>
@@ -658,7 +1007,7 @@
   <div class="hero-top">
     <div>
       <img src="logo-luj.png" alt="La Última Jugada" style="height:72px;width:auto;max-width:220px;object-fit:contain;display:block;margin-bottom:4px;opacity:0;animation:riseIn .5s ease forwards;" onerror="this.src='la-ultima-jugada-logo.png'; this.onerror=null;">
-      <p class="hero-sub">Dom 6/09 · Clásico Rosario · River–Rivadavia · Arsenal–Chelsea · Valencia–Barça</p>
+      <p class="hero-sub">Vie 30/10 · Fecha 15 Clausura · actualizado</p>
     </div>
     <div class="hero-actions">
       <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Sonido en vivo">🔇</button>
@@ -690,8 +1039,7 @@
 </div>
 <div class="fav-bar" id="favBar"></div>
 
-<div class="nav-wrap">
-  <div class="nav-guide" id="navGuide">
+<div class="nav-guide" id="navGuide">
   <h3>¿Por dónde empezamos?</h3>
   <p>Tocá una tarjeta o usá las pestañas de abajo. Todo el fútbol del día, en un solo lugar.</p>
   <div class="nav-cards">
@@ -731,6 +1079,7 @@
   <button type="button" class="nav-guide-dismiss" onclick="dismissNavGuide()">No mostrar de nuevo</button>
 </div>
 <div class="nav-label-row">Secciones</div>
+<div class="nav-wrap">
 <div class="tabs" id="mainTabs"></div>
 </div>
 
@@ -765,52 +1114,113 @@
    DATA — resultados y tablas reales tomados el 22/08/2026
    ========================================================= */
 
-const TODAY_DATE = "2026-09-07";
+let TODAY_DATE = "2026-10-30";
+
+const SA_TODAY = [
+  {comp:"Clausura", home:"Estudiantes (RC)", away:"Gimnasia (LP)", hs:null, as:null, status:"sched", when:"19:00", date:"2026-10-30", leagueSlug:"arg.1"},
+  {comp:"Clausura", home:"Huracán", away:"Tigre", hs:null, as:null, status:"sched", when:"19:00", date:"2026-10-30", leagueSlug:"arg.1"},
+  {comp:"Clausura", home:"Racing", away:"Aldosivi", hs:null, as:null, status:"sched", when:"21:15", date:"2026-10-30", leagueSlug:"arg.1"},
+  {comp:"Clausura", home:"Sarmiento", away:"Rosario Central", hs:null, as:null, status:"sched", when:"21:15", date:"2026-10-30", leagueSlug:"arg.1"},
+  {comp:"La Liga", home:"Villarreal", away:"Espanyol", hs:null, as:null, status:"sched", when:"17:00", date:"2026-10-30", leagueSlug:"esp.1"},
+  {comp:"Bundesliga", home:"Elversberg", away:"Mainz", hs:null, as:null, status:"sched", when:"16:30", date:"2026-10-30", leagueSlug:"ger.1"},
+];
+
+/* ---- UDL (Unión Deportiva de Ligas — Entre Ríos) ---- */
+const UDL_BASE = "https://www.uniondeportivadeligas.com.ar/img/teams/md/";
+const UDL_LINK = "https://www.uniondeportivadeligas.com.ar/estadisticas";
+const UDL_CLUBS = [
+  {name:"Nogoyá",crest:UDL_BASE+"nogoya.png"},
+  {name:"Central Nogoyá",crest:UDL_BASE+"central-nogoya.png"},
+  {name:"25 de Mayo (Nogoyá)",crest:"crest-25-mayo-nogoya.png"},
+  {name:"Ferro Nogoyá",crest:UDL_BASE+"ferro.png"},
+  {name:"Mayense",crest:UDL_BASE+"mayense.png"},
+  {name:"Canario",crest:UDL_BASE+"canario.png"},
+  {name:"Agrario",crest:UDL_BASE+"agrario.png"},
+  {name:"Atlético Maciá",crest:UDL_BASE+"atletico-macia.png"},
+  {name:"Martín Fierro",crest:UDL_BASE+"martin-fierro.png"},
+  {name:"Atlético Tala",crest:UDL_BASE+"atletico-tala.png"},
+  {name:"Peñarol (UDL)",crest:UDL_BASE+"sportivo-peniarol.png"},
+  {name:"Banfield (Nogoyá)",crest:UDL_BASE+"banfield.png"},
+  {name:"Boca del Tigre",crest:UDL_BASE+"boca-tigre.png"},
+  {name:"Cultural Aranguren",crest:UDL_BASE+"aranguren.png"},
+  {name:"Hernández",crest:UDL_BASE+"hernandez.png"},
+  {name:"Nobleza",crest:UDL_BASE+"nobleza.png"},
+  {name:"Roma RAM",crest:UDL_BASE+"roma.png"},
+  {name:"Ferrocarril Mansilla",crest:UDL_BASE+"ferrocarril-san-lorenzo.png"},
+  {name:"Lobo",crest:UDL_BASE+"lobo.png"},
+  {name:"Huracán (Victoria)",crest:UDL_BASE+"huracan.png"},
+  {name:"Libertad",crest:UDL_BASE+"libertad.png"},
+  {name:"Libertad Victoria",crest:UDL_BASE+"libertad-victoria.png"},
+  {name:"Newell's (Victoria)",crest:UDL_BASE+"lepra.png"},
+  {name:"Sarmiento",crest:UDL_BASE+"sarmiento.png"},
+  {name:"Sirio Libanés",crest:UDL_BASE+"libanes.png"},
+  {name:"Quinto",crest:UDL_BASE+"quinto.png"},
+  {name:"Lucas González",crest:UDL_BASE+"lucas-gonzalez.png"},
+  {name:"Sportivo Victoria",crest:UDL_BASE+"victoria.png"},
+  {name:"Porvenir",crest:"crest-el-porvenir.png"},
+  {name:"Unión Solense",crest:UDL_BASE+"union-solense.png"},
+];
+const UDL_CLASICOS = [
+  {home:"Cultural Aranguren", away:"Hernández", label:"Clásico Aranguren–Hernández"},
+  {home:"Nogoyá", away:"Sirio Libanés", label:"Clásico Nogoyá–Sirio Libanés"},
+  {home:"25 de Mayo (Nogoyá)", away:"Ferro Nogoyá", label:"Clásico 25 de Mayo–Ferro (Nogoyá)"},
+  {home:"Nobleza", away:"Roma RAM", label:"Clásico Nobleza–Roma RAM"},
+  {home:"Mayense", away:"Sarmiento", label:"Clásico Mayense–Sarmiento (Victoria)"},
+  {home:"Atlético Maciá", away:"Martín Fierro", label:"Clásico Maciá–Martín Fierro"},
+  {home:"Peñarol (UDL)", away:"Atlético Tala", label:"Clásico Peñarol–Tala"},
+  {home:"Ferrocarril Mansilla", away:"Unión Solense", label:"Clásico Mansilla–Solense"},
+];
+
 const RESULTS_CUTOFF = "2026-08-18"; // últimos 5 días
 
 const EURO = {
 epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
   matches:[
-    {id:"epl906a",home:"EVE",away:"MUN",hs:null,as:null,status:"sched",when:"10:00",date:"2026-09-06"},
-    {id:"epl906b",home:"ARS",away:"CFC",hs:null,as:null,status:"sched",when:"12:30",date:"2026-09-06"},
-    {id:"epl905a",home:"NEW",away:"BOU",hs:null,as:null,status:"sched",when:"08:30",date:"2026-09-05"},
-    {id:"epl905b",home:"BRE",away:"SUN",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
-    {id:"epl905c",home:"BRI",away:"LEE",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
-    {id:"epl905d",home:"FUL",away:"CRY",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
-    {id:"epl905e",home:"MCI",away:"COV",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
-    {id:"epl905f",home:"NFO",away:"TOT",hs:null,as:null,status:"sched",when:"11:00",date:"2026-09-05"},
-    {id:"epl905g",home:"HUL",away:"AVL",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-05"},
-    {id:"sr:sport_event:72221154",home:"ARS",away:"COV",hs:3,as:0,status:"final",when:"Vie 21, 16:00",date:"2026-08-21"},
-    {id:"sr:sport_event:72221156",home:"HUL",away:"MUN",hs:2,as:0,status:"final",when:"Sáb 22, 08:30",date:"2026-08-22"},
-    {id:"sr:sport_event:72221158",home:"EVE",away:"CRY",hs:2,as:0,status:"final",when:"Sáb 22, 11:00",date:"2026-08-22"},
-    {id:"sr:sport_event:72221160",home:"IPS",away:"SUN",hs:2,as:1,status:"final",when:"Sáb 22, 11:00",date:"2026-08-22"},
-    {id:"sr:sport_event:72221162",home:"NFO",away:"LEE",hs:0,as:1,status:"final",when:"Sáb 22, 11:00",date:"2026-08-22"},
-    {id:"sr:sport_event:72221164",home:"BRE",away:"TOT",hs:3,as:0,status:"final",when:"Sáb 22, 13:30",date:"2026-08-22"},
-    {id:"sr:sport_event:72221166",home:"BRI",away:"AVL",hs:4,as:0,status:"final",when:"Hoy 10:00",date:"2026-08-23"},
-    {id:"sr:sport_event:72221168",home:"MCI",away:"BOU",hs:2,as:1,status:"final",when:"Hoy 10:00",date:"2026-08-23"},
-    {id:"sr:sport_event:72221170",home:"NEW",away:"LFC",hs:2,as:2,status:"final",when:"Hoy 12:30",date:"2026-08-23"},
-    {id:"sr:sport_event:72221172",home:"FUL",away:"CFC",hs:0,as:0,status:"sched",when:"Lun 24, 16:00",date:"2026-08-24"},
-    {id:"sr:sport_event:72221220",home:"CRY",away:"MCI",hs:1,as:4,status:"final",when:"Vie 28",date:"2026-08-28",scorers:[{who:"Haaland",min:"17",side:"away"},{who:"Cherki",min:"54",side:"away"},{who:"Cherki",min:"59",side:"away"},{who:"Donnarumma",min:"56",side:"home",own:true},{who:"Haaland",min:"84",side:"away"}]},
-    {id:"sr:sport_event:72221224",home:"LFC",away:"NFO",hs:0,as:0,status:"sched",when:"Sáb 29, 08:30",date:"2026-08-29"},
-    {id:"sr:sport_event:72221214",home:"BOU",away:"EVE",hs:0,as:0,status:"sched",when:"Sáb 29, 11:00",date:"2026-08-29"},
-    {id:"sr:sport_event:72221218",home:"COV",away:"HUL",hs:0,as:0,status:"sched",when:"Sáb 29, 11:00",date:"2026-08-29"},
-    {id:"sr:sport_event:72221230",home:"TOT",away:"NEW",hs:0,as:0,status:"sched",when:"Sáb 29, 13:30",date:"2026-08-29"},
-    {id:"sr:sport_event:72221216",home:"CFC",away:"BRI",hs:4,as:3,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"epl30a",home:"LEE",away:"BRE",hs:1,as:1,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"epl30b",home:"SUN",away:"FUL",hs:1,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"epl30c",home:"MUN",away:"IPS",hs:5,as:2,status:"final",when:"FINAL",date:"2026-08-30"},
+    {id:"sr:sport_event:72221378",home:"EVE",away:"COV",hs:3,as:1,status:"final",when:"Vie 6, 17:00",date:"2026-11-06",scorers:[{who:"",min:"52",side:"away",home:false,own:false},{who:"",min:"56",side:"home",home:true,own:false},{who:"",min:"61",side:"home",home:true,own:false},{who:"",min:"81",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221384",home:"LEE",away:"TOT",hs:1,as:0,status:"final",when:"Sáb 7, 09:30",date:"2026-11-07",scorers:[{who:"",min:"79",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221372",home:"ARS",away:"HUL",hs:1,as:0,status:"final",when:"Sáb 7, 12:00",date:"2026-11-07",scorers:[{who:"",min:"72",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221380",home:"FUL",away:"NEW",hs:1,as:1,status:"final",when:"Sáb 7, 12:00",date:"2026-11-07",scorers:[{who:"",min:"80",side:"away",home:false,own:false},{who:"",min:"83",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221388",home:"NFO",away:"MCI",hs:3,as:1,status:"final",when:"Sáb 7, 14:30",date:"2026-11-07",scorers:[{who:"",min:"6",side:"home",home:true,own:false},{who:"",min:"18",side:"home",home:true,own:false},{who:"",min:"52",side:"away",home:false,own:false},{who:"",min:"73",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221374",home:"BRI",away:"BRE",hs:2,as:0,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"15",side:"home",home:true,own:false},{who:"",min:"42",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221376",home:"CRY",away:"LFC",hs:1,as:3,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"40",side:"away",home:false,own:false},{who:"",min:"54",side:"away",home:false,own:false},{who:"",min:"89",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221382",home:"IPS",away:"BOU",hs:1,as:2,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"5",side:"away",home:false,own:false},{who:"",min:"46",side:"away",home:false,own:false},{who:"",min:"73",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221390",home:"SUN",away:"CFC",hs:1,as:0,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"36",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221386",home:"MUN",away:"AVL",hs:4,as:4,status:"final",when:"Dom 8, 13:30",date:"2026-11-08",scorers:[{who:"",min:"1",side:"away",home:false,own:false},{who:"",min:"4",side:"away",home:false,own:false},{who:"",min:"16",side:"home",home:true,own:false},{who:"",min:"44",side:"home",home:true,own:false},{who:"",min:"48",side:"away",home:false,own:false},{who:"",min:"53",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72221406",home:"MCI",away:"FUL",hs:null,as:null,status:"sched",when:"Sáb 21, 09:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72221392",home:"AVL",away:"SUN",hs:null,as:null,status:"sched",when:"Sáb 21, 12:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72221394",home:"BOU",away:"NFO",hs:null,as:null,status:"sched",when:"Sáb 21, 12:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72221398",home:"CFC",away:"LEE",hs:null,as:null,status:"sched",when:"Sáb 21, 12:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72221400",home:"COV",away:"CRY",hs:null,as:null,status:"sched",when:"Sáb 21, 12:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72221410",home:"TOT",away:"IPS",hs:null,as:null,status:"sched",when:"Sáb 21, 12:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72221408",home:"NEW",away:"ARS",hs:null,as:null,status:"sched",when:"Sáb 21, 14:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72221402",home:"HUL",away:"BRI",hs:null,as:null,status:"sched",when:"Dom 22, 11:00",date:"2026-11-22"},
+    {id:"sr:sport_event:72221404",home:"LFC",away:"MUN",hs:null,as:null,status:"sched",when:"Dom 22, 13:30",date:"2026-11-22"},
+    {id:"sr:sport_event:72221396",home:"BRE",away:"EVE",hs:null,as:null,status:"sched",when:"Lun 23, 17:00",date:"2026-11-23"},
   ],
   names:{EVE:"Everton",CRY:"Crystal Palace",IPS:"Ipswich Town",SUN:"Sunderland",NFO:"Nott'm Forest",LEE:"Leeds United",
     ARS:"Arsenal",COV:"Coventry City",HUL:"Hull City",MUN:"Man United",BRE:"Brentford",TOT:"Tottenham",
     BRI:"Brighton",AVL:"Aston Villa",MCI:"Man City",BOU:"Bournemouth",NEW:"Newcastle",LFC:"Liverpool",FUL:"Fulham",CFC:"Chelsea"},
   standings:[
-    {r:1,t:"MCI",w:3,d:0,l:0,pts:9,gf:7,gc:2},{r:2,t:"ARS",w:3,d:0,l:0,pts:9,gf:6,gc:1},{r:3,t:"HUL",w:2,d:1,l:0,pts:7,gf:3,gc:0},
-    {r:4,t:"CFC",w:2,d:0,l:1,pts:6,gf:8,gc:7},{r:5,t:"BRE",w:1,d:2,l:0,pts:5,gf:5,gc:2},{r:6,t:"LFC",w:1,d:2,l:0,pts:5,gf:6,gc:4},
-    {r:7,t:"NEW",w:1,d:2,l:0,pts:5,gf:6,gc:4},{r:8,t:"EVE",w:1,d:2,l:0,pts:5,gf:5,gc:3},{r:9,t:"LEE",w:1,d:2,l:0,pts:5,gf:3,gc:2},
-    {r:10,t:"BRI",w:1,d:1,l:1,pts:4,gf:8,gc:5},{r:11,t:"MUN",w:1,d:1,l:1,pts:4,gf:7,gc:6},{r:12,t:"SUN",w:1,d:1,l:1,pts:4,gf:3,gc:3},
-    {r:13,t:"CRY",w:1,d:0,l:2,pts:3,gf:4,gc:8},{r:14,t:"IPS",w:1,d:0,l:2,pts:3,gf:4,gc:8},{r:15,t:"BOU",w:0,d:2,l:1,pts:2,gf:4,gc:5},
-    {r:16,t:"NFO",w:0,d:2,l:1,pts:2,gf:2,gc:3},{r:17,t:"AVL",w:0,d:1,l:2,pts:1,gf:0,gc:5},{r:18,t:"TOT",w:0,d:1,l:2,pts:1,gf:0,gc:5},
-    {r:19,t:"FUL",w:0,d:0,l:3,pts:0,gf:4,gc:7},{r:20,t:"COV",w:0,d:0,l:3,pts:0,gf:0,gc:5},
+    {r:1,t:"ARS",w:9,d:0,l:1,pts:27},
+    {r:2,t:"BRI",w:7,d:1,l:2,pts:22},
+    {r:3,t:"MCI",w:7,d:0,l:3,pts:21},
+    {r:4,t:"LFC",w:5,d:3,l:2,pts:18},
+    {r:5,t:"CFC",w:5,d:1,l:4,pts:16},
+    {r:6,t:"EVE",w:4,d:4,l:2,pts:16},
+    {r:7,t:"BOU",w:4,d:3,l:3,pts:15},
+    {r:8,t:"BRE",w:3,d:5,l:2,pts:14},
+    {r:9,t:"LEE",w:3,d:5,l:2,pts:14},
+    {r:10,t:"AVL",w:3,d:4,l:3,pts:13},
+    {r:11,t:"TOT",w:3,d:3,l:4,pts:12},
+    {r:12,t:"NEW",w:3,d:3,l:4,pts:12},
+    {r:13,t:"HUL",w:2,d:5,l:3,pts:11},
+    {r:14,t:"IPS",w:3,d:2,l:5,pts:11},
+    {r:15,t:"FUL",w:2,d:4,l:4,pts:10},
+    {r:16,t:"NFO",w:2,d:3,l:5,pts:9},
+    {r:17,t:"COV",w:3,d:0,l:7,pts:9},
+    {r:18,t:"MUN",w:1,d:5,l:4,pts:8},
+    {r:19,t:"SUN",w:2,d:2,l:6,pts:8},
+    {r:20,t:"CRY",w:2,d:1,l:7,pts:7},
   ],
   names:{EVE:"Everton",CRY:"Crystal Palace",IPS:"Ipswich Town",SUN:"Sunderland",NFO:"Nott'm Forest",LEE:"Leeds United",
     ARS:"Arsenal",COV:"Coventry City",HUL:"Hull City",MUN:"Man United",BRE:"Brentford",TOT:"Tottenham",
@@ -818,94 +1228,172 @@ epl: { name:"Premier League", accent:"#37003C", country:"Inglaterra",
     FUL:"Fulham",BOU:"Bournemouth"}},
 la_liga: { name:"La Liga", accent:"#EE8707", country:"España",
   matches:[
-    {id:"lal906a",home:"VCF",away:"BAR",hs:null,as:null,status:"sched",when:"11:15",date:"2026-09-06"},
-    {id:"lal906b",home:"ALA",away:"OSA",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-06"},
-    {id:"lal906c",home:"ESP",away:"SEV",hs:null,as:null,status:"sched",when:"16:00",date:"2026-09-06"},
-    {id:"lal905a",home:"ATH",away:"ATM",hs:null,as:null,status:"sched",when:"11:15",date:"2026-09-05"},
-    {id:"lal905b",home:"RAY",away:"RAC",hs:null,as:null,status:"sched",when:"13:30",date:"2026-09-05"},
-    {id:"lal905c",home:"VIL",away:"DEP",hs:null,as:null,status:"sched",when:"16:00",date:"2026-09-05"},
-    {id:"ll19",home:"RMA",away:"MCF",hs:4,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"ll20",home:"DEP",away:"VCF",hs:3,as:1,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"ll21",home:"RCC",away:"ATH",hs:0,as:2,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"ll13",home:"RMA",away:"RSO",hs:4,as:1,status:"final",when:"Mié 26",date:"2026-08-26"},
-    {id:"ll15",home:"BAR",away:"ATH",hs:2,as:0,status:"final",when:"Jue 27",date:"2026-08-27"},
-    {id:"ll16",home:"RAC",away:"ELC",hs:3,as:2,status:"final",when:"Vie 28",date:"2026-08-28"},
-    {id:"ll17",home:"ALA",away:"VIL",hs:1,as:0,status:"final",when:"Vie 28",date:"2026-08-28"},
+    {id:"sr:sport_event:72478700",home:"SEV",away:"ALA",hs:0,as:0,status:"final",when:"Vie 6, 17:00",date:"2026-11-06",scorers:[]},
+    {id:"sr:sport_event:72478694",home:"MCF",away:"RAC",hs:1,as:2,status:"final",when:"Sáb 7, 10:00",date:"2026-11-07",scorers:[{who:"",min:"28",side:"home",home:true,own:false},{who:"",min:"50",side:"away",home:false,own:false},{who:"",min:"60",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72478692",home:"ESP",away:"DEP",hs:0,as:0,status:"final",when:"Sáb 7, 12:15",date:"2026-11-07",scorers:[]},
+    {id:"sr:sport_event:72478696",home:"OSA",away:"ATH",hs:1,as:1,status:"final",when:"Sáb 7, 14:30",date:"2026-11-07",scorers:[{who:"",min:"84",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72478702",home:"VCF",away:"RMA",hs:0,as:3,status:"final",when:"Sáb 7, 17:00",date:"2026-11-07",scorers:[{who:"",min:"28",side:"away",home:false,own:false},{who:"",min:"36",side:"away",home:false,own:false},{who:"",min:"75",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72478690",home:"ELC",away:"RBB",hs:0,as:2,status:"final",when:"Dom 8, 10:00",date:"2026-11-08",scorers:[{who:"",min:"81",side:"away",home:false,own:false},{who:"",min:"89",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72478698",home:"RSO",away:"RVC",hs:1,as:0,status:"final",when:"Dom 8, 12:15",date:"2026-11-08",scorers:[{who:"",min:"67",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72478688",home:"RCC",away:"LEV",hs:0,as:0,status:"final",when:"Dom 8, 14:30",date:"2026-11-08",scorers:[]},
+    {id:"sr:sport_event:72478704",home:"VIL",away:"GET",hs:2,as:0,status:"final",when:"Dom 8, 14:30",date:"2026-11-08",scorers:[{who:"",min:"80",side:"home",home:true,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72478686",home:"ATM",away:"BAR",hs:1,as:2,status:"final",when:"Dom 8, 17:00",date:"2026-11-08",scorers:[{who:"",min:"10",side:"home",home:true,own:false},{who:"",min:"45",side:"away",home:false,own:false},{who:"",min:"66",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72478708",home:"ATH",away:"ESP",hs:null,as:null,status:"sched",when:"Vie 20, 17:00",date:"2026-11-20"},
+    {id:"sr:sport_event:72478706",home:"ALA",away:"DEP",hs:null,as:null,status:"sched",when:"Sáb 21, 10:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72478720",home:"RVC",away:"VCF",hs:null,as:null,status:"sched",when:"Sáb 21, 12:15",date:"2026-11-21"},
+    {id:"sr:sport_event:72478724",home:"SEV",away:"RBB",hs:null,as:null,status:"sched",when:"Sáb 21, 14:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72478722",home:"RMA",away:"RCC",hs:null,as:null,status:"sched",when:"Sáb 21, 17:00",date:"2026-11-21"},
+    {id:"sr:sport_event:72478710",home:"BAR",away:"VIL",hs:null,as:null,status:"sched",when:"Dom 22, 10:00",date:"2026-11-22"},
+    {id:"sr:sport_event:72478718",home:"RAC",away:"RSO",hs:null,as:null,status:"sched",when:"Dom 22, 12:15",date:"2026-11-22"},
+    {id:"sr:sport_event:72478716",home:"OSA",away:"MCF",hs:null,as:null,status:"sched",when:"Dom 22, 14:30",date:"2026-11-22"},
+    {id:"sr:sport_event:72478712",home:"GET",away:"ATM",hs:null,as:null,status:"sched",when:"Dom 22, 17:00",date:"2026-11-22"},
+    {id:"sr:sport_event:72478714",home:"LEV",away:"ELC",hs:null,as:null,status:"sched",when:"Lun 23, 17:00",date:"2026-11-23"},
   ],
   names:{BET:"Betis",RSO:"Real Sociedad",RAY:"Rayo Vallecano",ELC:"Elche",CEL:"Celta",ATH:"Athletic Bilbao",SEV:"Sevilla",ALA:"Alavés",GET:"Getafe",RVC:"Rayo Vallecano",RAC:"Racing Santander",
     VIL:"Villarreal",ESP:"Espanyol",LEV:"Levante",DEP:"Deportivo La Coruña",ELC:"Elche",ATM:"Atlético Madrid",MCF:"Málaga",
     RBB:"Real Betis",RSO:"Real Sociedad",VCF:"Valencia",RCC:"Celta de Vigo",RMA:"Real Madrid",BAR:"Barcelona",OSA:"Osasuna"},
   standings:[
-    {r:1,t:"BAR",w:4,d:0,l:0,pts:12,gf:17,gc:2},{r:2,t:"ALA",w:3,d:1,l:0,pts:10,gf:10,gc:3},{r:3,t:"RMA",w:3,d:0,l:1,pts:9,gf:10,gc:3},
-    {r:4,t:"BET",w:3,d:0,l:1,pts:9,gf:5,gc:5},{r:5,t:"DEP",w:2,d:2,l:0,pts:8,gf:8,gc:5},{r:6,t:"ATM",w:2,d:1,l:1,pts:7,gf:7,gc:6},
-    {r:7,t:"SEV",w:2,d:1,l:1,pts:7,gf:7,gc:6},{r:8,t:"OSA",w:2,d:1,l:1,pts:7,gf:5,gc:6},{r:9,t:"ATH",w:2,d:0,l:2,pts:6,gf:6,gc:5},
-    {r:10,t:"LEV",w:1,d:2,l:1,pts:5,gf:5,gc:5},{r:11,t:"ESP",w:1,d:1,l:2,pts:4,gf:6,gc:5},{r:12,t:"RAC",w:1,d:1,l:2,pts:4,gf:7,gc:8},
-    {r:13,t:"RAY",w:1,d:1,l:2,pts:4,gf:7,gc:10},{r:14,t:"RSO",w:1,d:1,l:2,pts:4,gf:3,gc:6},{r:15,t:"GET",w:1,d:0,l:2,pts:3,gf:1,gc:4},
-    {r:16,t:"VIL",w:0,d:2,l:2,pts:2,gf:6,gc:8},{r:17,t:"CEL",w:0,d:2,l:2,pts:2,gf:1,gc:4},{r:18,t:"MCF",w:0,d:2,l:2,pts:2,gf:1,gc:7},
-    {r:19,t:"ELC",w:0,d:1,l:2,pts:1,gf:3,gc:9},{r:20,t:"VCF",w:0,d:1,l:3,pts:1,gf:1,gc:9},
+    {r:1,t:"BAR",w:11,d:0,l:1,pts:33},
+    {r:2,t:"RMA",w:10,d:0,l:2,pts:30},
+    {r:3,t:"ATM",w:9,d:1,l:2,pts:28},
+    {r:4,t:"RBB",w:8,d:2,l:2,pts:26},
+    {r:5,t:"RSO",w:7,d:1,l:4,pts:22},
+    {r:6,t:"SEV",w:5,d:3,l:4,pts:18},
+    {r:7,t:"ATH",w:4,d:4,l:3,pts:16},
+    {r:8,t:"VIL",w:4,d:3,l:5,pts:15},
+    {r:9,t:"DEP",w:3,d:6,l:3,pts:15},
+    {r:10,t:"RAC",w:4,d:2,l:6,pts:14},
+    {r:11,t:"RCC",w:2,d:7,l:3,pts:13},
+    {r:12,t:"ALA",w:3,d:4,l:5,pts:13},
+    {r:13,t:"ESP",w:3,d:3,l:6,pts:12},
+    {r:14,t:"RVC",w:3,d:3,l:5,pts:12},
+    {r:15,t:"GET",w:3,d:3,l:6,pts:12},
+    {r:16,t:"OSA",w:3,d:3,l:6,pts:12},
+    {r:17,t:"LEV",w:2,d:5,l:5,pts:11},
+    {r:18,t:"ELC",w:2,d:4,l:6,pts:10},
+    {r:19,t:"VCF",w:2,d:3,l:7,pts:9},
+    {r:20,t:"MCF",w:0,d:5,l:7,pts:5},
   ]
 },
 
 serie_a: { name:"Serie A", accent:"#0068A8", country:"Italia",
   matches:[
-    {id:"sa906a",home:"JUV",away:"MIL",hs:null,as:null,status:"sched",when:"15:45",date:"2026-09-06"},
-    {id:"sa906b",home:"BOL",away:"SAS",hs:null,as:null,status:"sched",when:"13:00",date:"2026-09-06"},
-    {id:"sr:sport_event:71944898",home:"INT",away:"MON",hs:4,as:1,status:"final",when:"Sáb 22, 13:30",date:"2026-08-22"},
-    {id:"sr:sport_event:71944906",home:"UDI",away:"COM",hs:1,as:1,status:"final",when:"Sáb 22, 13:30",date:"2026-08-22"},
-    {id:"sr:sport_event:71944896",home:"GEN",away:"NAP",hs:0,as:2,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:71944900",home:"PAR",away:"CAG",hs:0,as:1,status:"final",when:"Sáb 22, 15:45",date:"2026-08-22"},
-    {id:"sr:sport_event:71944894",home:"FRO",away:"JUV",hs:0,as:0,status:"sched",when:"Hoy 13:30",date:"2026-08-23"},
-    {id:"sr:sport_event:71944908",home:"VEN",away:"LEC",hs:0,as:0,status:"sched",when:"Hoy 13:30",date:"2026-08-23"},
-    {id:"sr:sport_event:71944890",home:"ATA",away:"SAS",hs:0,as:0,status:"sched",when:"Hoy 15:45",date:"2026-08-23"},
-    {id:"sr:sport_event:71944904",home:"TOR",away:"ACM",hs:0,as:0,status:"sched",when:"Hoy 15:45",date:"2026-08-23"},
-    {id:"sr:sport_event:71944892",home:"BFC",away:"LAZ",hs:0,as:0,status:"sched",when:"Lun 24, 13:30",date:"2026-08-24"},
-    {id:"sr:sport_event:71944902",home:"ROM",away:"FIO",hs:0,as:0,status:"sched",when:"Lun 24, 15:45",date:"2026-08-24"},
-    {id:"sr:sport_event:71945218",home:"ACM",away:"VEN",hs:2,as:0,status:"final",when:"Vie 28",date:"2026-08-28"},
-    {id:"sr:sport_event:71945210",home:"FIO",away:"FRO",hs:0,as:0,status:"sched",when:"Sáb 29, 13:30",date:"2026-08-29"},
-    {id:"sr:sport_event:71945220",home:"MON",away:"UDI",hs:0,as:0,status:"sched",when:"Sáb 29, 13:30",date:"2026-08-29"},
-    {id:"sr:sport_event:71945224",home:"SAS",away:"TOR",hs:0,as:0,status:"sched",when:"Sáb 29, 13:30",date:"2026-08-29"},
+    {id:"sr:sport_event:71945404",home:"VEN",away:"UDI",hs:2,as:1,status:"final",when:"Vie 6, 16:45",date:"2026-11-06",scorers:[{who:"",min:"54",side:"home",home:true,own:false},{who:"",min:"57",side:"away",home:false,own:false},{who:"",min:"65",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945386",home:"CAG",away:"FRO",hs:1,as:0,status:"final",when:"Sáb 7, 11:00",date:"2026-11-07",scorers:[{who:"",min:"38",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945402",home:"TOR",away:"LEC",hs:1,as:1,status:"final",when:"Sáb 7, 11:00",date:"2026-11-07",scorers:[{who:"",min:"60",side:"home",home:true,own:false},{who:"",min:"73",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:71945398",home:"PAR",away:"BFC",hs:1,as:2,status:"final",when:"Sáb 7, 14:00",date:"2026-11-07",scorers:[{who:"",min:"53",side:"away",home:false,own:false},{who:"",min:"72",side:"away",home:false,own:false},{who:"",min:"81",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945400",home:"ROM",away:"SAS",hs:3,as:0,status:"final",when:"Sáb 7, 16:45",date:"2026-11-07",scorers:[{who:"",min:"27",side:"home",home:true,own:false},{who:"",min:"30",side:"home",home:true,own:false},{who:"",min:"58",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945396",home:"NAP",away:"LAZ",hs:1,as:1,status:"final",when:"Dom 8, 08:30",date:"2026-11-08",scorers:[{who:"",min:"28",side:"away",home:false,own:false},{who:"",min:"48",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945390",home:"GEN",away:"ACM",hs:1,as:2,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"13",side:"away",home:false,own:false},{who:"",min:"19",side:"away",home:false,own:false},{who:"",min:"88",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945394",home:"MON",away:"ATA",hs:0,as:1,status:"final",when:"Dom 8, 11:00",date:"2026-11-08",scorers:[{who:"",min:"49",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:71945392",home:"INT",away:"COM",hs:2,as:0,status:"final",when:"Dom 8, 14:00",date:"2026-11-08",scorers:[{who:"",min:"12",side:"home",home:true,own:false},{who:"",min:"19",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:71945388",home:"FIO",away:"JUV",hs:2,as:2,status:"final",when:"Dom 8, 16:45",date:"2026-11-08",scorers:[{who:"",min:"4",side:"home",home:true,own:false},{who:"",min:"32",side:"away",home:false,own:false},{who:"",min:"54",side:"home",home:true,own:false},{who:"",min:"66",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:71945410",home:"COM",away:"CAG",hs:null,as:null,status:"sched",when:"Sáb 21, 11:00",date:"2026-11-21"},
+    {id:"sr:sport_event:71945414",home:"LAZ",away:"LEC",hs:null,as:null,status:"sched",when:"Sáb 21, 11:00",date:"2026-11-21"},
+    {id:"sr:sport_event:71945422",home:"PAR",away:"ROM",hs:null,as:null,status:"sched",when:"Sáb 21, 14:00",date:"2026-11-21"},
+    {id:"sr:sport_event:71945420",home:"NAP",away:"TOR",hs:null,as:null,status:"sched",when:"Sáb 21, 16:45",date:"2026-11-21"},
+    {id:"sr:sport_event:71945412",home:"JUV",away:"VEN",hs:null,as:null,status:"sched",when:"Dom 22, 08:30",date:"2026-11-22"},
+    {id:"sr:sport_event:71945408",home:"BFC",away:"UDI",hs:null,as:null,status:"sched",when:"Dom 22, 11:00",date:"2026-11-22"},
+    {id:"sr:sport_event:71945424",home:"SAS",away:"GEN",hs:null,as:null,status:"sched",when:"Dom 22, 11:00",date:"2026-11-22"},
+    {id:"sr:sport_event:71945416",home:"ACM",away:"FRO",hs:null,as:null,status:"sched",when:"Dom 22, 14:00",date:"2026-11-22"},
+    {id:"sr:sport_event:71945406",home:"ATA",away:"INT",hs:null,as:null,status:"sched",when:"Dom 22, 16:45",date:"2026-11-22"},
+    {id:"sr:sport_event:71945418",home:"MON",away:"FIO",hs:null,as:null,status:"sched",when:"Lun 23, 16:45",date:"2026-11-23"},
   ],
   names:{INT:"Inter",MON:"Monza",UDI:"Udinese",COM:"Como",GEN:"Genoa",NAP:"Napoli",PAR:"Parma",CAG:"Cagliari",
     FRO:"Frosinone",JUV:"Juventus",VEN:"Venezia",LEC:"Lecce",ATA:"Atalanta",SAS:"Sassuolo",TOR:"Torino",ACM:"AC Milan",
     BFC:"Bologna",LAZ:"Lazio",ROM:"AS Roma",FIO:"Fiorentina"},
   standings:[
-    {r:1,t:"ROM",w:3,d:0,l:0,pts:9,gf:10,gc:1},{r:2,t:"INT",w:3,d:0,l:0,pts:9,gf:8,gc:3},{r:3,t:"COM",w:2,d:1,l:0,pts:7,gf:7,gc:3},
-    {r:4,t:"MIL",w:2,d:1,l:0,pts:7,gf:5,gc:2},{r:5,t:"JUV",w:2,d:1,l:0,pts:7,gf:4,gc:1},{r:6,t:"FRO",w:2,d:0,l:1,pts:6,gf:6,gc:3},
-    {r:7,t:"LAZ",w:2,d:0,l:0,pts:6,gf:2,gc:0},{r:8,t:"ATA",w:2,d:0,l:1,pts:6,gf:4,gc:3},{r:9,t:"UDI",w:1,d:1,l:0,pts:4,gf:4,gc:3},
-    {r:10,t:"SAS",w:1,d:1,l:1,pts:4,gf:5,gc:5},{r:11,t:"NAP",w:1,d:0,l:2,pts:3,gf:5,gc:5},{r:12,t:"CAG",w:1,d:0,l:1,pts:3,gf:1,gc:1},
-    {r:13,t:"TOR",w:1,d:0,l:2,pts:3,gf:4,gc:5},{r:14,t:"LEC",w:1,d:0,l:1,pts:3,gf:2,gc:4},{r:15,t:"BOL",w:0,d:1,l:2,pts:1,gf:2,gc:4},
-    {r:16,t:"PAR",w:0,d:1,l:2,pts:1,gf:1,gc:4},{r:17,t:"MON",w:0,d:1,l:2,pts:1,gf:4,gc:8},{r:18,t:"VEN",w:0,d:0,l:3,pts:0,gf:2,gc:7},
-    {r:19,t:"GEN",w:0,d:0,l:3,pts:0,gf:1,gc:7},{r:20,t:"FIO",w:0,d:0,l:3,pts:0,gf:1,gc:9},
+    {r:1,t:"LAZ",w:9,d:2,l:0,pts:29},
+    {r:2,t:"INT",w:9,d:1,l:1,pts:28},
+    {r:3,t:"ROM",w:8,d:3,l:0,pts:27},
+    {r:4,t:"ACM",w:7,d:3,l:1,pts:24},
+    {r:5,t:"COM",w:7,d:2,l:2,pts:23},
+    {r:6,t:"FRO",w:6,d:2,l:3,pts:20},
+    {r:7,t:"JUV",w:5,d:3,l:3,pts:18},
+    {r:8,t:"BFC",w:5,d:2,l:4,pts:17},
+    {r:9,t:"CAG",w:5,d:1,l:5,pts:16},
+    {r:10,t:"NAP",w:4,d:3,l:4,pts:15},
+    {r:11,t:"TOR",w:4,d:2,l:5,pts:14},
+    {r:12,t:"ATA",w:4,d:2,l:5,pts:14},
+    {r:13,t:"GEN",w:4,d:1,l:6,pts:13},
+    {r:14,t:"LEC",w:3,d:1,l:7,pts:10},
+    {r:15,t:"FIO",w:2,d:3,l:6,pts:9},
+    {r:16,t:"PAR",w:2,d:2,l:7,pts:8},
+    {r:17,t:"SAS",w:2,d:2,l:7,pts:8},
+    {r:18,t:"MON",w:2,d:1,l:8,pts:7},
+    {r:19,t:"VEN",w:2,d:0,l:9,pts:6},
+    {r:20,t:"UDI",w:1,d:2,l:8,pts:5},
   ]
 },
 bundesliga: { name:"Bundesliga", accent:"#D3010C", country:"Alemania",
   matches:[
-    {id:"bl906a",home:"HSV",away:"M05",hs:null,as:null,status:"sched",when:"10:30",date:"2026-09-06"},
-    {id:"bl906b",home:"SGE",away:"FCA",hs:null,as:null,status:"sched",when:"12:30",date:"2026-09-06"},
-    {id:"bl30a",home:"SCF",away:"SVW",hs:4,as:1,status:"final",when:"FINAL",date:"2026-08-30"},
-    {id:"bl30b",home:"FCA",away:"SCH",hs:3,as:0,status:"final",when:"FINAL",date:"2026-08-30"},
+    {id:"sr:sport_event:72513278",home:"SGE",away:"HSV",hs:3,as:1,status:"final",when:"Dom 1, 13:30",date:"2026-11-01",scorers:[{who:"",min:"10",side:"home",home:true,own:false},{who:"",min:"14",side:"away",home:false,own:false},{who:"",min:"47",side:"home",home:true,own:false},{who:"",min:"69",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513304",home:"HSV",away:"BMG",hs:3,as:1,status:"final",when:"Vie 6, 16:30",date:"2026-11-06",scorers:[{who:"",min:"11",side:"home",home:true,own:false},{who:"",min:"44",side:"away",home:false,own:false},{who:"",min:"59",side:"home",home:true,own:false},{who:"",min:"70",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513292",home:"BVB",away:"SVE",hs:2,as:1,status:"final",when:"Sáb 7, 11:30",date:"2026-11-07",scorers:[{who:"",min:"55",side:"home",home:true,own:false},{who:"",min:"71",side:"home",home:true,own:false},{who:"",min:"81",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72513294",home:"RBL",away:"FCA",hs:5,as:2,status:"final",when:"Sáb 7, 11:30",date:"2026-11-07",scorers:[{who:"",min:"1",side:"away",home:false,own:false},{who:"",min:"34",side:"home",home:true,own:false},{who:"",min:"35",side:"home",home:true,own:false},{who:"",min:"45",side:"home",home:true,own:false},{who:"",min:"60",side:"home",home:true,own:false},{who:"",min:"66",side:"home",home:true,own:false},{who:"",min:"90",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72513302",home:"M05",away:"BMU",hs:1,as:2,status:"final",when:"Sáb 7, 11:30",date:"2026-11-07",scorers:[{who:"",min:"14",side:"away",home:false,own:false},{who:"",min:"57",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513308",home:"PAD",away:"SGE",hs:2,as:2,status:"final",when:"Sáb 7, 11:30",date:"2026-11-07",scorers:[{who:"",min:"23",side:"away",home:false,own:false},{who:"",min:"45",side:"home",home:true,own:false},{who:"",min:"73",side:"home",home:true,own:false},{who:"",min:"90",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72513296",home:"VFB",away:"SVW",hs:1,as:0,status:"final",when:"Sáb 7, 14:30",date:"2026-11-07",scorers:[{who:"",min:"7",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513306",home:"KOE",away:"LEV",hs:1,as:2,status:"final",when:"Dom 8, 11:30",date:"2026-11-08",scorers:[{who:"",min:"7",side:"away",home:false,own:false},{who:"",min:"85",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513300",home:"SCF",away:"UNI",hs:2,as:0,status:"final",when:"Dom 8, 13:30",date:"2026-11-08",scorers:[{who:"",min:"55",side:"home",home:true,own:false},{who:"",min:"67",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:72513298",home:"TSG",away:"SCH",hs:2,as:1,status:"final",when:"Dom 8, 15:30",date:"2026-11-08",scorers:[{who:"",min:"10",side:"home",home:true,own:false},{who:"",min:"26",side:"home",home:true,own:false},{who:"",min:"81",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:72513310",home:"BMU",away:"KOE",hs:null,as:null,status:"sched",when:"Vie 20, 16:30",date:"2026-11-20"},
+    {id:"sr:sport_event:72513312",home:"LEV",away:"PAD",hs:null,as:null,status:"sched",when:"Sáb 21, 11:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513314",home:"SGE",away:"TSG",hs:null,as:null,status:"sched",when:"Sáb 21, 11:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513318",home:"UNI",away:"RBL",hs:null,as:null,status:"sched",when:"Sáb 21, 11:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513320",home:"BMG",away:"BVB",hs:null,as:null,status:"sched",when:"Sáb 21, 11:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513326",home:"SVE",away:"SCF",hs:null,as:null,status:"sched",when:"Sáb 21, 11:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513324",home:"SCH",away:"VFB",hs:null,as:null,status:"sched",when:"Sáb 21, 14:30",date:"2026-11-21"},
+    {id:"sr:sport_event:72513316",home:"FCA",away:"M05",hs:null,as:null,status:"sched",when:"Dom 22, 11:30",date:"2026-11-22"},
+    {id:"sr:sport_event:72513322",home:"SVW",away:"HSV",hs:null,as:null,status:"sched",when:"Dom 22, 13:30",date:"2026-11-22"},
+    {id:"sr:sport_event:72513342",home:"SVW",away:"BMG",hs:null,as:null,status:"sched",when:"Vie 27, 16:30",date:"2026-11-27"},
   ],
   names:{BMU:"Bayern Múnich",VFB:"Stuttgart",RBL:"RB Leipzig",BMG:"M'gladbach",M05:"Mainz",
     UNI:"Union Berlin",SGE:"E. Frankfurt",KOE:"Colonia",TSG:"Hoffenheim",LEV:"B. Leverkusen",
-    BVB:"B. Dortmund",HSV:"Hamburgo",SCF:"Freiburg",SVW:"W. Bremen",FCA:"Augsburgo",SCH:"Schalke 04",ELV:"Elversberg",PAD:"Paderborn"},
+    BVB:"B. Dortmund",HSV:"Hamburgo",SCF:"Freiburg",SVW:"W. Bremen",FCA:"Augsburgo",SCH:"Schalke 04",SVE:"Elversberg",PAD:"Paderborn"},
   standings:[
-    {r:1,t:"FCA",w:2,d:0,l:0,pts:6,gf:7,gc:1},{r:2,t:"SCF",w:2,d:0,l:0,pts:6,gf:5,gc:1},{r:3,t:"BVB",w:2,d:0,l:0,pts:6,gf:5,gc:2},
-    {r:4,t:"ELV",w:2,d:0,l:0,pts:6,gf:7,gc:5},{r:5,t:"M05",w:1,d:1,l:0,pts:4,gf:5,gc:0},{r:6,t:"BMU",w:1,d:1,l:0,pts:4,gf:5,gc:1},
-    {r:7,t:"LEV",w:1,d:0,l:1,pts:3,gf:6,gc:3},{r:8,t:"RBL",w:1,d:0,l:1,pts:3,gf:4,gc:3},{r:9,t:"VFB",w:1,d:0,l:1,pts:3,gf:5,gc:6},
-    {r:10,t:"SVW",w:1,d:0,l:1,pts:3,gf:4,gc:5},{r:11,t:"KOE",w:1,d:0,l:1,pts:3,gf:4,gc:6},{r:12,t:"PAD",w:0,d:1,l:1,pts:1,gf:0,gc:1},
-    {r:13,t:"SGE",w:0,d:1,l:1,pts:1,gf:4,gc:7},{r:14,t:"SCH",w:0,d:1,l:1,pts:1,gf:0,gc:3},{r:15,t:"UNI",w:0,d:1,l:1,pts:1,gf:3,gc:7},
-    {r:16,t:"TSG",w:0,d:0,l:2,pts:0,gf:4,gc:6},{r:17,t:"BMG",w:0,d:0,l:2,pts:0,gf:3,gc:7},{r:18,t:"HSV",w:0,d:0,l:2,pts:0,gf:0,gc:7},
+    {r:1,t:"BMU",w:6,d:3,l:0,pts:21},
+    {r:2,t:"BVB",w:6,d:3,l:0,pts:21},
+    {r:3,t:"SCF",w:6,d:1,l:2,pts:19},
+    {r:4,t:"RBL",w:6,d:0,l:3,pts:18},
+    {r:5,t:"LEV",w:5,d:1,l:3,pts:16},
+    {r:6,t:"SVW",w:4,d:3,l:2,pts:15},
+    {r:7,t:"SVE",w:4,d:1,l:4,pts:13},
+    {r:8,t:"VFB",w:4,d:0,l:5,pts:12},
+    {r:9,t:"TSG",w:4,d:0,l:5,pts:12},
+    {r:10,t:"SGE",w:3,d:3,l:3,pts:12},
+    {r:11,t:"HSV",w:4,d:0,l:5,pts:12},
+    {r:12,t:"M05",w:3,d:1,l:5,pts:10},
+    {r:13,t:"PAD",w:2,d:4,l:3,pts:10},
+    {r:14,t:"FCA",w:2,d:3,l:4,pts:9},
+    {r:15,t:"KOE",w:2,d:3,l:4,pts:9},
+    {r:16,t:"UNI",w:1,d:4,l:4,pts:7},
+    {r:17,t:"SCH",w:1,d:3,l:5,pts:6},
+    {r:18,t:"BMG",w:1,d:1,l:7,pts:4},
   ]
 },
 ucl: { name:"Champions League", accent:"#1A2B5C", country:"UEFA",
   matches:[
-    {id:"ucl1",home:"SAB",away:"HBS",hs:5,as:2,status:"final",when:"Mar 25 · Ida/Vuelta",date:"2026-08-25"},
-    {id:"ucl2",home:"BOD",away:"NEC",hs:3,as:0,status:"final",when:"Mar 25 · Play-off",date:"2026-08-25"},
-    {id:"ucl3",home:"LAS",away:"CEL",hs:5,as:1,status:"final",when:"Mar 25 · Play-off",date:"2026-08-25"},
-    {id:"ucl4",home:"AEK",away:"LEV",hs:0,as:0,status:"sched",when:"Mié 26, 15:00",date:"2026-08-26"},
-    {id:"ucl5",home:"LYO",away:"FEN",hs:0,as:0,status:"sched",when:"Mié 26, 15:00",date:"2026-08-26"},
-    {id:"ucl6",home:"NKC",away:"SLO",hs:0,as:0,status:"sched",when:"Mié 26, 15:00",date:"2026-08-26"},
-    {id:"ucl7",home:"VIK",away:"DIN",hs:0,as:0,status:"sched",when:"Mié 26, 15:00",date:"2026-08-26"},
+    {id:"sr:sport_event:74165994",home:"VIL",away:"PSG",hs:0,as:6,status:"final",when:"Mar 3, 17:00",date:"2026-11-03",scorers:[{who:"",min:"9",side:"away",home:false,own:false},{who:"",min:"12",side:"away",home:false,own:false},{who:"",min:"13",side:"away",home:false,own:false},{who:"",min:"17",side:"away",home:false,own:false},{who:"",min:"50",side:"away",home:false,own:false},{who:"",min:"78",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:74165996",home:"AEK",away:"RMA",hs:2,as:3,status:"final",when:"Mié 4, 14:45",date:"2026-11-04",scorers:[{who:"",min:"12",side:"home",home:true,own:false},{who:"",min:"32",side:"away",home:false,own:false},{who:"",min:"75",side:"home",home:true,own:false},{who:"",min:"78",side:"away",home:false,own:false},{who:"",min:"90",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:74165998",home:"FEN",away:"LFC",hs:3,as:2,status:"final",when:"Mié 4, 14:45",date:"2026-11-04",scorers:[{who:"",min:"25",side:"away",home:false,own:false},{who:"",min:"29",side:"home",home:true,own:false},{who:"",min:"69",side:"away",home:false,own:false},{who:"",min:"73",side:"home",home:true,own:false},{who:"",min:"79",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:74166000",home:"BVB",away:"RBB",hs:2,as:1,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"49",side:"home",home:true,own:false},{who:"",min:"67",side:"away",home:false,own:false},{who:"",min:"72",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:74166002",home:"FCP",away:"NAP",hs:4,as:1,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"11",side:"home",home:true,own:false},{who:"",min:"43",side:"away",home:false,own:false},{who:"",min:"71",side:"home",home:true,own:false},{who:"",min:"80",side:"home",home:true,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:74166004",home:"PSV",away:"BRU",hs:1,as:2,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"25",side:"away",home:false,own:false},{who:"",min:"54",side:"home",home:true,own:false},{who:"",min:"65",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:74166006",home:"RBL",away:"MCI",hs:2,as:3,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"37",side:"away",home:false,own:false},{who:"",min:"49",side:"home",home:true,own:false},{who:"",min:"58",side:"away",home:false,own:false},{who:"",min:"61",side:"home",home:true,own:false},{who:"",min:"78",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:74166008",home:"RCL",away:"COM",hs:1,as:9,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"7",side:"away",home:false,own:false},{who:"",min:"32",side:"away",home:false,own:false},{who:"",min:"40",side:"away",home:false,own:false},{who:"",min:"47",side:"away",home:false,own:false},{who:"",min:"53",side:"away",home:false,own:false},{who:"",min:"57",side:"away",home:false,own:false},{who:"",min:"62",side:"away",home:false,own:false},{who:"",min:"65",side:"home",home:true,own:false},{who:"",min:"69",side:"away",home:false,own:false},{who:"",min:"90",side:"away",home:false,own:false}]},
+    {id:"sr:sport_event:74166010",home:"SLA",away:"ARS",hs:1,as:2,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"9",side:"away",home:false,own:false},{who:"",min:"38",side:"away",home:false,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:74166012",home:"VIK",away:"SBH",hs:4,as:1,status:"final",when:"Mié 4, 17:00",date:"2026-11-04",scorers:[{who:"",min:"11",side:"away",home:false,own:false},{who:"",min:"27",side:"home",home:true,own:false},{who:"",min:"69",side:"home",home:true,own:false},{who:"",min:"81",side:"home",home:true,own:false},{who:"",min:"90",side:"home",home:true,own:false}]},
+    {id:"sr:sport_event:74166014",home:"BOG",away:"ASK",hs:null,as:null,status:"sched",when:"Mar 24, 14:45",date:"2026-11-24"},
+    {id:"sr:sport_event:74166016",home:"GAL",away:"AVL",hs:null,as:null,status:"sched",when:"Mar 24, 14:45",date:"2026-11-24"},
+    {id:"sr:sport_event:74166018",home:"ARS",away:"BVB",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166020",home:"COM",away:"AEK",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166022",home:"FEY",away:"FCP",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166024",home:"MCI",away:"NAP",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166026",home:"RBL",away:"RCL",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166028",home:"RMA",away:"PSV",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166030",home:"SLO",away:"RBB",hs:null,as:null,status:"sched",when:"Mar 24, 17:00",date:"2026-11-24"},
+    {id:"sr:sport_event:74166032",home:"SBH",away:"BAR",hs:null,as:null,status:"sched",when:"Mié 25, 14:45",date:"2026-11-25"},
   ],
   names:{
     SAB:"Sabah",HBS:"Hapoel Be'er Sheva",BOD:"Bodø/Glimt",NEC:"NEC Nijmegen",
@@ -916,8 +1404,45 @@ ucl: { name:"Champions League", accent:"#1A2B5C", country:"UEFA",
     BAY:"Bayern",PSG:"PSG",INT:"Inter",JUV:"Juventus",ATM:"Atlético Madrid",
     ARS:"Arsenal",CHE:"Chelsea",BVB:"Dortmund",NAP:"Napoli",BEN:"Benfica",
     ACM:"Milan",TOT:"Tottenham",SPO:"Sporting",NEW:"Newcastle"
-  },
-  standings:[],
+  ,COM:"Como",AVL:"Aston Villa",BRU:"Brujas",RBB:"Betis",BMU:"Bayern",VFB:"Stuttgart",ASK:"LASK",MUN:"Man United",GAL:"Galatasaray",ROM:"Roma",SHA:"Shakhtar",PSV:"PSV",BOG:"Bodø/Glimt",FCP:"Oporto",VIL:"Villarreal",RBL:"Leipzig",SBH:"Sabah",FEY:"Feyenoord",RCL:"Lens",SLA:"Slavia Praga",LIL:"Lille"},
+  standings:[
+    {r:1,t:"PSG",w:4,d:0,l:0,pts:12},
+    {r:2,t:"RMA",w:4,d:0,l:0,pts:12},
+    {r:3,t:"ARS",w:3,d:1,l:0,pts:10},
+    {r:4,t:"COM",w:3,d:0,l:1,pts:9},
+    {r:5,t:"BAR",w:3,d:0,l:1,pts:9},
+    {r:6,t:"AVL",w:3,d:0,l:1,pts:9},
+    {r:7,t:"MCI",w:3,d:0,l:1,pts:9},
+    {r:8,t:"LFC",w:3,d:0,l:1,pts:9},
+    {r:9,t:"BRU",w:3,d:0,l:1,pts:9},
+    {r:10,t:"SPO",w:3,d:0,l:1,pts:9},
+    {r:11,t:"RBB",w:3,d:0,l:1,pts:9},
+    {r:12,t:"BVB",w:3,d:0,l:1,pts:9},
+    {r:13,t:"BMU",w:2,d:2,l:0,pts:8},
+    {r:14,t:"VFB",w:2,d:1,l:1,pts:7},
+    {r:15,t:"INT",w:2,d:0,l:2,pts:6},
+    {r:16,t:"ASK",w:2,d:0,l:2,pts:6},
+    {r:17,t:"MUN",w:2,d:0,l:2,pts:6},
+    {r:18,t:"GAL",w:2,d:0,l:2,pts:6},
+    {r:19,t:"FEN",w:1,d:2,l:1,pts:5},
+    {r:20,t:"ROM",w:1,d:1,l:2,pts:4},
+    {r:21,t:"SHA",w:1,d:1,l:2,pts:4},
+    {r:22,t:"VIK",w:1,d:1,l:2,pts:4},
+    {r:23,t:"ATM",w:1,d:1,l:2,pts:4},
+    {r:24,t:"PSV",w:1,d:1,l:2,pts:4},
+    {r:25,t:"BOG",w:1,d:1,l:2,pts:4},
+    {r:26,t:"FCP",w:1,d:0,l:3,pts:3},
+    {r:27,t:"NAP",w:1,d:0,l:3,pts:3},
+    {r:28,t:"VIL",w:1,d:0,l:3,pts:3},
+    {r:29,t:"AEK",w:1,d:0,l:3,pts:3},
+    {r:30,t:"RBL",w:1,d:0,l:3,pts:3},
+    {r:31,t:"SBH",w:1,d:0,l:3,pts:3},
+    {r:32,t:"FEY",w:1,d:0,l:3,pts:3},
+    {r:33,t:"RCL",w:1,d:0,l:3,pts:3},
+    {r:34,t:"SLA",w:0,d:1,l:3,pts:1},
+    {r:35,t:"LIL",w:0,d:1,l:3,pts:1},
+    {r:36,t:"SLO",w:0,d:0,l:4,pts:0},
+  ],
   note:"Play-offs 2026/27 · Sorteo fase de liga: jueves 27/08. Actualizá para resultados ESPN en vivo."
 }
 };
@@ -930,60 +1455,110 @@ const GAME_STATS = {
 
 // ---- Sudamérica: sin API en vivo — tablas reales buscadas a mano, fechas indicadas ----
 const URUGUAY = {
-  updated:"Torneo AUF 2026 · 30/08/2026",
-  link:"https://www.sofascore.com/es/football/tournament/uruguay/primera-division/278",
+  updated:"Clausura Uruguay 2026 · 12 PJ · 30/10",
   table:[
-    {t:"Peñarol",pj:8,pts:18},{t:"Nacional",pj:8,pts:17},{t:"Cerro Largo",pj:8,pts:14},
-    {t:"Boston River",pj:8,pts:13},{t:"Defensor",pj:8,pts:12},{t:"Liverpool (Uy)",pj:8,pts:11},
-    {t:"Danubio",pj:8,pts:10},{t:"Racing (Uy)",pj:8,pts:10},{t:"Wanderers",pj:8,pts:9},
-    {t:"River (Uy)",pj:8,pts:8},
-  ],
-  fixtures:[
-    {d:"Próximos",m:"Consultar Sofascore / AUF"},
+    {t:"Liverpool (Uru)",pj:12,pts:27},{t:"Torque",pj:12,pts:25},{t:"Nacional",pj:12,pts:23},
+    {t:"Maldonado",pj:12,pts:21},{t:"Peñarol",pj:12,pts:21},{t:"Progreso",pj:12,pts:19},
+    {t:"Juventud",pj:12,pts:18},{t:"Cerro",pj:12,pts:18},{t:"Racing (Uru)",pj:12,pts:16},
+    {t:"Boston River",pj:12,pts:15},{t:"Wanderers",pj:12,pts:15},{t:"Albion",pj:12,pts:12},
+    {t:"Danubio",pj:12,pts:10},{t:"Cerro Largo",pj:12,pts:9},{t:"Defensor",pj:12,pts:9},
+    {t:"Central Español",pj:12,pts:5}
   ]
 };
 const ARGENTINA = {
-    updated:"Clausura · 7/09/2026 post fecha 8 (domingo) · pendientes Barracas-Argentinos y Unión-Instituto",
-  link:"https://www.promiedos.com.ar/",
+  zonaA: [
+    {t:"Instituto",pj:14,pts:32,gf:21,gc:10},
+    {t:"Vélez",pj:14,pts:27,gf:23,gc:13},
+    {t:"Boca",pj:14,pts:27,gf:22,gc:14},
+    {t:"Defensa y Justicia",pj:14,pts:27,gf:20,gc:13},
+    {t:"Lanús",pj:14,pts:24,gf:17,gc:10},
+    {t:"Newell's",pj:14,pts:21,gf:13,gc:10},
+    {t:"Gimnasia (Mza)",pj:14,pts:20,gf:16,gc:15},
+    {t:"Independiente",pj:14,pts:19,gf:12,gc:14},
+    {t:"San Lorenzo",pj:14,pts:18,gf:7,gc:12},
+    {t:"Unión",pj:14,pts:17,gf:21,gc:23},
+    {t:"Estudiantes (LP)",pj:14,pts:14,gf:17,gc:18},
+    {t:"Platense",pj:14,pts:14,gf:14,gc:20},
+    {t:"Deportivo Riestra",pj:14,pts:12,gf:10,gc:14},
+    {t:"Central Córdoba (SdE)",pj:14,pts:10,gf:11,gc:23},
+    {t:"Talleres",pj:14,pts:9,gf:13,gc:22}
+  ],
+  zonaB: [
+    {t:"Rosario Central",pj:14,pts:28,gf:22,gc:11},
+    {t:"Argentinos Juniors",pj:14,pts:28,gf:18,gc:11},
+    {t:"Gimnasia (LP)",pj:14,pts:25,gf:21,gc:18},
+    {t:"River",pj:14,pts:23,gf:19,gc:13},
+    {t:"Belgrano",pj:14,pts:22,gf:14,gc:11},
+    {t:"Barracas Central",pj:14,pts:22,gf:13,gc:11},
+    {t:"Sarmiento",pj:14,pts:21,gf:22,gc:21},
+    {t:"Huracán",pj:14,pts:19,gf:12,gc:14},
+    {t:"Ind. Rivadavia",pj:14,pts:19,gf:17,gc:22},
+    {t:"Atlético Tucumán",pj:14,pts:17,gf:13,gc:13},
+    {t:"Banfield",pj:14,pts:14,gf:15,gc:20},
+    {t:"Tigre",pj:14,pts:13,gf:13,gc:16},
+    {t:"Racing",pj:14,pts:12,gf:14,gc:21},
+    {t:"Aldosivi",pj:14,pts:11,gf:15,gc:22},
+    {t:"Estudiantes (RC)",pj:14,pts:9,gf:9,gc:19}
+  ]
+};
+
+
+/* ---- Extras: anual, promedios, goleadores, transferencias ---- */
+const ARG_ANUAL = {
+  updated:"Tabla anual 2026 · 30/10 · post fecha 14",
+  note:"Apertura + Clausura (30 PJ). Boca y Argentinos 57. Estudiantes RC último con 14.",
+  rows:[
+    {t:"Boca",pj:30,pts:57},{t:"Argentinos Juniors",pj:30,pts:57},{t:"Rosario Central",pj:30,pts:56},
+    {t:"Vélez",pj:30,pts:55},{t:"Instituto",pj:30,pts:53},{t:"Ind. Rivadavia",pj:30,pts:53},
+    {t:"River Plate",pj:30,pts:52},{t:"Gimnasia (LP)",pj:30,pts:51},{t:"Lanús",pj:30,pts:48},
+    {t:"Belgrano",pj:30,pts:48},{t:"Defensa y Justicia",pj:30,pts:46},{t:"Estudiantes (LP)",pj:30,pts:45},
+    {t:"Independiente",pj:30,pts:43},{t:"Barracas Central",pj:30,pts:43},{t:"Huracán",pj:30,pts:41},
+    {t:"San Lorenzo",pj:30,pts:40},{t:"Sarmiento",pj:30,pts:40},{t:"Gimnasia (Mza)",pj:30,pts:39},
+    {t:"Unión",pj:30,pts:38},{t:"Newell's Old Boys",pj:30,pts:36},{t:"Talleres",pj:30,pts:35},
+    {t:"Tigre",pj:30,pts:33},{t:"Racing",pj:30,pts:33},{t:"Banfield",pj:30,pts:32},
+    {t:"Atlético Tucumán",pj:30,pts:31},{t:"Platense",pj:30,pts:30},{t:"Central Córdoba (SdE)",pj:30,pts:26},
+    {t:"Deportivo Riestra",pj:30,pts:23},{t:"Aldosivi",pj:30,pts:19},{t:"Estudiantes (RC)",pj:30,pts:14}
+  ]
+};
+const ARG_PROMEDIOS = {
+  updated:"Promedios descenso · 30/10/2026",
+  note:"Estudiantes (RC) ya descendido por promedios. Aldosivi pelea el 2° descenso por la anual.",
+  rows:[
+    {t:"Boca",pj:103,pts:186,prom:1.806},{t:"River Plate",pj:103,pts:175,prom:1.699},{t:"Vélez",pj:103,pts:171,prom:1.660},
+    {t:"Argentinos Juniors",pj:103,pts:170,prom:1.650},{t:"Rosario Central",pj:103,pts:169,prom:1.641},
+    {t:"Lanús",pj:103,pts:157,prom:1.524},{t:"Racing",pj:103,pts:156,prom:1.515},
+    {t:"Independiente",pj:103,pts:153,prom:1.485},{t:"Huracán",pj:103,pts:150,prom:1.456},
+    {t:"Estudiantes (LP)",pj:103,pts:150,prom:1.456},{t:"Defensa y Justicia",pj:103,pts:142,prom:1.379},
+    {t:"Ind. Rivadavia",pj:103,pts:142,prom:1.379},{t:"Barracas Central",pj:103,pts:141,prom:1.369},
+    {t:"Talleres",pj:103,pts:141,prom:1.369},{t:"Instituto",pj:103,pts:140,prom:1.359},
+    {t:"Gimnasia (LP)",pj:103,pts:137,prom:1.330},{t:"Unión",pj:103,pts:137,prom:1.330},
+    {t:"San Lorenzo",pj:103,pts:136,prom:1.320},{t:"Belgrano",pj:103,pts:134,prom:1.301},
+    {t:"Gimnasia (Mza)",pj:30,pts:39,prom:1.300},{t:"Deportivo Riestra",pj:103,pts:123,prom:1.194},
+    {t:"Platense",pj:103,pts:122,prom:1.184},{t:"Tigre",pj:103,pts:121,prom:1.175},
+    {t:"Newell's Old Boys",pj:103,pts:118,prom:1.146},{t:"Atlético Tucumán",pj:103,pts:115,prom:1.117},
+    {t:"Sarmiento",pj:103,pts:110,prom:1.068},{t:"Central Córdoba (SdE)",pj:103,pts:110,prom:1.068},
+    {t:"Banfield",pj:103,pts:108,prom:1.049},{t:"Aldosivi",pj:62,pts:52,prom:0.839},
+    {t:"Estudiantes (RC)",pj:30,pts:14,prom:0.467}
+  ]
+};
+const PRIMERA_NACIONAL = {
+  updated:"Primera Nacional 2026 · fecha 35 · 30/10 · falta la última",
+  link:"https://www.promiedos.com.ar/league/primera-nacional",
   zonaA:[
-    {t:"Gimnasia (Mza)",pj:8,pts:16,gf:14,gc:7},
-    {t:"Vélez",pj:8,pts:16,gf:11,gc:6},
-    {t:"Instituto",pj:7,pts:16,gf:6,gc:2},
-    {t:"Defensa y Justicia",pj:8,pts:14,gf:9,gc:9},
-    {t:"Independiente",pj:8,pts:13,gf:7,gc:6},
-    {t:"Newell's Old Boys",pj:8,pts:12,gf:9,gc:7},
-    {t:"Boca",pj:8,pts:11,gf:9,gc:10},
-    {t:"Unión",pj:7,pts:10,gf:12,gc:10},
-    {t:"Lanús",pj:8,pts:10,gf:8,gc:8},
-    {t:"San Lorenzo",pj:8,pts:10,gf:3,gc:5},
-    {t:"Deportivo Riestra",pj:8,pts:9,gf:8,gc:7},
-    {t:"Platense",pj:8,pts:9,gf:8,gc:12},
-    {t:"Estudiantes (LP)",pj:8,pts:7,gf:7,gc:8},
-    {t:"Central Córdoba (SdE)",pj:8,pts:7,gf:4,gc:8},
-    {t:"Talleres",pj:8,pts:5,gf:8,gc:13},
+    {t:"Ferro",pj:35,pts:65},{t:"Godoy Cruz",pj:35,pts:63},{t:"Deportivo Morón",pj:35,pts:58},
+    {t:"Colón",pj:35,pts:57},{t:"Deportivo Maipú",pj:35,pts:51},{t:"Almirante Brown",pj:35,pts:51},
+    {t:"Ciudad de Bolívar",pj:35,pts:51},{t:"Estudiantes (BA)",pj:35,pts:49},{t:"Chaco For Ever",pj:35,pts:43},
+    {t:"Los Andes",pj:35,pts:42},{t:"Racing (Cba)",pj:35,pts:40},{t:"Def. de Belgrano",pj:35,pts:39},
+    {t:"Mitre (SE)",pj:35,pts:39},{t:"Central Norte",pj:35,pts:38},{t:"All Boys",pj:35,pts:38},
+    {t:"San Telmo",pj:35,pts:38},{t:"Acassuso",pj:35,pts:34},{t:"San Miguel",pj:35,pts:33}
   ],
   zonaB:[
-    {t:"Argentinos Juniors",pj:7,pts:16,gf:12,gc:7},
-    {t:"Sarmiento",pj:8,pts:15,gf:15,gc:12},
-    {t:"Gimnasia (LP)",pj:8,pts:15,gf:12,gc:12},
-    {t:"Atlético Tucumán",pj:8,pts:13,gf:6,gc:3},
-    {t:"Belgrano",pj:8,pts:12,gf:8,gc:5},
-    {t:"Tigre",pj:8,pts:12,gf:7,gc:5},
-    {t:"Rosario Central",pj:8,pts:12,gf:9,gc:8},
-    {t:"Ind. Rivadavia",pj:8,pts:11,gf:9,gc:10},
-    {t:"River Plate",pj:8,pts:10,gf:10,gc:9},
-    {t:"Huracán",pj:8,pts:10,gf:6,gc:6},
-    {t:"Barracas Central",pj:7,pts:10,gf:4,gc:5},
-    {t:"Banfield",pj:8,pts:7,gf:8,gc:13},
-    {t:"Estudiantes (RC)",pj:8,pts:6,gf:3,gc:9},
-    {t:"Aldosivi",pj:8,pts:5,gf:8,gc:12},
-    {t:"Racing",pj:8,pts:5,gf:7,gc:13},
-  ],
-zonaB:[
-    {t:"Tristán Suárez",pj:26,pts:48},{t:"Temperley",pj:27,pts:46},{t:"Gimnasia (Jujuy)",pj:26,pts:45},
-    {t:"Atlanta",pj:27,pts:42},{t:"Midland",pj:26,pts:41},{t:"Gimnasia y Tiro",pj:27,pts:41},
-    {t:"Deportivo Maipú",pj:27,pts:38},{t:"Atlético Rafaela",pj:26,pts:35},{t:"Quilmes",pj:27,pts:33},
-    {t:"San Martín (SJ)",pj:25,pts:32},
+    {t:"Tristán Suárez",pj:35,pts:63},{t:"Atlanta",pj:35,pts:61},{t:"Temperley",pj:35,pts:60},
+    {t:"Gimnasia (Jujuy)",pj:35,pts:58},{t:"Deportivo Madryn",pj:35,pts:57},{t:"Midland",pj:35,pts:54},
+    {t:"Gimnasia y Tiro",pj:35,pts:52},{t:"Colegiales",pj:35,pts:51},{t:"San Martín (SJ)",pj:35,pts:48},
+    {t:"San Martín (T)",pj:35,pts:46},{t:"Atlético Rafaela",pj:35,pts:46},{t:"Agropecuario",pj:35,pts:43},
+    {t:"Quilmes",pj:35,pts:42},{t:"Almagro",pj:35,pts:42},{t:"Chacarita",pj:35,pts:39},
+    {t:"Defensores Unidos",pj:35,pts:39}
   ]
 };
 const B_METRO = {
@@ -1014,6 +1589,55 @@ const FEDERAL_A = {
 
 // Escudos SA: SOLO logos oficiales ESPN (si falla la imagen, se oculta — sin inventar escudos)
 const SA_CRESTS = {
+  "Man United":"https://media.api-sports.io/football/teams/33.png",
+  "Man City":"https://media.api-sports.io/football/teams/50.png",
+  "Coventry":"https://media.api-sports.io/football/teams/59.png",
+  "Brighton":"https://media.api-sports.io/football/teams/51.png",
+  "Barcelona":"https://media.api-sports.io/football/teams/529.png",
+  "Atlético":"https://media.api-sports.io/football/teams/530.png",
+  "Napoli":"https://media.api-sports.io/football/teams/492.png",
+  "Juventus":"https://media.api-sports.io/football/teams/496.png",
+  "Bayern":"https://media.api-sports.io/football/teams/157.png",
+  "RB Leipzig":"https://media.api-sports.io/football/teams/173.png",
+  "Hamburgo":"https://media.api-sports.io/football/teams/175.png",
+  "Elversberg":"https://media.api-sports.io/football/teams/7852.png",
+  "Sarmiento":"https://a.espncdn.com/i/teamlogos/soccer/500/10158.png",
+  "Belgrano":"https://a.espncdn.com/i/teamlogos/soccer/500/4.png",
+  "Huracán":"https://a.espncdn.com/i/teamlogos/soccer/500/10.png",
+  "Racing":"https://a.espncdn.com/i/teamlogos/soccer/500/15.png",
+  "Rosario Central":"https://a.espncdn.com/i/teamlogos/soccer/500/17.png",
+
+  "Liverpool":"https://media.api-sports.io/football/teams/40.png",
+  "LFC":"https://media.api-sports.io/football/teams/40.png",
+  "Fulham":"https://media.api-sports.io/football/teams/36.png",
+
+  "Hull City":"https://a.espncdn.com/i/teamlogos/soccer/500/306.png",
+  "Hull":"https://a.espncdn.com/i/teamlogos/soccer/500/306.png",
+  "Nott'm Forest":"https://a.espncdn.com/i/teamlogos/soccer/500/393.png",
+  "Nottingham Forest":"https://a.espncdn.com/i/teamlogos/soccer/500/393.png",
+  "Crystal Palace":"https://a.espncdn.com/i/teamlogos/soccer/500/384.png",
+  "Ipswich":"https://a.espncdn.com/i/teamlogos/soccer/500/373.png",
+  "Ipswich Town":"https://a.espncdn.com/i/teamlogos/soccer/500/373.png",
+  "Bournemouth":"https://a.espncdn.com/i/teamlogos/soccer/500/349.png",
+  "Brentford":"https://a.espncdn.com/i/teamlogos/soccer/500/337.png",
+  "Aston Villa":"https://a.espncdn.com/i/teamlogos/soccer/500/362.png",
+  "Fulham":"https://a.espncdn.com/i/teamlogos/soccer/500/370.png",
+  "Sunderland":"https://a.espncdn.com/i/teamlogos/soccer/500/366.png",
+  "Elche":"https://a.espncdn.com/i/teamlogos/soccer/500/3751.png",
+  "Rayo Vallecano":"https://a.espncdn.com/i/teamlogos/soccer/500/101.png",
+  "Athletic":"https://a.espncdn.com/i/teamlogos/soccer/500/93.png",
+  "Cagliari":"https://a.espncdn.com/i/teamlogos/soccer/500/2922.png",
+  "Atalanta":"https://a.espncdn.com/i/teamlogos/soccer/500/105.png",
+  "Lazio":"https://a.espncdn.com/i/teamlogos/soccer/500/108.png",
+  "Milan":"https://a.espncdn.com/i/teamlogos/soccer/500/103.png",
+  "Chelsea":"https://a.espncdn.com/i/teamlogos/soccer/500/363.png",
+  "Tottenham":"https://a.espncdn.com/i/teamlogos/soccer/500/367.png",
+  "Everton":"https://a.espncdn.com/i/teamlogos/soccer/500/368.png",
+  "Arsenal":"https://a.espncdn.com/i/teamlogos/soccer/500/359.png",
+  "Real Madrid":"https://a.espncdn.com/i/teamlogos/soccer/500/86.png",
+  "Man United":"https://a.espncdn.com/i/teamlogos/soccer/500/360.png",
+  "Man City":"https://a.espncdn.com/i/teamlogos/soccer/500/382.png",
+
   "Le Mans":"https://tmssl.akamaized.net/images/wappen/big/1081.png",
   "Le Mans FC":"https://tmssl.akamaized.net/images/wappen/big/1081.png",
   "Instituto":"https://a.espncdn.com/i/teamlogos/soccer/500/2975.png",
@@ -1047,7 +1671,7 @@ const SA_CRESTS = {
   "Racing":"https://a.espncdn.com/i/teamlogos/soccer/500/15.png",
   "River Plate":"https://a.espncdn.com/i/teamlogos/soccer/500/16.png",
   "Aldosivi":"https://a.espncdn.com/i/teamlogos/soccer/500/9739.png",
-  "Liverpool":"https://a.espncdn.com/i/teamlogos/soccer/500/5492.png",
+  
   "Cerro":"https://a.espncdn.com/i/teamlogos/soccer/500/5490.png",
   "Dep. Maldonado":"https://a.espncdn.com/i/teamlogos/soccer/500/10000.png",
   "Boston River":"https://a.espncdn.com/i/teamlogos/soccer/500/9999.png",
@@ -1091,262 +1715,51 @@ const SA_CRESTS = {
 function saCrest(name){
   if(!name) return "";
   const n = String(name).trim();
-  if(SA_CRESTS[n]) return `<img src="${SA_CRESTS[n]}" class="crest-img" alt="" loading="lazy" onerror="this.remove()">`;
-  const keys = Object.keys(SA_CRESTS);
-  const low = n.toLowerCase();
-  let hit = keys.find(k=>k.toLowerCase()===low);
-  if(!hit){
-    const candidates = keys.filter(k=>{
-      const a=k.toLowerCase().replace(/[^a-z0-9]/gi,"");
-      const b=low.replace(/[^a-z0-9]/gi,"");
-      if(!a||!b) return false;
-      if(a===b) return true;
-      // clave debe ser casi tan larga como el nombre (evita Independiente → Rivadavia)
-      if(b.includes(a) && a.length >= Math.min(12, Math.max(8, b.length-4))) return true;
-      if(a.includes(b) && b.length >= Math.min(12, Math.max(8, a.length-4))) return true;
-      return false;
-    }).sort((x,y)=>y.length-x.length);
-    hit = candidates[0];
+  const FALLBACKS = {
+    "Liverpool":"https://media.api-sports.io/football/teams/40.png",
+    "Fulham":"https://media.api-sports.io/football/teams/36.png",
+    "Chelsea":"https://media.api-sports.io/football/teams/49.png",
+    "Arsenal":"https://media.api-sports.io/football/teams/42.png",
+    "Man City":"https://media.api-sports.io/football/teams/50.png",
+    "Man United":"https://media.api-sports.io/football/teams/33.png",
+    "Tottenham":"https://media.api-sports.io/football/teams/47.png",
+    "Everton":"https://media.api-sports.io/football/teams/45.png",
+    "Bournemouth":"https://media.api-sports.io/football/teams/35.png",
+    "Brentford":"https://media.api-sports.io/football/teams/55.png",
+    "Aston Villa":"https://media.api-sports.io/football/teams/66.png",
+    "Nott'm Forest":"https://media.api-sports.io/football/teams/65.png",
+    "Crystal Palace":"https://media.api-sports.io/football/teams/52.png",
+    "Ipswich":"https://media.api-sports.io/football/teams/57.png",
+    "Hull City":"https://media.api-sports.io/football/teams/64.png",
+    "Sunderland":"https://media.api-sports.io/football/teams/746.png",
+    "Real Madrid":"https://media.api-sports.io/football/teams/541.png",
+    "Rayo Vallecano":"https://media.api-sports.io/football/teams/728.png",
+    "Athletic":"https://media.api-sports.io/football/teams/531.png",
+    "Elche":"https://media.api-sports.io/football/teams/3751.png",
+    "Lazio":"https://media.api-sports.io/football/teams/487.png",
+    "Milan":"https://media.api-sports.io/football/teams/489.png",
+    "Atalanta":"https://media.api-sports.io/football/teams/499.png",
+    "Cagliari":"https://media.api-sports.io/football/teams/490.png"
+  };
+  let url = (typeof SA_CRESTS!=="undefined" && SA_CRESTS[n]) ? SA_CRESTS[n] : "";
+  if(!url || !/^https?:\/\//i.test(url)) url = FALLBACKS[n] || "";
+  if(!url && typeof SA_CRESTS!=="undefined"){
+    const low = n.toLowerCase();
+    const hit = Object.keys(SA_CRESTS).find(k=>k.toLowerCase()===low);
+    if(hit && /^https?:\/\//i.test(SA_CRESTS[hit])) url = SA_CRESTS[hit];
   }
-  if(!hit){
-    const aliases = {
-      "independiente rivadavia":"Ind. Rivadavia","ca independiente rivadavia":"Ind. Rivadavia",
-      "independiente (mza)":"Ind. Rivadavia","independiente mendoza":"Ind. Rivadavia",
-      "arsenal de sarandi":"Arsenal (Sarandi)","arsenal sarandi":"Arsenal (Sarandi)","arsenal sarandí":"Arsenal (Sarandi)",
-      "gimnasia de mendoza":"Gimnasia (Mza)","gimnasia mendoza":"Gimnasia (Mza)",
-      "gimnasia de la plata":"Gimnasia (LP)","estudiantes de la plata":"Estudiantes (LP)",
-      "estudiantes rio cuarto":"Estudiantes (RC)","central cordoba":"Central Córdoba (SdE)",
-      "deportivo riestra":"Deportivo Riestra","dep. riestra":"Deportivo Riestra",
-      "newells":"Newell's Old Boys","atlético tucuman":"Atlético Tucumán","atl. tucuman":"Atlético Tucumán",
-      "atl. tucumán":"Atlético Tucumán","defensa y justicia":"Defensa y Justicia",
-      "boca juniors":"Boca","river":"River Plate","racing club":"Racing","unión santa fe":"Unión"
-    };
-    const ak = aliases[low];
-    if(ak && SA_CRESTS[ak]) hit = ak;
-  }
-  const url = hit ? SA_CRESTS[hit] : "";
-  if(url) return `<img src="${url}" class="crest-img" alt="" loading="lazy" onerror="this.remove()">`;
-  return "";
+  if(!url) url = FALLBACKS[n] || "";
+  if(!url) return "";
+  // si el valor no es URL (ej. id "31"), usar fallback
+  if(!/^https?:\/\//i.test(url)) url = FALLBACKS[n] || "";
+  if(!url) return "";
+  const fb = FALLBACKS[n] || "";
+  const onerr = fb && fb!==url
+    ? `this.onerror=null;this.src='${fb}';`
+    : `this.style.opacity='0.2';`;
+  return `<img src="${url}" class="crest-img" alt="" loading="lazy" onerror="${onerr}">`;
 }
 
-// Partidos SA de hoy (fecha TODAY_DATE) — se actualizan con la web
-
-const ARG_FECHA_EXTRA = [
-  {comp:"Liga Profesional",home:"Huracán",away:"Estudiantes (RC)",hs:null,as:null,status:"sched",when:"Sáb 19:00"},
-  {comp:"Liga Profesional",home:"Unión",away:"Sarmiento",hs:null,as:null,status:"sched",when:"Vie 19:00"},
-  {comp:"Liga Profesional",home:"Banfield",away:"River Plate",hs:null,as:null,status:"sched",when:"Dom 15:00"},
-  {comp:"Liga Profesional",home:"Boca",away:"Lanús",hs:null,as:null,status:"sched",when:"Vie 21:30"},
-  {comp:"Liga Profesional",home:"Argentinos Juniors",away:"Aldosivi",hs:null,as:null,status:"sched",when:"Dom 17:00"},
-  {comp:"Liga Profesional",home:"Rosario Central",away:"Gimnasia (LP)",hs:null,as:null,status:"sched",when:"Sáb 17:00"},
-  {comp:"Primera Nacional",home:"Ferro",away:"Tristán Suárez",hs:null,as:null,status:"sched",when:"Sáb 16:00"},
-  {comp:"Primera Nacional",home:"Colón",away:"Atlanta",hs:null,as:null,status:"sched",when:"Dom 17:30"},
-  {comp:"Federal A",home:"Douglas Haig",away:"Sportivo Belgrano",hs:null,as:null,status:"sched",when:"Dom 16:00"},
-];
-
-
-
-const ARG_ANUAL = {
-  updated: "Tabla Anual 2026 · actualizada 7/09/2026 (Apertura + Clausura hasta F8)",
-  note: "Suma puntos Apertura + Clausura. El 1° es Campeón de Liga; último desciende (si no coincide con promedios).",
-  rows: [
-    {t:"Ind. Rivadavia", pj:24, pts:45},
-    {t:"Argentinos Juniors", pj:23, pts:45},
-    {t:"Vélez", pj:24, pts:44},
-    {t:"Boca", pj:24, pts:41},
-    {t:"Gimnasia (LP)", pj:24, pts:41},
-    {t:"Rosario Central", pj:24, pts:40},
-    {t:"River Plate", pj:24, pts:39},
-    {t:"Estudiantes (LP)", pj:24, pts:38},
-    {t:"Belgrano", pj:24, pts:38},
-    {t:"Independiente", pj:24, pts:37},
-    {t:"Instituto", pj:23, pts:37},
-    {t:"Gimnasia (Mza)", pj:24, pts:35},
-    {t:"Lanús", pj:24, pts:34},
-    {t:"Sarmiento", pj:24, pts:34},
-    {t:"Defensa y Justicia", pj:24, pts:33},
-    {t:"Tigre", pj:24, pts:32},
-    {t:"Huracán", pj:24, pts:32},
-    {t:"San Lorenzo", pj:24, pts:32},
-    {t:"Unión", pj:23, pts:31},
-    {t:"Talleres", pj:24, pts:31},
-    {t:"Barracas Central", pj:23, pts:31},
-    {t:"Atlético Tucumán", pj:24, pts:27},
-    {t:"Newell's Old Boys", pj:24, pts:27},
-    {t:"Racing", pj:24, pts:26},
-    {t:"Banfield", pj:24, pts:25},
-    {t:"Platense", pj:24, pts:25},
-    {t:"Central Córdoba (SdE)", pj:24, pts:23},
-    {t:"Deportivo Riestra", pj:24, pts:20},
-    {t:"Aldosivi", pj:24, pts:13},
-    {t:"Estudiantes (RC)", pj:24, pts:11},
-  ]
-};
-
-const ARG_PROMEDIOS = {
-  updated: "Promedios 2024-2025-2026 · 7/09/2026",
-  note: "Último de promedios desciende. Estudiantes RC y Aldosivi en zona crítica.",
-  rows: [
-    {t:"Boca", pj:97, pts:170, prom:1.753},
-    {t:"River Plate", pj:97, pts:162, prom:1.670},
-    {t:"Vélez", pj:97, pts:160, prom:1.649},
-    {t:"Argentinos Juniors", pj:96, pts:158, prom:1.646},
-    {t:"Rosario Central", pj:97, pts:153, prom:1.577},
-    {t:"Racing", pj:97, pts:149, prom:1.536},
-    {t:"Independiente", pj:97, pts:147, prom:1.515},
-    {t:"Lanús", pj:97, pts:143, prom:1.474},
-    {t:"Estudiantes (LP)", pj:97, pts:143, prom:1.474},
-    {t:"Gimnasia (Mza)", pj:24, pts:35, prom:1.458},
-    {t:"Huracán", pj:97, pts:141, prom:1.454},
-    {t:"Talleres", pj:97, pts:137, prom:1.412},
-    {t:"Ind. Rivadavia", pj:97, pts:134, prom:1.381},
-    {t:"Unión", pj:96, pts:130, prom:1.354},
-    {t:"Barracas Central", pj:96, pts:129, prom:1.344},
-    {t:"Defensa y Justicia", pj:97, pts:129, prom:1.330},
-    {t:"San Lorenzo", pj:97, pts:128, prom:1.320},
-    {t:"Gimnasia (LP)", pj:97, pts:127, prom:1.309},
-    {t:"Instituto", pj:96, pts:124, prom:1.292},
-    {t:"Belgrano", pj:97, pts:124, prom:1.278},
-    {t:"Tigre", pj:97, pts:120, prom:1.237},
-    {t:"Deportivo Riestra", pj:97, pts:120, prom:1.237},
-    {t:"Platense", pj:97, pts:117, prom:1.206},
-    {t:"Atlético Tucumán", pj:97, pts:111, prom:1.144},
-    {t:"Newell's Old Boys", pj:97, pts:109, prom:1.124},
-    {t:"Central Córdoba (SdE)", pj:97, pts:107, prom:1.103},
-    {t:"Sarmiento", pj:97, pts:104, prom:1.072},
-    {t:"Banfield", pj:97, pts:101, prom:1.041},
-    {t:"Aldosivi", pj:56, pts:46, prom:0.821},
-    {t:"Estudiantes (RC)", pj:24, pts:11, prom:0.458},
-  ]
-};
-
-const COPA_ARGENTINA = {
-  updated: "Copa Argentina 2026 · octavos · 7/09/2026",
-  note: "Vélez 0-0 Boca (Boca clasificó 4-3 penales). Próximos cruces según fixture oficial.",
-  fase: "Octavos de final",
-  pairs: [
-    {home:"Vélez", away:"Boca", hs:0, as:0, status:"clasificado", when:"FINAL", note:"0-0 · Boca 4-3 penales · clasifica Boca"},
-  ]
-};
-
-const ARG_FECHAS = {
-  current: 7,
-  list: {
-    2: {label:"Fecha 2", days:[{d:"Ver resultados", m:[["Promiedos","→","Resultados F2"],["La Nación","→","Fixture"]]}]},
-    3: {label:"Fecha 3", days:[{d:"Datos en Promiedos", m:[["Promiedos.com.ar","→","ver"]]}]},
-    4: {label:"Fecha 4", days:[{d:"Datos en Promiedos", m:[["Promiedos.com.ar","→","ver"]]}]},
-    5: {label:"Fecha 5", days:[{d:"Datos en Promiedos", m:[["Promiedos.com.ar","→","ver"]]}]},
-    1: {label:"Fecha 1", days:[
-      {d:"Dom 26/07", m:[["Dep. Riestra","Boca","3-0"],["Independiente","Estudiantes (LP)","2-0"],["Gimnasia (Mza)","Central Córdoba","1-0"],["Newell's","Talleres","1-0"],["Vélez","Instituto","1-0"],["Argentinos","Sarmiento","3-2"],["Belgrano","Rosario Central","2-1"],["Racing","Gimnasia (LP)","2-1"],["Huracán","Banfield","1-0"],["Barracas Central","River","1-0"]]}
-    ]},
-    6: {label:"Fecha 6 (interzonales)", days:[
-      {d:"Dom 23/08", m:[["Racing","Boca","1-1"],["River","Vélez","2-2"]]},
-      {d:"Lun 24/08", m:[["Tigre","Central Córdoba","2-1"],["Lanús","Argentinos","1-1"],["Talleres","Rosario Central","2-2"],["Atl. Tucumán","Instituto","0-0"],["Ind. Rivadavia","Independiente","0-0"],["Gimnasia (LP)","Gimnasia (Mza)","2-3"],["Belgrano","Defensa y Justicia","1-2"],["Estudiantes (LP)","Sarmiento","0-2"],["San Lorenzo","Estudiantes (RC)","0-0"]]}
-    ]},
-    7: {label:"Fecha 7", days:[
-      {d:"Vie 28", m:[["Unión","Sarmiento","4-1"],["Boca","Lanús","1-0"]]},
-      {d:"Sáb 29", m:[["Dep. Riestra","Vélez","1-1"],["Rosario Central","Gimnasia (LP)","1-2"],["Huracán","Estudiantes (RC)","1-1"],["Talleres","Central Córdoba","0-0"],["Atl. Tucumán","Belgrano","0-0"]]},
-      {d:"Dom 30", m:[["Banfield","River","2-3"],["Argentinos","Aldosivi","2-1"],["Independiente","Gimnasia (Mza)","0-3"],["Ind. Rivadavia","Racing","3-1"]]},
-      {d:"Lun 31", m:[["Defensa y Justicia","Platense","19:00"],["Estudiantes (LP)","Newell's Old Boys","19:00"],["Tigre","Barracas Central","21:15"],["Instituto","San Lorenzo","21:15"]]}
-    ]}
-  }
-};
-
-const SA_TODAY = [
-  // Solo 7 de septiembre 2026
-  {comp:"🇦🇷 Clausura", home:"Barracas Central", away:"Argentinos Juniors", hs:null, as:null, status:"sched", when:"19:00", date:"2026-09-07", tv:["espn","disney"], stadium:"Claudio Chiqui Tapia", note:"Fecha 8 · Zona B"},
-  {comp:"🇦🇷 Clausura", home:"Unión", away:"Instituto", hs:null, as:null, status:"sched", when:"21:15", date:"2026-09-07", tv:["tnt","dgo"], stadium:"15 de Abril", note:"Fecha 8 · Zona A"},
-  {comp:"🇪🇸 La Liga", home:"Getafe", away:"Celta", hs:null, as:null, status:"sched", when:"14:00", date:"2026-09-07", tv:["espn4","disney"], note:"Jornada 4"},
-  {comp:"🇪🇸 La Liga", home:"Elche", away:"Real Sociedad", hs:null, as:null, status:"sched", when:"16:30", date:"2026-09-07", tv:["espn4","disney"], note:"Jornada 4"},
-  {comp:"🇮🇹 Serie A", home:"Cagliari", away:"Lecce", hs:null, as:null, status:"sched", when:"13:30", date:"2026-09-07", tv:["disney"], note:"Jornada 3"},
-  {comp:"🇮🇹 Serie A", home:"Udinese", away:"Lazio", hs:null, as:null, status:"sched", when:"15:45", date:"2026-09-07", tv:["disney"], note:"Jornada 3"},
-];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Ayer (domingo 23/08): Racing 1-1 Boca · River 2-2 Vélez · etc.
-
-// Libertadores / Sudamericana (octavos 2026)
-const LIBERTADORES = {
-  updated:"Cuartos de final · ida 8-10/09 · vuelta 15-17/09 · 7/09/2026",
-  note:"Octavos terminados. Argentinos en cuartos: Estudiantes y Platense. Rivadavia eliminado por Fluminense (penales).",
-  pairs:[
-    {home:"Fluminense",away:"Platense",hs:null,as:null,status:"cuartos",note:"Ida 8/09 19:00 Maracaná · Vuelta 15/09"},
-    {home:"Estudiantes (LP)",away:"Corinthians",hs:null,as:null,status:"cuartos",note:"Ida 9/09 21:30 Hirschi · Vuelta 16/09"},
-    {home:"Palmeiras",away:"LDU Quito",hs:null,as:null,status:"cuartos",note:"Ida 9/09 19:00 · Vuelta 16/09"},
-    {home:"Ind. del Valle",away:"Flamengo",hs:null,as:null,status:"cuartos",note:"Ida 10/09 21:30 · Vuelta 17/09"},
-  ]
-};
-const SUDAMERICANA = {
-  updated:"Cuartos de final · ida 8-10/09 · 7/09/2026",
-  note:"Boca 7-1 Recoleta. River eliminado por Santa Fe (penales). Torque eliminó a Tigre.",
-  pairs:[
-    {home:"Santa Fe",away:"Vasco",hs:null,as:null,status:"cuartos",note:"Ida 8/09 19:00 El Campín · Vuelta 15/09"},
-    {home:"Boca",away:"São Paulo",hs:null,as:null,status:"cuartos",note:"Ida 8/09 21:30 Bombonera · Vuelta 15/09"},
-    {home:"Santos",away:"Atlético Mineiro",hs:null,as:null,status:"cuartos",note:"Ida 9/09 19:00 · Vuelta 16/09"},
-    {home:"Cienciano",away:"City Torque",hs:null,as:null,status:"cuartos",note:"Ida 10/09 21:30 · Vuelta 17/09"},
-  ]
-};
-
-
-const UDL_LINK = "https://www.uniondeportivadeligas.com.ar/estadisticas";
-const UDL_BASE = "https://www.uniondeportivadeligas.com.ar/img/teams/md/";
-/* Clubes únicos (sin duplicados) */
-const UDL_CLUBS = [
-  {name:"Nogoyá",crest:UDL_BASE+"nogoya.png"},
-  {name:"Central Nogoyá",crest:UDL_BASE+"central-nogoya.png"},
-  {name:"25 de Mayo (Nogoyá)",crest:"crest-25-mayo-nogoya.png"},
-  {name:"Ferro Nogoyá",crest:UDL_BASE+"ferro.png"},
-  {name:"Mayense",crest:UDL_BASE+"mayense.png"},
-  {name:"Canario",crest:UDL_BASE+"canario.png"},
-  {name:"Agrario",crest:UDL_BASE+"agrario.png"},
-  {name:"Atlético Maciá",crest:UDL_BASE+"atletico-macia.png"},
-  {name:"Martín Fierro",crest:UDL_BASE+"martin-fierro.png"},
-  {name:"Atlético Tala",crest:UDL_BASE+"atletico-tala.png"},
-  {name:"Peñarol (UDL)",crest:UDL_BASE+"sportivo-peniarol.png"},
-  {name:"Banfield (Nogoyá)",crest:UDL_BASE+"banfield.png"},
-  {name:"Boca del Tigre",crest:UDL_BASE+"boca-tigre.png"},
-  {name:"Cultural Aranguren",crest:UDL_BASE+"aranguren.png"},
-  {name:"Hernández",crest:UDL_BASE+"hernandez.png"},
-  {name:"Nobleza",crest:UDL_BASE+"nobleza.png"},
-  {name:"Roma RAM",crest:UDL_BASE+"roma.png"},
-  {name:"Ferrocarril Mansilla",crest:UDL_BASE+"ferrocarril-san-lorenzo.png"},
-  {name:"Lobo",crest:UDL_BASE+"lobo.png"},
-  {name:"Huracán (Victoria)",crest:UDL_BASE+"huracan.png"},
-  {name:"Libertad",crest:UDL_BASE+"libertad.png"},
-  {name:"Libertad Victoria",crest:UDL_BASE+"libertad-victoria.png"},
-  {name:"Newell's (Victoria)",crest:UDL_BASE+"lepra.png"},
-  {name:"Sarmiento",crest:UDL_BASE+"sarmiento.png"},
-  {name:"Sirio Libanés",crest:UDL_BASE+"libanes.png"},
-  {name:"Quinto",crest:UDL_BASE+"quinto.png"},
-  {name:"Lucas González",crest:UDL_BASE+"lucas-gonzalez.png"},
-  {name:"Sportivo Victoria",crest:UDL_BASE+"victoria.png"},
-  {name:"Porvenir",crest:"crest-el-porvenir.png"},
-  {name:"Unión Solense",crest:UDL_BASE+"union-solense.png"},
-];
-const UDL_CLASICOS = [
-  {home:"Cultural Aranguren", away:"Hernández", label:"Clásico Aranguren–Hernández"},
-  {home:"Nogoyá", away:"Sirio Libanés", label:"Clásico Nogoyá–Sirio Libanés"},
-  {home:"25 de Mayo (Nogoyá)", away:"Ferro Nogoyá", label:"Clásico 25 de Mayo–Ferro (Nogoyá)"},
-  {home:"Nobleza", away:"Roma RAM", label:"Clásico Nobleza–Roma RAM"},
-  {home:"Mayense", away:"Sarmiento", label:"Clásico Mayense–Sarmiento (Victoria)"},
-  {home:"Atlético Maciá", away:"Martín Fierro", label:"Clásico Maciá–Martín Fierro"},
-  {home:"Peñarol (UDL)", away:"Atlético Tala", label:"Clásico Peñarol–Tala"},
-  {home:"Ferrocarril Mansilla", away:"Unión Solense", label:"Clásico Mansilla–Solense"},
-];
 function udlCrest(name){
   if(!name) return `<div class="crest" style="width:36px;height:36px;font-size:10px">?</div>`;
   let n = name.toLowerCase().trim();
@@ -1384,7 +1797,7 @@ function renderUdl(){
     </div>`;
   });
   html += `<div class="group-label">Clubes de la UDL</div>`;
-  html += `<div class="udl-grid">${(UDL_CLUBS||[]).map((cl,i)=>`<div class="udl-club" onclick="typeof openUdlClub==='function'&&openUdlClub(${i})"><img src="${cl.crest}" loading="lazy" onerror="this.style.opacity=0.15"><span>${cl.name}</span></div>`).join("")}</div>`;
+  html += `<div class="udl-grid">${(UDL_CLUBS||[]).map((cl,i)=>`<div class="udl-club" title="${cl.name}" aria-label="${cl.name}" role="button" tabindex="0" onclick="typeof openUdlClub==='function'&&openUdlClub(${i})"><img src="${cl.crest}" alt="${cl.name}" loading="lazy" onerror="this.style.opacity=0.15"></div>`).join("")}</div>`;
   html += `<div class="note" style="margin-top:12px">Los clásicos se disputan en el calendario oficial de la UDL. Resultados en vivo cuando estén disponibles en la web de la liga.</div>`;
   el.innerHTML = html;
 }
@@ -1764,26 +2177,33 @@ function extractEspnScorers(ev){
 }
 function scorersForSide(m, side){
   if(!m) return "";
-  const hs = m.hs, as = m.as;
-  if(hs==null || as==null) return "";
-  if(Number(hs)===0 && Number(as)===0) return "";
   if(m.status==="sched") return "";
-  const scorers = m.scorers || m.goals || [];
-  if(!scorers.length) return "";
-  const list = scorers.filter(s=>{
-    if(s.side==="home"||s.side==="away") return s.side===side;
-    if(s.home===true) return side==="home";
-    if(s.home===false) return side==="away";
-    return false;
-  });
-  if(!list.length) return "";
-  const bits = list.map(s=>{
-    const min = s.min ? ` ${s.min}'` : "";
-    const og = s.own ? " (e.c.)" : "";
-    return `<b>${s.who||s.name||"?"}</b>${min}${og}`;
-  });
-  const cls = side==="home" ? "left" : "right";
-  return `<div class="side-scorers ${cls}">${bits.join("<br>")}</div>`;
+  if(m.hs!=null && m.as!=null && Number(m.hs)===0 && Number(m.as)===0) return "";
+  var rawSide = side==="home" ? (m.scorersH||[]) : (m.scorersA||[]);
+  var bits = [];
+  if(rawSide && rawSide.length){
+    for(var i=0;i<rawSide.length;i++){
+      var t = String(rawSide[i]);
+      var mm = t.match(/^(.+?)\s+(\d{1,3})'?$/);
+      if(mm) bits.push("<b>"+mm[1]+"</b> "+mm[2]+"'");
+      else bits.push("<b>"+t+"</b>");
+    }
+  } else {
+    var scorers = m.scorers || m.goals || [];
+    for(var i=0;i<scorers.length;i++){
+      var s = scorers[i];
+      var ok = false;
+      if(s.side==="home"||s.side==="away") ok = s.side===side;
+      else if(s.home===true) ok = side==="home";
+      else if(s.home===false) ok = side==="away";
+      if(!ok) continue;
+      var min = s.min ? (" "+s.min+"'") : "";
+      bits.push("<b>"+(s.who||s.name||"?")+"</b>"+min+(s.own?" (e.c.)":""));
+    }
+  }
+  if(!bits.length) return "";
+  var align = side==="away" ? "right" : "left";
+  return '<div class="side-scorers '+align+'" style="display:block;font-size:10px;line-height:1.35;margin-top:3px;color:#aab;max-width:120px;">'+bits.join("<br>")+'</div>';
 }
 function scorersHTML(m){ return ""; }
 
@@ -1881,7 +2301,7 @@ function scorersForSide(m, side){
   const scorers = m.scorers||[];
   const list = scorers.filter(s=>s.side===side || (side==="home"&&s.home===true) || (side==="away"&&s.home===false));
   if(!list.length) return "";
-  const bits = list.map(s=>`<b>${s.who||"?"}</b>${s.min?` ${s.min}'`:""}${s.own?" (e.c.)":""}`);
+  const bits = list.map(s=>`${s.who?`<b>${s.who}</b>`:"Gol"}${s.min?` ${s.min}'`:""}${s.own?" (e.c.)":""}`);
   return `<div class="side-scorers ${side==="home"?"left":"right"}">${bits.join("<br>")}</div>`;
 }
 function scorersHTML(){ return ""; }
@@ -1999,13 +2419,9 @@ function fixLaLigaMadridMixups(){
 
 
 function isHoyWhen(m){
-  if(!m) return false;
-  const d = String(m.date||"").slice(0,10);
-  const hoy = (typeof TODAY_DATE!=="undefined" ? TODAY_DATE : "2026-09-07");
-  if(d && d !== hoy) return false;
-  if(m.status==="live") return true;
   const w = String(m.when||"").toLowerCase();
-  if(/\bfinal\b|ayer|domingo|sáb\b|sab\b|vie\b|jue\b|mié|mie\b|2026-09-0[0-6]/i.test(w)) return false;
+  if(/^lun\b|^lunes|mañana|tomorrow/i.test(w)) return false;
+  if(m.date && m.date !== TODAY_DATE && m.status!=="live") return false;
   return true;
 }
 
@@ -2077,161 +2493,119 @@ function promotePastKickoff(){
 }
 
 function renderToday(){
-  try{fixLaLigaMadridMixups(); }catch(e){}
-  if(typeof scrubMexicanFromToday==="function") scrubMexicanFromToday();
-  // Segunda pasada anti-duplicados (ESPN puede sumar nombres raros)
+  try{ if(typeof scrubMexicanFromToday==="function") scrubMexicanFromToday(); }catch(e){}
+
+  // Anti-dupes estricto en SA_TODAY
   if(typeof SA_TODAY!=="undefined" && SA_TODAY){
-    const seen2 = new Map();
+    const seen = new Map();
     for(let i=0;i<SA_TODAY.length;i++){
-      const m=SA_TODAY[i];
-      const k=pairKey(m.home,m.away);
+      const m = SA_TODAY[i];
+      const k = typeof pairKey==="function" ? pairKey(m.home,m.away) : (m.home+"|"+m.away);
       if(!k || k==="|") continue;
-      if(seen2.has(k)){
-        const prev = seen2.get(k);
-        const sc = x => (x.status==="live"?10:x.status==="final"?8:1)+(x.hs!=null?3:0)+(x.scorers&&x.scorers.length?1:0);
-        if(sc(m) > sc(prev.m)) { seen2.set(k, {m, i}); }
-      } else seen2.set(k, {m, i});
+      if(!seen.has(k)) seen.set(k, m);
+      else {
+        const prev = seen.get(k);
+        const sc = x => (x.status==="live"?10:x.status==="final"?8:1)+(x.hs!=null?3:0);
+        if(sc(m) > sc(prev)) seen.set(k, m);
+      }
     }
-    const keep = new Set([...seen2.values()].map(v=>v.m));
-    for(let i=SA_TODAY.length-1;i>=0;i--){
-      if(!keep.has(SA_TODAY[i])) SA_TODAY.splice(i,1);
-    }
+    SA_TODAY.length = 0;
+    seen.forEach(m => SA_TODAY.push(m));
   }
 
-  const groups=[];
-  leagueKeys.forEach(k=>{
-    const lg=EURO[k];
-    if(!lg) return;
-    let todays = (lg.matches||[]).filter(m=>m.date===TODAY_DATE || m.status==="live");
-    // Uniq dentro de la liga por pairKey de nombres resueltos
-    const seenLg = new Map();
-    todays.forEach(m=>{
-      const hn = (lg.names && lg.names[m.home]) || m.home || "";
-      const an = (lg.names && lg.names[m.away]) || m.away || "";
-      const nk = pairKey(hn, an);
-      if(!nk || nk==="|") return;
-      if(seenLg.has(nk)){
-        const prev = seenLg.get(nk);
-        const score = x => (x.status==="live"?4:x.status==="final"?3:1)+(x.hs!=null?1:0);
-        if(score(m) > score(prev)) seenLg.set(nk, m);
-      } else seenLg.set(nk, m);
-    });
-    todays = Array.from(seenLg.values());
-    if(todays.length) groups.push({key:k,lg,matches:todays});
-  });
   const favs = typeof loadFavs==="function" ? loadFavs() : [];
-  const mi = (typeof getMiClub==="function"?getMiClub():"");
-  if(mi && favs.indexOf(mi)<0) favs.push(mi);
   const onlyFav = !!window.__todayOnlyFav && favs.length>0;
-  let html = `<div class="note">Partidos de hoy (${(TODAY_DATE||"").split("-").reverse().join("/")}) · API ESPN en vivo cada 60s · Argentina, Sudamérica y Europa.</div>`;
+
+  let html = `<div class="note">Partidos de hoy (${(TODAY_DATE||"").split("-").reverse().join("/")}) · auto cada 30s · <span id="lastUpdateHint">cargando…</span></div>`;
   if(favs.length){
     html += `<div class="fav-filter-bar">
       <button type="button" class="fav-filter-btn ${!onlyFav?"on":""}" onclick="window.__todayOnlyFav=false;renderToday()">Todos</button>
       <button type="button" class="fav-filter-btn ${onlyFav?"on":""}" onclick="window.__todayOnlyFav=true;renderToday()">⭐ Solo favoritos (${favs.length})</button>
     </div>`;
   }
-  let idx=0, shown=0;
-  try{ if(typeof scrubMexicanFromToday==="function") scrubMexicanFromToday(); }catch(e){}
-  // Lista SA única por pareja de equipos
-  function uniqMatches(list, nameFn){
-    const seen=new Map();
-    (list||[]).forEach(m=>{
-      const h=nameFn?nameFn(m.home):m.home;
-      const a=nameFn?nameFn(m.away):m.away;
-      const nk = (typeof pairKey==="function") ? pairKey(h,a)
-        : [String(h||"").toLowerCase(),String(a||"").toLowerCase()].sort().join("|");
-      if(!nk || nk==="|") return;
-      if(seen.has(nk)){
-        const prev=seen.get(nk);
-        const score=x=>(x.status==="live"?10:x.status==="final"?8:1)+(x.scorers&&x.scorers.length?2:0)+(x.hs!=null?3:0)+(x.tv?1:0);
-        if(score(m)>score(prev)) seen.set(nk,m);
-      } else seen.set(nk,m);
-    });
-    return Array.from(seen.values());
-  }
-  const saList = uniqMatches(filterHoyList((typeof SA_TODAY!=="undefined" && SA_TODAY) ? SA_TODAY : [])).filter(isHoyWhen);
-  const euroTeamPairs = new Set();
-  const globalSeen = new Set();
-  groups.forEach(g=>{
-    (g.matches||[]).forEach(m=>{
-      const hn=(g.lg.names[m.home]||m.home||"");
-      const an=(g.lg.names[m.away]||m.away||"");
-      const nk = (typeof pairKey==="function") ? pairKey(hn,an)
-        : [hn,an].map(x=>String(x).toLowerCase()).sort().join("|");
-      euroTeamPairs.add(nk);
-    });
+
+  // SOLO SA_TODAY en Hoy (no mezclar EURO → evita ligas repetidas)
+  let list = (typeof SA_TODAY!=="undefined" && SA_TODAY) ? SA_TODAY.slice() : [];
+  list.forEach(function(m){
+    if(m.status==="sched" || m.status==="scheduled"){ m.hs = null; m.as = null; }
   });
-  let saFiltered = saList.filter(m=>{
-    const nk = (typeof pairKey==="function") ? pairKey(m.home,m.away)
-      : [m.home,m.away].map(x=>String(x||"").toLowerCase()).sort().join("|");
-    if(euroTeamPairs.has(nk)) return false;
-    if(globalSeen.has(nk)) return false;
-    globalSeen.add(nk);
+  list = list.filter(m => {
+    if(m.date && m.date !== TODAY_DATE && m.status!=="live" && m.status!=="final") return false;
+    if(typeof isHoyWhen==="function" && !isHoyWhen(m)) return false;
     return true;
   });
-  if(onlyFav) saFiltered = saFiltered.filter(m=>matchTouchesFav(m.home,m.away,favs));
-  if(saFiltered.length){
-    // HARD unique: una sola tarjeta por cruce
-    const hard = new Map();
-    saFiltered.forEach(m=>{
-      const k = pairKey(m.home, m.away);
-      if(!k || k==="|") return;
-      if(!hard.has(k)) hard.set(k, m);
-      else {
-        const prev = hard.get(k);
-        const better = (x)=> (x.status==="live"?10:x.status==="final"?8:0)+(x.hs!=null?3:0)+(x.scorers&&x.scorers.length?2:0)+(x.tv?1:0)+(/^\d{1,2}:\d{2}/.test(String(x.when||""))?1:0);
-        if(better(m)>better(prev)) hard.set(k,m);
-      }
-    });
-    saFiltered = Array.from(hard.values());
-    saFiltered.sort((a,b)=>{
-      const rank = m => {
-        if(m.status==="live") return -1;
-        if(m.status==="final") return 2;
-        const t = String(m.when||"").match(/(\d{1,2}):(\d{2})/);
-        return t ? (parseInt(t[1],10)*60+parseInt(t[2],10))/1500 : 1;
-      };
-      return rank(a)-rank(b);
-    });
-    html += `<div class="group-label">🌎 Sudamérica / Argentina${onlyFav?" · favoritos":""}</div>`;
-    saFiltered.forEach(m=>{
-      html += saMatchCard(m, idx++);
+  if(onlyFav && typeof matchTouchesFav==="function"){
+    list = list.filter(m => matchTouchesFav(m.home, m.away, favs));
+  }
+
+  // Una sola tarjeta por cruce
+  const hard = new Map();
+  list.forEach(m=>{
+    const k = typeof pairKey==="function" ? pairKey(m.home,m.away) : (m.home+"|"+m.away);
+    if(!k || k==="|") return;
+    if(!hard.has(k)) hard.set(k, m);
+  });
+  list = Array.from(hard.values());
+
+  // Orden: live → sched → final
+  list.sort((a,b)=>{
+    const rank = m => m.status==="live"?0 : m.status==="final"?2 : 1;
+    if(rank(a)!==rank(b)) return rank(a)-rank(b);
+    return String(a.when||"").localeCompare(String(b.when||""));
+  });
+
+  // Agrupar SOLO por m.comp
+  function compLabel(m){
+    const c = String(m.comp||"");
+    if(/Premier|🏴󠁧󠁢󠁥󠁮󠁧󠁿/i.test(c)) return "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League";
+    if(/La Liga|🇪🇸/i.test(c)) return "🇪🇸 La Liga";
+    if(/Serie A|🇮🇹/i.test(c)) return "🇮🇹 Serie A";
+    if(/Bundesliga|🇩🇪/i.test(c)) return "🇩🇪 Bundesliga";
+    if(/Copa Argentina/i.test(c)) return "🇦🇷 Copa Argentina";
+    if(/Clausura|Liga Profesional|🇦🇷/i.test(c)) return "🇦🇷 Liga Profesional (Clausura)";
+    if(/Libertadores|Sudamericana/i.test(c)) return "🌎 Copas sudamericanas";
+    if(/Uruguay|🇺🇾/i.test(c)) return "🇺🇾 Uruguay";
+    return c || "Otros";
+  }
+
+  const byComp = new Map();
+  list.forEach(m=>{
+    const lab = compLabel(m);
+    if(!byComp.has(lab)) byComp.set(lab, []);
+    byComp.get(lab).push(m);
+  });
+
+  const order = [
+    "🇦🇷 Liga Profesional (Clausura)",
+    "🇦🇷 Copa Argentina",
+    "🇺🇾 Uruguay",
+    "🌎 Copas sudamericanas",
+    "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League",
+    "🇪🇸 La Liga",
+    "🇮🇹 Serie A",
+    "🇩🇪 Bundesliga"
+  ];
+  const labels = [...order.filter(l=>byComp.has(l)), ...[...byComp.keys()].filter(l=>!order.includes(l))];
+
+  let idx = 0, shown = 0;
+  labels.forEach(lab=>{
+    const ms = byComp.get(lab)||[];
+    if(!ms.length) return;
+    html += `<div class="group-label">${lab}${onlyFav?" · favoritos":""}</div>`;
+    ms.forEach(m=>{
+      html += (typeof saMatchCard==="function" ? saMatchCard(m, idx++) : "");
       shown++;
     });
-  }
-  groups.forEach(g=>{
-    let ms = uniqMatches(g.matches||[], ab=>(g.lg.names[ab]||ab));
-    // solo HOY para no mezclar fechas viejas
-    ms = ms.filter(m=>!m.date || m.date===TODAY_DATE || m.status==="live");
-    if(onlyFav){
-      ms = ms.filter(m=>{
-        const hn = g.lg.names[m.home]||m.home, an = g.lg.names[m.away]||m.away;
-        return matchTouchesFav(hn,an,favs) || matchTouchesFav(m.home,m.away,favs);
-      });
-    }
-    // filtrar ya mostrados en SA u otra liga
-    ms = ms.filter(m=>{
-      const hn=g.lg.names[m.home]||m.home, an=g.lg.names[m.away]||m.away;
-      const nk = (typeof pairKey==="function") ? pairKey(hn,an)
-        : [hn,an].map(x=>String(x).toLowerCase()).sort().join("|");
-      if(globalSeen.has(nk)) return false;
-      globalSeen.add(nk);
-      return true;
-    });
-    if(!ms.length) return;
-    html += `<div class="group-label">${g.lg.name}${onlyFav?" · favoritos":""}</div>`;
-    ms.sort((a,b)=> (a.status==="live"?-1:0) - (b.status==="live"?-1:0));
-    ms.forEach(m=>{
-      html += matchCard(m,g.lg,idx++,g.key); shown++;
-    });
   });
+
   if(!shown){
     html += onlyFav
-      ? `<div class="empty-hint">Hoy no juegan tus favoritos. Sacá el filtro o agregá más clubes ⭐</div>`
-      : `<div class="empty-hint">No hay partidos cargados para hoy. Tocá Actualizar.</div>`;
+      ? `<div class="empty-hint">Hoy no juegan tus favoritos.</div>`
+      : `<div class="empty-hint">No hay partidos para hoy.</div>`;
   }
-  document.getElementById("todayPanel").innerHTML = html;
-  try{ checkFavLiveAlerts(); }catch(e){}
+  const panel = document.getElementById("todayPanel");
+  if(panel) panel.innerHTML = html;
+  try{ if(typeof checkFavLiveAlerts==="function") checkFavLiveAlerts(); }catch(e){}
 }
 
 function renderUclNote(lg){
@@ -2849,34 +3223,42 @@ async function openMatchDetail(opts){
 
 
 function saMatchCard(m, i){
-  const hasScore = m.hs!==null && m.hs!==undefined && m.as!==null && m.as!==undefined;
-  const isSched = m.status==="sched" || (!hasScore && m.status!=="live" && m.status!=="final");
-  const timeOnly = String(m.when||"").replace(/scheduled/i,"Programado").trim() || "Programado";
-  const scoreHtml = isSched
-    ? `<div class="kickoff">${timeOnly}</div>`
-    : `<div class="score">${m.hs??0}<span class="dash">–</span>${m.as??0}</div>`;
+  // Programados: solo hora, NUNCA 0-0
+  const isSched = m.status==="sched" || m.status==="scheduled" || m.status==="pre";
+  const hasRealScore = !isSched && m.hs!==null && m.hs!==undefined && m.as!==null && m.as!==undefined;
+  const score = !hasRealScore
+    ? `<div class="kickoff">${(/scheduled/i.test(String(m.when||''))?'Programado':(m.when||'Programado'))}</div>`
+    : `<div class="score">${m.hs}<span class="dash">–</span>${m.as}</div>`;
+  let stLabel = m.when || "Programado";
+  if(/scheduled/i.test(stLabel)) stLabel = "Programado";
   let liveMin = m.minute || m.clock || "";
-  if(!liveMin && m.status==="live" && m.when){
-    const mm=String(m.when).match(/(\d{1,3})\s*'/);
-    if(mm) liveMin=mm[1]+"'";
-  }
+  if(!liveMin && m.status==="live" && m.when){ const mm=String(m.when).match(/(\d{1,3})\s*'/); if(mm) liveMin=mm[1]+"'"; }
   const pill = m.status==="live"
-    ? (liveMin?`<span class="live-minute">${liveMin}</span>`:"")+`<span class="status-pill live">EN VIVO</span>`
-    : (m.status==="final" ? `<span class="status-pill final">${/pen/i.test(String(m.when||""))?m.when:"FINAL"}</span>` : "");
-  const crestH = (typeof saCrest==="function" && saCrest(m.home)) || `<div class="crest crest-fallback">${String(m.home||"?").slice(0,3).toUpperCase()}</div>`;
-  const crestA = (typeof saCrest==="function" && saCrest(m.away)) || `<div class="crest crest-fallback">${String(m.away||"?").slice(0,3).toUpperCase()}</div>`;
+    ? `${liveMin?`<span class="live-minute">${liveMin}</span>`:""}<span class="status-pill live">EN VIVO</span>`
+    : m.status==="final" ? `<span class="status-pill final">FINAL</span>`
+    : `<span class="status-pill sched">${stLabel}</span>`;
   const eid = m.espnId || m.eventId || "";
   const slug = m.leagueSlug || "arg.1";
   const payload = encodeURIComponent(JSON.stringify({
     leagueSlug: slug, eventId: eid, home: m.home, away: m.away,
     hs: m.hs, as: m.as, status: m.status, when: m.when, comp: m.comp||"🇦🇷 Clausura"
   }));
-  const homeSafe = String(m.home||"").replace(/'/g,"\\'");
-  const awaySafe = String(m.away||"").replace(/'/g,"\\'");
-  return `<div class="match" style="animation-delay:${i*0.04}s;cursor:pointer" onclick="try{openMatchDetail(JSON.parse(decodeURIComponent('${payload}')))}catch(e){}">
-    <div class="side" onclick="event.stopPropagation();openSATeam('${homeSafe}')">${crestH}<div class="tname">${m.home||""}</div>${typeof scorersForSide==="function"?scorersForSide(m,"home"):""}</div>
-    <div class="mid">${scoreHtml}${pill}${typeof tvChipHTML==="function"?tvChipHTML(m.tv||[]):""}<div class="tap-hint">tocá para detalle</div></div>
-    <div class="side right" onclick="event.stopPropagation();openSATeam('${awaySafe}')">${crestA}<div class="tname">${m.away||""}</div>${typeof scorersForSide==="function"?scorersForSide(m,"away"):""}</div>
+    return `<div class="match" style="animation-delay:${i*0.04}s;cursor:pointer" onclick="try{openMatchDetail(JSON.parse(decodeURIComponent('${payload}')))}catch(e){}">
+    <div class="side" onclick="event.stopPropagation();openSATeam('${String(m.home||'').replace(/'/g,"\\'")}')">
+      ${saCrest(m.home)}
+      <div class="side-col">
+        <div class="tname">${m.home}</div>
+        ${scorersForSide(m,"home")}
+      </div>
+    </div>
+    <div class="mid">${score}${pill}${tvChipHTML(m.tv||guessTV(m, m.comp||""))}<div style="font-size:9px;color:var(--dim2);margin-top:2px">tocá para detalle</div></div>
+    <div class="side right" onclick="event.stopPropagation();openSATeam('${String(m.away||'').replace(/'/g,"\\'")}')">
+      ${saCrest(m.away)}
+      <div class="side-col">
+        <div class="tname">${m.away}</div>
+        ${scorersForSide(m,"away")}
+      </div>
+    </div>
   </div>`;
 }
 
@@ -3337,72 +3719,31 @@ function applyEspnEventsToEuro(leagueKey, data){
   return n;
 }
 
-function applyEspnArgToSA(data){
-  if(!data || !data.events) return 0;
-  let n = 0;
-  data.events.forEach(ev=>{
+function applyEspnArgToSA(events){
+  // Solo actualiza marcador/minuto si el pairKey coincide. NUNCA cambia nombres de equipos.
+  if(!events || !events.length || typeof SA_TODAY==="undefined") return;
+  events.forEach(ev=>{
     try{
-      const comps = (ev.competitions && ev.competitions[0]) || {};
-      const teams = comps.competitors || [];
-      if(teams.length<2) return;
-      const date = (ev.date||"").slice(0,10);
-      const status = mapEspnStatus(ev);
-      if(date && date !== TODAY_DATE && status !== "live") return;
-      const home = teams.find(c=>c.homeAway==="home") || teams[0];
-      const away = teams.find(c=>c.homeAway==="away") || teams[1];
-      const hs = home.score!=null && home.score!=="" ? parseInt(home.score,10) : null;
-      const as = away.score!=null && away.score!=="" ? parseInt(away.score,10) : null;
-      let when = (ev.status && ev.status.type && (ev.status.type.shortDetail || ev.status.type.detail)) || "";
-      if(/scheduled/i.test(when)) when = "Programado";
-      const hName = (home.team && (home.team.shortDisplayName || home.team.displayName)) || "Local";
-      const aName = (away.team && (away.team.shortDisplayName || away.team.displayName)) || "Visitante";
-      const scorers = extractEspnScorers(ev);
-      const clk = extractEspnClock(ev);
-      const nk = pairKey(hName, aName);
-      if(!nk || nk==="|") return;
-      let i = SA_TODAY.findIndex(m => pairKey(m.home, m.away) === nk);
-      if(i < 0){
-        // Solo agregar si es HOY y live/final (resultados reales ESPN)
-        if(status==="sched") return;
-        if(date && date !== TODAY_DATE) return;
-        SA_TODAY.push({
-          comp:"🇦🇷 Clausura", home: hName, away: aName,
-          hs: hs, as: as, status, when: status==="final"?"FINAL":(when||"EN VIVO"),
-          date: date||TODAY_DATE, minute: clk||"", espnId: ev.id,
-          scorers: scorers.length?scorers:undefined, tv: guessTV({home:hName,away:aName},"🇦🇷")
-        });
-        n++;
-        return;
-      }
-      const m = SA_TODAY[i];
-      // Actualizar siempre desde ESPN
-      if(hs!=null) m.hs = hs;
-      if(as!=null) m.as = as;
-      if(status==="final"){ m.status="final"; m.when="FINAL"; m.minute=""; }
-      else if(status==="live"){ m.status="live"; if(when) m.when=when; if(clk) m.minute=clk; }
-      else if(m.status!=="live" && m.status!=="final"){ m.status=status; if(when) m.when=when; }
-      if(ev.id) m.espnId = ev.id;
-      if(scorers && scorers.length) m.scorers = scorers;
-      m.date = date||TODAY_DATE;
-      if(clk && m.status==="live") m.minute = clk;
-      n++;
-    }catch(e){ console.warn("applyEspnArg",e); }
+      const comps = (ev.competitions&&ev.competitions[0]) || {};
+      const home = (comps.competitors||[]).find(x=>x.homeAway==="home");
+      const away = (comps.competitors||[]).find(x=>x.homeAway==="away");
+      if(!home||!away) return;
+      const hn = home.team&&home.team.displayName || home.team&&home.team.shortDisplayName || "";
+      const an = away.team&&away.team.displayName || away.team&&away.team.shortDisplayName || "";
+      const k = typeof pairKey==="function" ? pairKey(hn,an) : (hn+"|"+an);
+      const m = SA_TODAY.find(x => pairKey(x.home,x.away)===k || pairKey(x.home,x.away)===pairKey(an,hn));
+      if(!m) return; // no crear partidos nuevos
+      const hs = home.score!=null ? parseInt(home.score,10) : m.hs;
+      const as = away.score!=null ? parseInt(away.score,10) : m.as;
+      if(!isNaN(hs)) m.hs = hs;
+      if(!isNaN(as)) m.as = as;
+      const st = (ev.status&&ev.status.type&&ev.status.type.name)||"";
+      if(/IN_PLAY|STATUS_IN_PROGRESS|LIVE/i.test(st)) m.status="live";
+      else if(/FINAL|STATUS_FINAL/i.test(st)) m.status="final";
+      const clk = (ev.status&&ev.status.displayClock)||"";
+      if(clk && m.status==="live") m.when = clk.replace(/:00$/,"") + "'";
+    }catch(e){}
   });
-  try{
-    const map = new Map();
-    (SA_TODAY||[]).forEach(m=>{
-      const k = pairKey(m.home,m.away);
-      if(!k||k==="|") return;
-      if(m.date && m.date !== TODAY_DATE && m.status!=="live") return;
-      const prev = map.get(k);
-      const sc = x => (x.status==="live"?10:x.status==="final"?8:1)+(x.hs!=null?3:0)+(x.minute?1:0);
-      if(!prev || sc(m)>sc(prev)) map.set(k,m);
-    });
-    SA_TODAY.length = 0;
-    map.forEach(m=>SA_TODAY.push(m));
-  }catch(e){}
-  try{ scrubMexicanFromToday(); }catch(e){}
-  return n;
 }
 
 
@@ -3498,49 +3839,75 @@ function scrubMexicanFromToday(){
     }
   }
 }
-function applyEspnExtraToToday(compKey, data){
-  if(!data || !data.events || !data.events.length) return 0;
-  const labels = {
-    ucl:"🏆 Champions", uel:"🏆 Europa League",
-    libertadores:"🏆 Libertadores", sudamericana:"🏆 Sudamericana",
-    /* solo ligas de la web */
-  };
-  const label = labels[compKey] || compKey;
+function applyEspnExtraToToday(events){
+  if(!events || !events.length || typeof SA_TODAY==="undefined") return 0;
   let n = 0;
-  data.events.forEach(ev=>{
-    const comps = (ev.competitions && ev.competitions[0]) || {};
-    const teams = comps.competitors || [];
-    if(teams.length<2) return;
-    const date = (ev.date||"").slice(0,10);
-    if(date && date !== TODAY_DATE && mapEspnStatus(ev)!=="live") return;
-    const home = teams.find(c=>c.homeAway==="home") || teams[0];
-    const away = teams.find(c=>c.homeAway==="away") || teams[1];
-    const hn = (home.team && (home.team.shortDisplayName||home.team.displayName)) || "?";
-    const an = (away.team && (away.team.shortDisplayName||away.team.displayName)) || "?";
-    // Nunca México / Liga MX
-    const blobMX = (hn+" "+an+" "+label+" "+(ev.name||"")).toLowerCase();
-    if(/liga mx|méxico|mexico|chivas|guadalajara|cruz azul|monterrey|tigres|pachuca|toluca|pumas|santos laguna|atlas|necaxa|mazatlán|mazatlan|tijuana|atlante|querétaro|queretaro|puebla|león\b|leon\b|juárez|juarez|américa\b|club america/.test(blobMX) && !/sudamerican|libertador|argentina|boca|river/.test(blobMX)) return;
-    const status = mapEspnStatus(ev);
-    const hs = home.score!=null && home.score!=="" ? parseInt(home.score,10) : null;
-    const as = away.score!=null && away.score!=="" ? parseInt(away.score,10) : null;
-    const when = (ev.status && ev.status.type && ev.status.type.shortDetail) || "";
-    // evitar duplicados por nombre
-    const nk = pairKey(hn, an);
-    const exists = SA_TODAY.some(m=> pairKey(m.home,m.away)===nk);
-    const scorers = extractEspnScorers(ev);
-    if(!exists){
-      SA_TODAY.push({comp:label, home:hn, away:an, hs, as, status, when: when||label, scorers: scorers.length?scorers:undefined});
+  const norm = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+  events.forEach(ev=>{
+    try{
+      const comps = (ev.competitions&&ev.competitions[0]) || {};
+      const teams = comps.competitors || [];
+      const home = teams.find(x=>x.homeAway==="home") || teams[0];
+      const away = teams.find(x=>x.homeAway==="away") || teams[1];
+      if(!home||!away) return;
+      const hn = (home.team&&(home.team.displayName||home.team.shortDisplayName))||"";
+      const an = (away.team&&(away.team.displayName||away.team.shortDisplayName))||"";
+      let m = null;
+      if(typeof pairKey==="function"){
+        const k = pairKey(hn,an);
+        m = SA_TODAY.find(x => pairKey(x.home,x.away)===k);
+      }
+      if(!m){
+        const eh = norm(hn), ea = norm(an);
+        m = SA_TODAY.find(x=>{
+          const nh = norm(x.home), na = norm(x.away);
+          return nh && eh && na && ea &&
+            (nh===eh || nh.indexOf(eh)>=0 || eh.indexOf(nh)>=0 || nh.slice(0,6)===eh.slice(0,6)) &&
+            (na===ea || na.indexOf(ea)>=0 || ea.indexOf(na)>=0 || na.slice(0,6)===ea.slice(0,6));
+        });
+      }
+      if(!m) return;
+      const hs = home.score!=null && home.score!=="" ? parseInt(home.score,10) : null;
+      const asv = away.score!=null && away.score!=="" ? parseInt(away.score,10) : null;
+      const preMatch = /STATUS_SCHEDULED|STATUS_PRE|SCHEDULED|pre/i.test(st) || (ev.status&&ev.status.type&&ev.status.type.state==="pre");
+      if(!preMatch){
+        if(hs!=null && !isNaN(hs)) m.hs = hs;
+        if(asv!=null && !isNaN(asv)) m.as = asv;
+      } else {
+        m.hs = null; m.as = null; m.status = "sched";
+      }
+      const st = (ev.status&&ev.status.type&&(ev.status.type.name||ev.status.type.state))||"";
+      if(/IN_PLAY|STATUS_IN_PROGRESS|LIVE/i.test(st)) m.status="live";
+      else if(/FINAL|STATUS_FINAL/i.test(st)) m.status="final";
+      const clk = (ev.status && ev.status.displayClock) || "";
+      const mm = String(clk).match(/(\d{1,3})/);
+      if(mm && m.status==="live") m.when = mm[1] + "'";
+      const details = comps.details || [];
+      if(details.length){
+        const sh=[], sa=[];
+        details.forEach(d=>{
+          const isGoal = d.scoringPlay || /Goal|Gol|penalty/i.test(((d.type&&d.type.text)||d.text||""));
+          if(!isGoal) return;
+          const athletes = d.athletesInvolved||[];
+          const who = (athletes[0]&&(athletes[0].shortName||athletes[0].displayName)) || "?";
+          const min = String(d.clock||"").replace(/'/g,"");
+          const line = min ? (who+" "+min+"'") : who;
+          const teamId = d.team && d.team.id;
+          const homeId = home.team && home.team.id;
+          if(teamId && homeId && String(teamId)===String(homeId)) sh.push(line);
+          else if(teamId) sa.push(line);
+          else if(d.homeAway==="home") sh.push(line);
+          else sa.push(line);
+        });
+        if(sh.length) m.scorersH = sh;
+        if(sa.length) m.scorersA = sa;
+      }
       n++;
-    } else {
-      const m = SA_TODAY.find(x=>{
-        const mk = (typeof normTeamKey==="function") ? [normTeamKey(x.home),normTeamKey(x.away)].sort().join("|") : ((x.home||"")+"|"+(x.away||"")).toLowerCase();
-        return mk===nk;
-      });
-      if(m){ m.hs=hs; m.as=as; m.status=status; if(when) m.when=when; if(scorers.length) m.scorers=scorers; n++; }
-    }
+    }catch(e){}
   });
   return n;
 }
+
 
 
 
@@ -3556,7 +3923,7 @@ async function refreshFromEspn(){
     dates.forEach(dd=>{
       jobs.push(
         fetchEspnScoreboard(ESPN_LEAGUES[k], dd)
-          .then(data=>{ try{ updated += applyEspnEventsToEuro(k, data)||0; }catch(e){ console.warn(e); } })
+          .then(data=>{ try{ updated += applyEspnEventsToEuro(k, data)||0; }catch(e){ console.warn(e); } try{ if(data&&data.events) applyEspnExtraToToday(data.events); }catch(e2){} })
           .catch(e=>console.warn("ESPN",k,e))
       );
     });
@@ -3647,11 +4014,10 @@ window.handleRefresh = handleRefresh;
    OTROS DEPORTES — solo selección / ligas de Argentina
    ========================================================= */
 const OTROS_AR_SEED = [
-  {sport:"🏀 Básquet", comp:"Eliminatorias Mundial 2027", home:"Argentina", away:"Puerto Rico", hs:89, as:75, status:"final", when:"FINAL", date:"2026-08-27", note:"Mar del Plata · Bolmaro figura · 6-1 en el grupo", tv:[]},
-  {sport:"🏀 Básquet", comp:"Eliminatorias Mundial 2027", home:"Canadá", away:"Argentina", hs:null, as:null, status:"sched", when:"Lun 31/08", date:"2026-08-31", note:"Próximo partido eliminatorias", tv:[]},
-  {sport:"🏑 Hockey", comp:"Mundial Femenino", home:"Argentina (Leonas)", away:"Países Bajos", hs:null, as:null, status:"final", when:"Ver resultado", date:"2026-08-29", note:"Final del Mundial · Disney+ / ESPN", tv:["disney","espn"]},
-  {sport:"🏑 Hockey", comp:"Mundial Masculino", home:"Argentina (Leones)", away:"—", hs:null, as:null, status:"sched", when:"Consultar", date:"2026-08-30", note:"Seguimiento Leones en el Mundial", tv:["espn"]},
-  {sport:"🏐 Vóley", comp:"Selección Argentina", home:"Argentina", away:"—", hs:null, as:null, status:"sched", when:"Próximos", date:"2026-08-30", note:"Calendario FIVB / FEVA", tv:[]},
+  {sport:"🏀 Básquet", comp:"Eliminatorias Mundial 2027", home:"Argentina", away:"Puerto Rico", hs:89, as:75, status:"final", when:"FINAL", date:"2026-08-27", note:"Mar del Plata · Bolmaro figura", tv:[]},
+  {sport:"🏑 Hockey", comp:"Mundial Femenino", home:"Argentina (Leonas)", away:"Países Bajos", hs:null, as:null, status:"final", when:"FINAL", date:"2026-08-29", note:"Final del Mundial · Disney+ / ESPN", tv:["disney","espn"]},
+  {sport:"🏑 Hockey", comp:"Selección", home:"Los Leones", away:"—", hs:null, as:null, status:"info", when:"Agenda", date:"2026-09-12", note:"Seguí calendario oficial de CAH · actualizado 12/09", tv:[]},
+  {sport:"🏐 Vóley", comp:"Selección", home:"Argentina", away:"—", hs:null, as:null, status:"info", when:"Agenda", date:"2026-09-12", note:"Solo selecciones argentinas en este apartado", tv:[]},
 ];
 
 let OTROS_AR = OTROS_AR_SEED.slice();
@@ -5684,7 +6050,6 @@ function renderArgentina(){
     <button class="stab ${sub==="clausura"?"active":""}" onclick="window.__argSub='clausura';render()">Clausura</button>
     <button class="stab ${sub==="anual"?"active":""}" onclick="window.__argSub='anual';render()">Anual</button>
     <button class="stab ${sub==="prom"?"active":""}" onclick="window.__argSub='prom';render()">Promedios</button>
-    <button class="stab ${sub==="fechas"?"active":""}" onclick="window.__argSub='copa';render()">Copa Argentina</button>
     <button class="stab ${sub==="fechas"?"active":""}" onclick="window.__argSub='fechas';render()">Fechas</button>
     <button class="stab ${sub==="ascenso"?"active":""}" onclick="window.__argSub='ascenso';render()">Ascenso</button>
   </div>`;
@@ -5708,23 +6073,6 @@ function renderArgentina(){
         <td>${r.pj}</td><td class="pts">${r.pts}</td><td class="pts">${Number(r.prom||r.avg||0).toFixed(3)}</td></tr>`;
     });
     html += `</tbody></table>`;
-  } else if(sub==="copa"){
-    const CA = COPA_ARGENTINA;
-    html += `<div class="note">${CA.updated}<br>${CA.note}</div>`;
-    html += `<div class="group-label">${CA.fase}</div>`;
-    (CA.pairs||[]).forEach((p,i)=>{
-      const score = (p.hs!=null && p.as!=null) ? (p.hs + " – " + p.as) : "–";
-      let stHtml = "";
-      if(p.status==="hoy") stHtml = '<span class="status-pill live">HOY</span>';
-      else if(p.status==="clasificado") stHtml = '<span class="status-pill final">'+(p.when||"FINAL")+'</span>';
-      else stHtml = '<span class="status-pill sched">'+(p.when||"")+'</span>';
-      const note = p.note ? '<div style="font-size:10px;color:var(--dim);margin-top:3px">'+p.note+'</div>' : '';
-      html += '<div class="match" style="animation-delay:'+(i*0.04)+'s">'
-        + '<div class="side"><div class="tname">'+p.home+'</div></div>'
-        + '<div class="mid"><div class="score">'+score+'</div>'+stHtml+note+'</div>'
-        + '<div class="side right"><div class="tname">'+p.away+'</div></div>'
-        + '</div>';
-    });
   } else if(sub==="fechas"){
     const curF = window.__argFecha || (typeof ARG_FECHAS!=="undefined" ? ARG_FECHAS.current : 7);
     const maxF = 7;
@@ -6007,21 +6355,34 @@ function miClubBarHTML(){
 }
 var __liveTimer = null;
 function startLivePoll(){
-  if(__liveTimer) return;
-  __liveTimer = setInterval(function(){
+  if(window.__liveTimer) clearInterval(window.__liveTimer);
+  function tick(){
     try{
       if(typeof promotePastKickoff==="function") promotePastKickoff();
       if(typeof refreshFromEspn==="function"){
         refreshFromEspn().then(function(){
           try{ if(typeof promotePastKickoff==="function") promotePastKickoff(); }catch(e){}
           try{ if(typeof scrubMexicanFromToday==="function") scrubMexicanFromToday(); }catch(e){}
-          try{ if(typeof fixLaLigaMadridMixups==="function") fixLaLigaMadridMixups(); }catch(e){}
-          if(typeof render==="function") render();
+          try{ if(typeof renderToday==="function") renderToday(); }catch(e){}
+          try{ if(typeof render==="function") render(); }catch(e){}
+          try{
+            var el = document.getElementById("lastUpdateHint");
+            if(el){
+              var d = new Date();
+              el.textContent = "Actualizado "+d.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+            }
+          }catch(e){}
         }).catch(function(){});
+      } else {
+        try{ if(typeof renderToday==="function") renderToday(); }catch(e){}
       }
     }catch(e){}
-  }, 60000);
+  }
+  // primera pasada a los 8s, después cada 30s
+  setTimeout(tick, 8000);
+  window.__liveTimer = setInterval(tick, 30000);
 }
+
 function careerSaveBarHTML(){
   var has = false;
   try{ has = !!localStorage.getItem(CAREER_SAVE_KEY); }catch(e){}
@@ -6112,6 +6473,13 @@ if("serviceWorker" in navigator){
 window.__euroSub="partidos";
 
 /* boot */
+
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState==="visible" && typeof refreshFromEspn==="function"){
+    refreshFromEspn().then(function(){ try{renderToday()}catch(e){}; try{render()}catch(e){}; }).catch(function(){});
+  }
+});
+
 window.__euroSub="partidos";
 try{initTheme()}catch(e){}
 try{initSoundBtn()}catch(e){}
@@ -6121,6 +6489,159 @@ try{render()}catch(e){console.error(e)}
 try{updateLiveUI()}catch(e){}
 try{refreshFromEspn().then(()=>{render();if(typeof startLivePoll==='function')startLivePoll();try{notifyMiClubIfPlaying()}catch(e){}}).catch(()=>{if(typeof startLivePoll==='function')startLivePoll();})}catch(e){try{startLivePoll();}catch(_e){}}
 
+</script>
+<script>
+/* Resalta partidos de clubes favoritos (solo clase CSS; no toca datos) */
+(function(){
+  function markFavs(){
+    try{
+      var favs = (typeof loadFavs === "function") ? loadFavs() : [];
+      var cards = document.querySelectorAll("main .match");
+      for(var i=0;i<cards.length;i++){
+        var c = cards[i];
+        var names = c.querySelectorAll(".tname");
+        var on = !!(favs.length && names.length>=2 && typeof matchTouchesFav === "function" &&
+          matchTouchesFav(names[0].textContent.trim(), names[1].textContent.trim(), favs));
+        c.classList.toggle("fav-highlight", on);
+      }
+    }catch(e){}
+  }
+  var ZONE_LABEL = {ucl:"Champions League", uel:"Europa League", uecl:"Conference League", po:"Play-off", rel:"Descenso"};
+  function zoneOf(rank, rows){
+    if(rows === 36){ // Champions: fase de liga
+      if(rank <= 8) return "ucl";
+      if(rank <= 24) return "po";
+      return null;
+    }
+    if(rows === 18){ // Bundesliga
+      if(rank <= 4) return "ucl";
+      if(rank === 5) return "uel";
+      if(rank === 6) return "uecl";
+      if(rank === 16) return "po";
+      if(rank >= 17) return "rel";
+      return null;
+    }
+    if(rows === 20){ // Premier, La Liga, Serie A
+      if(rank <= 4) return "ucl";
+      if(rank === 5) return "uel";
+      if(rank === 6) return "uecl";
+      if(rank >= 18) return "rel";
+      return null;
+    }
+    return null;
+  }
+  function markZones(){
+    try{
+      var tables = document.querySelectorAll("#euroPanel table.standings");
+      for(var t=0;t<tables.length;t++){
+        var tb = tables[t];
+        if(tb.getAttribute("data-zones")==="1") continue;
+        tb.setAttribute("data-zones","1");
+        var rows = tb.querySelectorAll("tbody tr");
+        var used = {};
+        for(var i=0;i<rows.length;i++){
+          var rk = rows[i].querySelector("td.rank");
+          var team = rows[i].querySelector("td.team");
+          if(!rk || !team) continue;
+          var rank = parseInt(rk.textContent, 10);
+          var z = zoneOf(rank, rows.length);
+          if(!z) continue;
+          used[z] = true;
+          var dot = document.createElement("span");
+          dot.className = "zdot zone-" + z;
+          dot.setAttribute("aria-label", ZONE_LABEL[z]);
+          team.insertBefore(dot, team.firstChild);
+        }
+        var keys = Object.keys(used);
+        if(keys.length){
+          var leg = document.createElement("div");
+          leg.className = "zone-legend";
+          leg.innerHTML = keys.map(function(k){ return '<span><i class="zone-'+k+'"></i>'+ZONE_LABEL[k]+'</span>'; }).join("");
+          tb.parentNode.insertBefore(leg, tb.nextSibling);
+        }
+      }
+    }catch(e){}
+  }
+  var main = document.querySelector("main");
+  if(main && window.MutationObserver){
+    new MutationObserver(function(){ markFavs(); markZones(); }).observe(main, {childList:true, subtree:true});
+  }
+  window.addEventListener("load", function(){ markFavs(); markZones(); });
+  markFavs(); markZones();
+})();
+</script>
+<script>
+/* "Hoy" sigue la fecha de Argentina y se refresca a las 00:00 (America/Argentina/Buenos_Aires) */
+(function(){
+  var TZ = "America/Argentina/Buenos_Aires";
+  function arToday(){
+    return new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+  }
+  function msToNextArMidnight(){
+    var d = new Date();
+    var parts = new Intl.DateTimeFormat("en-GB",{timeZone:TZ,hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(d);
+    var get = function(t){ return +parts.find(function(x){ return x.type===t; }).value; };
+    var secs = get("hour")*3600 + get("minute")*60 + get("second");
+    return Math.max(1000, (86400 - secs)*1000 - d.getMilliseconds() + 1500);
+  }
+  function syncToday(){
+    try{
+      var today = arToday();
+      if(typeof TODAY_DATE !== "undefined" && TODAY_DATE !== today){
+        TODAY_DATE = today;
+        if(typeof handleRefresh === "function") handleRefresh();
+        if(typeof render === "function") render();
+      }
+    }catch(e){}
+  }
+  function schedule(){
+    setTimeout(function(){ syncToday(); schedule(); }, msToNextArMidnight());
+  }
+  syncToday();
+  schedule();
+  // Las pestañas en segundo plano frenan los timers: al volver se revisa la fecha
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) syncToday(); });
+})();
+</script>
+<script>
+/* Datos de data/luj-data.json (actualizados por GitHub Actions desde API-Football).
+   Reemplaza tablas y "Hoy" cuando el archivo tiene datos. Si no hay archivo o falla, queda lo que ya estaba. */
+(function(){
+  var DATA_URL = "data/luj-data.json";
+  var TZ = "America/Argentina/Buenos_Aires";
+  function arToday(){
+    return new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+  }
+  function apply(d){
+    if(!d || typeof d !== "object") return;
+    try{
+      var st = d.standings || {};
+      if(st.arg && typeof ARGENTINA !== "undefined"){
+        if(st.arg.zonaA && st.arg.zonaA.length) ARGENTINA.zonaA = st.arg.zonaA;
+        if(st.arg.zonaB && st.arg.zonaB.length) ARGENTINA.zonaB = st.arg.zonaB;
+      }
+      if(typeof EURO !== "undefined"){
+        Object.keys(st).forEach(function(k){
+          if(k !== "arg" && EURO[k] && st[k] && st[k].length) EURO[k].standings = st[k];
+        });
+      }
+      if(d.dateAR && d.dateAR === arToday() && Array.isArray(d.today) && typeof SA_TODAY !== "undefined"){
+        SA_TODAY.length = 0;
+        d.today.forEach(function(m){ SA_TODAY.push(m); });
+      }
+      if(typeof render === "function") render();
+    }catch(e){ console.warn("datos", e); }
+  }
+  function load(){
+    fetch(DATA_URL + "?v=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(apply)
+      .catch(function(){});
+  }
+  load();
+  setInterval(load, 10 * 60 * 1000);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) load(); });
+})();
 </script>
 </body>
 </html>
